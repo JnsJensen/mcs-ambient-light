@@ -1,0 +1,9 @@
+class Car
+
+values
+    public velocity : real = 10; -- m/s
+
+instance variables
+    public position : real; -- m
+
+end Car

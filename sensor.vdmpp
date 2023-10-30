@@ -1,0 +1,24 @@
+class Sensor
+
+instance variables
+    private cars : set of Car;
+    private position : real;
+    private road : Road; -- Reference to the road it is part of
+
+operations
+    public Sensor : real ==> Sensor
+    Sensor(pos) == (
+        cars := [];
+        position := pos;
+    );
+
+    public Update : () ==> ()
+    Update() == (
+        let all_cars_on_road = Road.GetCars() in
+            cars := { car | car : all_cars_on_road & abs(car.distance - position) < 0.1 }
+    );
+
+    public GetCars : () ==> seq of Car
+    GetCars() == cars
+
+end Sensor

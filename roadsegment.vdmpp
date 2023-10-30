@@ -1,0 +1,10 @@
+class Road
+
+types
+    -- protected StreetLamp = bool;
+
+instance variables
+    street_lamps : seq of StreetLamp := [];
+    connections : map nat to Road := { |-> };
+
+end Road

@@ -1,0 +1,14 @@
+class StreetLamp
+
+instance variables
+    private on : bool := false;
+    sensor : Sensor;
+
+operations
+    public On : () ==> ()
+    On() == on := true;
+
+    public Off : () ==> ()
+    Off() == off := false;
+
+end StreetLamp

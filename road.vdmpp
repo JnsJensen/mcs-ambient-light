@@ -1,0 +1,6 @@
+class RoadSegment is subclass of Road
+
+instance variables
+    private cars : seq of Cars;
+
+end RoadSegment

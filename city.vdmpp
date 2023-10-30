@@ -1,0 +1,8 @@
+class City
+
+instance variables
+    roads : set of Roads;
+    intersections : set of Intersections;
+    -- cost_map : -- something something adjacency matrix with dsitances as costs.    
+
+end City
