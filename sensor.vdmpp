@@ -7,9 +7,9 @@ instance variables
 
 operations
     public Sensor : real ==> Sensor
-    Sensor(pos) == (
+    Sensor(p_position) == (
         cars := {};
-        position := pos;
+        position := p_position;
     );
 
     public Update : () ==> ()

@@ -1,3 +1,24 @@
 class Intersection is subclass of Road
 
+instance variables
+    public position : Position;
+
+operations
+    public Intersection : Position * set of Road ==> Intersection
+    Intersection(p_position, p_roads) == (
+        connections := p_roads;
+        position := p_position;
+        -- initialise 4 street lamps for an intersection
+    );
+
+    -- chooses a random road between available connections
+    -- does not choose the road that the car came from
+    public NextRoad : Road ==> Road
+    NextRoad(p_from_road) == (
+        let avaiable_roads = connections \ {p_from_road} in
+            let random_index = MATH.rand(1, card avaiable_roads) in
+                let random_road = avaiable_roads(random_index) in
+                    return random_road
+    );
+
 end Intersection

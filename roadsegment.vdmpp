@@ -2,8 +2,13 @@ class RoadSegment is subclass of Road
 
 instance variables
     private cars : set of Car;
+    private length : real;
 
 operations
+    public RoadSegment : Position * Position ==> RoadSegment
+    RoadSegment(p_position1, p_position2) ==
+        length := p_position1.distanceTo(p_position2);
+
     public GetCars : () ==> set of Car
     GetCars() ==
         return cars;

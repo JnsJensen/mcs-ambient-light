@@ -1,0 +1,20 @@
+class Position
+-- Defines a 2D (x, y) position
+
+instance variables
+    public x : real;
+    public y : real;
+
+operations
+    public Position : real, real ==> Position
+    Position(p_x, p_y) == (
+        x := p_x;
+        y := p_y;
+    );
+
+    public DistanceTo : Position ==> real
+    DistanceTo(p_to_position) == (
+        let dx = x - p_to_position.x in
+            let dy = y - p_to_position.y in
+                return MATH`sqrt(dx**2 + dy**2);
+    );

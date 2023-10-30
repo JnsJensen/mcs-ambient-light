@@ -1,8 +1,34 @@
 class City
 
+-- The City is a collection of RoadSegments and Intersections
+-- See it as a graph
+--      Each intersection is a node in the graph
+--      Each road is an edge in the graph
+
 instance variables
-    roads : set of Road;
-    intersections : set of Intersection;
-    -- cost_map : -- something something adjacency matrix with dsitances as costs.    
+    intersections : set of Intersection; -- graph nodes
+    roads : set of RoadSegment; -- graph edges
+    costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
+
+    inv EdgeInv(roads, costs);
+
+functions
+    -- same amount of costs as roads
+    EdgeInv : set of RoadSegment * seq of real -> bool
+    EdgeInv(p_roads, p_costs) ==
+        len p_roads = len p_costs;
+
+operations
+    -- constructor
+    -- takes a set of positions that define the intersection nodes
+    -- and a map of nat1 to nat1 that which intersections are connected with an edge
+    -- the distance between the intersections is calculated for each edge
+    public City : set of Position * map of nat1 to nat1 ==> City
+    City(p_intersection_positions, p_edges) == (
+        intersections := {new Intersection(pos) | pos in set p_intersection_positions};
+        roads := {new RoadSegment(intersections(i), intersections(j)) | i,j in set dom p_edges & i < j};
+        costs := [RoadSegment.distance(roads(i)) | i in set dom roads];
+        return self
+    );
 
 end City

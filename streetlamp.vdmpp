@@ -2,13 +2,19 @@ class StreetLamp
 
 instance variables
     private on : bool := false;
-    sensor : Sensor;
+    public sensor : Sensor;
 
 operations
+    public StreetLamp : real ==> StreetLamp
+    StreetLamp(p_position) ==
+        sensor := new Sensor(p_position);
+
     public On : () ==> ()
-    On() == on := true;
+    On() ==
+        on := true;
 
     public Off : () ==> ()
-    Off() == on := false;
+    Off() ==
+        on := false;
 
 end StreetLamp
