@@ -8,17 +8,17 @@ instance variables
 operations
     public Sensor : real ==> Sensor
     Sensor(pos) == (
-        cars := [];
+        cars := {};
         position := pos;
     );
 
     public Update : () ==> ()
     Update() == (
         let all_cars_on_road = Road.GetCars() in
-            cars := { car | car : all_cars_on_road & abs(car.distance - position) < 0.1 }
+            cars := { car | car in set all_cars_on_road & abs(car.distance - position) < 0.1 }
     );
 
-    public GetCars : () ==> seq of Car
-    GetCars() == cars
+    public GetCars : () ==> set of Car
+    GetCars() == return cars
 
 end Sensor

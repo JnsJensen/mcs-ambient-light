@@ -1,10 +1,11 @@
-class Road
-
-types
-    -- protected StreetLamp = bool;
+class RoadSegment is subclass of Road
 
 instance variables
-    street_lamps : seq of StreetLamp := [];
-    connections : map nat to Road := { |-> };
+    private cars : set of Car;
 
-end Road
+operations
+    public GetCars : () ==> set of Car
+    GetCars() ==
+        return cars;
+
+end RoadSegment

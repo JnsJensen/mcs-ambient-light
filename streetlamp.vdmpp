@@ -9,6 +9,6 @@ operations
     On() == on := true;
 
     public Off : () ==> ()
-    Off() == off := false;
+    Off() == on := false;
 
 end StreetLamp

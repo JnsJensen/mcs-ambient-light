@@ -1,8 +1,8 @@
 class City
 
 instance variables
-    roads : set of Roads;
-    intersections : set of Intersections;
+    roads : set of Road;
+    intersections : set of Intersection;
     -- cost_map : -- something something adjacency matrix with dsitances as costs.    
 
 end City
