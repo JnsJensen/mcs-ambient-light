@@ -27,12 +27,12 @@ operations
     City(p_intersection_positions, p_edges) == (
         -- 1. make the roads defined by the edges map
         -- tuple (2, 4) means there is a road between points 2 and 4
-        let roads_seq = [
-            new RoadSegment(
-                p_intersection_positions(first), p_intersection_positions(second))
-                | mk_(first, second) in seq VDMUtil`set2seq[(nat1 * nat1)](p_edges)
-        ] in
-            roads := elems roads_seq;
+        -- let roads_seq = [
+        --     new RoadSegment(
+        --         p_intersection_positions(first), p_intersection_positions(second))
+        --         | mk_(first, second) in seq VDMUtil`set2seq[(nat1 * nat1)](p_edges)
+        -- ] in
+        --     roads := elems roads_seq;
 
         -- 2. make the intersections defined by the positions set
         -- passing in the correct roads to each intersection
@@ -44,11 +44,17 @@ operations
                 | mk_(ip_idx1, ip_idx2) in set p_edges & ip_idx1 = ip_idx or ip_idx2 = ip_idx
             }
             | ip_idx in set inds p_intersection_positions
-        ] in 
+        ] in (
             intersections := {
                 new Intersection(p_intersection_positions(ip_idx), roads_per_intersection(ip_idx))
                 | ip_idx in set inds p_intersection_positions
             };
+            
+            -- am I guaranteed to get only unique roads here?
+            -- like how does it compare the roads, and filter out all duplicates?
+            roads := dunion elems roads_per_intersection;
+        );
+        
     );
 
 
