@@ -8,6 +8,6 @@ values
 instance variables
     -- the progress of the car along the road
     -- a real number between 0 and the length of the road
-    public progress : real; -- m
+    public progress : real := 0; -- m
 
 end Car

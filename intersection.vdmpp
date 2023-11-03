@@ -2,6 +2,7 @@ class Intersection is subclass of Road
 
 instance variables
     public position : Position;
+    public connections : set of Road;
 
 operations
     public Intersection : Position * set of Road ==> Intersection
@@ -15,10 +16,8 @@ operations
     -- does not choose the road that the car came from
     public NextRoad : Road ==> Road
     NextRoad(p_from_road) == (
-        let avaiable_roads = connections \ {p_from_road} in
-            let random_index = MATH.rand(1, card avaiable_roads) in
-                let random_road = avaiable_roads(random_index) in
-                    return random_road
+        let road in set connections \ {p_from_road} in
+            return road
     );
 
 end Intersection

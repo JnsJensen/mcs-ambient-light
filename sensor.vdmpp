@@ -1,21 +1,21 @@
 class Sensor
 
 instance variables
-    private cars : set of Car;
-    private position : real;
-    private road : Road; -- Reference to the road it is part of
+    private cars : set of Car := {};
+    private road : RoadSegment; -- Reference to the road it is part of
+    private position : real; -- position along the road in meters
 
 operations
-    public Sensor : real ==> Sensor
-    Sensor(p_position) == (
-        cars := {};
+    public Sensor : RoadSegment * real ==> Sensor
+    Sensor(p_road, p_position) == (
         position := p_position;
+        road := p_road;
     );
 
     public Update : () ==> ()
     Update() == (
-        let all_cars_on_road = Road.GetCars() in
-            cars := { car | car in set all_cars_on_road & abs(car.distance - position) < 0.1 }
+        let all_cars_on_road = road.GetCars() in
+            cars := { car | car in set all_cars_on_road & abs(car.progress - position) < 0.1 }
     );
 
     public GetCars : () ==> set of Car

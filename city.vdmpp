@@ -6,29 +6,51 @@ class City
 --      Each road is an edge in the graph
 
 instance variables
-    intersections : set of Intersection; -- graph nodes
-    roads : set of RoadSegment; -- graph edges
-    costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
+    public intersections : set of Intersection; -- graph nodes
+    public roads : set of RoadSegment; -- graph edges
+    -- costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
 
-    inv EdgeInv(roads, costs);
+    -- inv EdgeInv(roads, costs);
 
-functions
-    -- same amount of costs as roads
-    EdgeInv : set of RoadSegment * seq of real -> bool
-    EdgeInv(p_roads, p_costs) ==
-        len p_roads = len p_costs;
+-- functions
+    -- -- same amount of costs as roads
+    -- EdgeInv : set of RoadSegment * seq of real -> bool
+    -- EdgeInv(p_roads, p_costs) ==
+    --     card p_roads = len p_costs;
 
 operations
     -- constructor
     -- takes a set of positions that define the intersection nodes
-    -- and a map of nat1 to nat1 that which intersections are connected with an edge
+    -- and a tuple of two nat1 that which intersections are connected with an edge
     -- the distance between the intersections is calculated for each edge
-    public City : set of Position * map of nat1 to nat1 ==> City
+    public City : seq of Position * set of (nat1 * nat1) ==> City
     City(p_intersection_positions, p_edges) == (
-        intersections := {new Intersection(pos) | pos in set p_intersection_positions};
-        roads := {new RoadSegment(intersections(i), intersections(j)) | i,j in set dom p_edges & i < j};
-        costs := [RoadSegment.distance(roads(i)) | i in set dom roads];
-        return self
+        -- 1. make the roads defined by the edges map
+        -- tuple (2, 4) means there is a road between points 2 and 4
+        let roads_seq = [
+            new RoadSegment(
+                p_intersection_positions(first), p_intersection_positions(second))
+                | mk_(first, second) in seq VDMUtil`set2seq[(nat1 * nat1)](p_edges)
+        ] in
+            roads := elems roads_seq;
+
+        -- 2. make the intersections defined by the positions set
+        -- passing in the correct roads to each intersection
+        -- both roads that start and end at the intersection
+        -- we know from the set of tuples which roads to choose
+        let roads_per_intersection = [
+            {
+                new RoadSegment(p_intersection_positions(ip_idx1), p_intersection_positions(ip_idx2))
+                | mk_(ip_idx1, ip_idx2) in set p_edges & ip_idx1 = ip_idx or ip_idx2 = ip_idx
+            }
+            | ip_idx in set inds p_intersection_positions
+        ] in 
+            intersections := {
+                new Intersection(p_intersection_positions(ip_idx), roads_per_intersection(ip_idx))
+                | ip_idx in set inds p_intersection_positions
+            };
     );
+
+
 
 end City

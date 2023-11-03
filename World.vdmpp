@@ -1,0 +1,6 @@
+class World
+
+instance variables
+    public static env : [Environment] := nil;
+
+end World

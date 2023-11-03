@@ -1,0 +1,10 @@
+class Testing
+
+instance variables
+    public m : map nat1 to nat1 := { 1 |-> 2, 2 |-> 3, 3 |-> 4};
+
+operations
+    public MapTest : nat1 ==> nat1
+    MapTest(x) == return m(x)
+
+end Testing
