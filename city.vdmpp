@@ -23,16 +23,10 @@ operations
     -- takes a set of positions that define the intersection nodes
     -- and a tuple of two nat1 that which intersections are connected with an edge
     -- the distance between the intersections is calculated for each edge
-    public City : seq of Position * set of (nat1 * nat1) ==> City
+    City : seq of Position * set of (nat1 * nat1) ==> City
     City(p_intersection_positions, p_edges) == (
         -- 1. make the roads defined by the edges map
         -- tuple (2, 4) means there is a road between points 2 and 4
-        -- let roads_seq = [
-        --     new RoadSegment(
-        --         p_intersection_positions(first), p_intersection_positions(second))
-        --         | mk_(first, second) in seq VDMUtil`set2seq[(nat1 * nat1)](p_edges)
-        -- ] in
-        --     roads := elems roads_seq;
 
         -- 2. make the intersections defined by the positions set
         -- passing in the correct roads to each intersection
@@ -54,9 +48,51 @@ operations
             -- like how does it compare the roads, and filter out all duplicates?
             roads := dunion elems roads_per_intersection;
         );
-        
     );
 
+    -- add a car to the city
+    -- takes a position of an intersection
+    -- use intersection to find the a road to start on
+    public AddCar : Car * Position ==> ()
+    AddCar(p_car, p_intersection_position) == (
+        -- 1. find the intersection
+        -- 2. choose random road from intersection
+        -- 3. add car to road
+        let intersection = intersection in set intersections and intersection.position = p_intersection_position in
+            let road = road in set intersection.connections in
+                road.AddCar(p_car);
+    );
 
+    public Step : () ==> ()
+    Step() == (
+        -- 1. move the cars
+        --    1.1. if car reaches intersection, move it to the next road
+        --    1.2. if car reaches an intersection with no new road to move to, remove it
+        -- 2. sense cars
+        -- 3. turn street lamps on or off
+        let cars = dunion {
+            road.GetCars()
+            | road in set roads
+        } in
+            for all car in set cars do (
+                dcl velocity : real := car.velocity,
+                    road : RoadSegment := car.road,
+                    progress : real := car.progress,
+                    direction : Direction := car.direction;
+                
+                -- update car position
+                -- let updated_progress = progress + velocity * World`timerRef.stepLength in
+                --     if updated_progress >= road.length then
+                --         let intersection =
+            );
+
+        let street_lamps = dunion {road.street_lamps | road in set roads} in
+            let sensors = dunion {
+                street_lamp.sensor
+                | street_lamp in set street_lamps
+            } in
+                for all sensor in set sensors do
+                    sensor.Sense();
+    );
 
 end City

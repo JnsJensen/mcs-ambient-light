@@ -1,0 +1,22 @@
+class Timer 
+
+instance variables
+
+  current_time : nat := 0;
+
+values 
+
+  public step_length : nat = 100;
+
+operations
+
+public 
+  StepTime: () ==> ()
+  StepTime() == 
+    current_time := current_time + step_length;
+
+public
+  GetTime: () ==> nat 
+  GetTime() == return current_time;
+
+end Timer

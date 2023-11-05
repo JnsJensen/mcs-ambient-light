@@ -1,5 +1,6 @@
 class Position
 -- Defines a 2D (x, y) position
+-- coordinates interpreted at a meter scale
 
 instance variables
     public x : real;

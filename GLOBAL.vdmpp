@@ -1,0 +1,9 @@
+class GLOBAL
+
+types
+    public Time = nat;
+    public String = seq of char;
+    public Edge = (nat1 * nat1);
+    public StreetLampState = <ON> | <OFF>;
+
+end GLOBAL

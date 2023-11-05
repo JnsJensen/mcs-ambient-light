@@ -1,4 +1,67 @@
-class Environment
+class Environment is subclass of GLOBAL
 
+types
+    inline = Position * Car * Time;
+    outline = set of (Position * Car) * set of StreetLamp * Time;
+
+instance variables
+    io : IO := new IO();
+
+    inlines : seq of inline := [];
+    outlines : seq of outline := [];
+
+    city : City;
+    
+    busy : bool := true;
+
+operations
+    public Environment : String * String ==> Environment
+    Environment(p_inline_fname, p_city_fname) == (
+        def mk_(-,input) = io.freadval[seq of inline](p_inline_fname) 
+        in
+            inlines := input;
+        
+        def mk_(-,input) = io.freadval[City](p_city_fname)
+        in
+            city := input;
+    );
+
+    -- output the outlines
+    public showResult : () ==> ()
+    showResult() ==
+        def - = io.writeval[seq of outline](outlines) in skip;
+    
+    -- Function to run through the inlines and generate the outlines
+    public Run : () ==> ()
+    Run() == (
+        while not isFinished() do (
+            HandleInlines();
+            city.Step();
+            World`timerRef.StepTime();
+        );
+    );
+
+    -- Function to handle all inlines for the current time
+    private HandleInlines : () ==> ()
+    HandleInlines() == (
+        if len inlines > 0 then (
+            dcl current_time : Time := World`timerRef.GetTime(),
+                done : bool := false;
+            while not done do (
+                def mk_(position, car, time) = hd inlines in
+                    if time <= current_time then (
+                        city.AddCar(car, position);
+                        inlines := tl inlines;
+                        done := len inlines = 0;
+                    )
+                    else done := true;
+            )
+        )
+        else busy := false;
+    );
+
+    public isFinished : () ==> bool 
+    isFinished() == 
+        return inlines = [];
 
 end Environment

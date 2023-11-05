@@ -6,8 +6,24 @@ values
     public velocity : real = 10; -- m/s
 
 instance variables
+    -- reference to the road the car is driving on
+    public road : Road;
+
     -- the progress of the car along the road
     -- a real number between 0 and the length of the road
     public progress : real := 0; -- m
+
+    -- direction denoted by either 1 or -1
+    -- invariant should exist to make sure this holds
+    public direction : int := 1;
+    inv direction in set {-1, 1};
+
+operations
+    public Car : RoadSegment * real * int ==> Car
+    Car(p_road, p_progress, p_direction) == (
+        road := p_road;
+        progress := p_progress;
+        direction := p_direction;
+    );
 
 end Car

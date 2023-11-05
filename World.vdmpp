@@ -2,5 +2,15 @@ class World
 
 instance variables
     public static env : [Environment] := nil;
+    public static timerRef : Timer := new Timer();
+
+operations
+    World : () ==> World
+    World() ==
+        env := new Environment("inputs/inlines.txt", "inputs/city.txt");
+
+    public Run : () ==> ()
+    Run() == 
+        env.Run();
 
 end World

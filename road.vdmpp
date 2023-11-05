@@ -4,7 +4,4 @@ instance variables
     street_lamps : seq of StreetLamp := [];
     connections : set of Road := {};
 
-operations
-    
-
 end Road

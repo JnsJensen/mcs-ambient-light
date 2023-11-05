@@ -1,5 +1,8 @@
 class Sensor
 
+values
+    public static range : real = 10.0; -- Range of the sensor in meters
+
 instance variables
     private cars : set of Car := {};
     private road : RoadSegment; -- Reference to the road it is part of
@@ -12,8 +15,9 @@ operations
         road := p_road;
     );
 
-    public Update : () ==> ()
-    Update() == (
+    -- update the sensor with the cars on the road that are in range
+    public Sense : () ==> ()
+    Sense() == (
         let all_cars_on_road = road.GetCars() in
             cars := { car | car in set all_cars_on_road & abs(car.progress - position) < 0.1 }
     );
