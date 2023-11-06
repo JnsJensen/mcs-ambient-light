@@ -14,8 +14,8 @@ operations
     );
 
     -- Returns the distance from the current point to the given point
-    public DistanceTo : Position ==> real
-    DistanceTo(p_to_position) == (
+    public distance_to : Position ==> real
+    distance_to(p_to_position) == (
         MATH`sqrt((x - p_to_position.x)**2 + (y - p_to_position.y)**2)
     );
 

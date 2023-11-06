@@ -1,4 +1,4 @@
-class City
+class City is subclass of GLOBAL
 
 -- The City is a collection of RoadSegments and Intersections
 -- See it as a graph
@@ -8,6 +8,7 @@ class City
 instance variables
     public intersections : set of Intersection; -- graph nodes
     public roads : set of RoadSegment; -- graph edges
+    public graph : map RoadID to (IntersectionID * IntersectionID); -- graph
     -- costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
 
     -- inv EdgeInv(roads, costs);
@@ -17,16 +18,39 @@ instance variables
     -- EdgeInv : set of RoadSegment * seq of real -> bool
     -- EdgeInv(p_roads, p_costs) ==
     --     card p_roads = len p_costs;
+functions
+    private make_road_ids : set of Edge -> map RoadID to Edge
+    make_road_ids(p_edges) ==
+        let make_road_ids_rec = lambda p_edge : set of Edge, p_id : map RoadID to Edge &
+            if p_edges = {} then
+                { |-> }
+            else
+                let edge in set p_edges in
+                    let rest = make_road_ids(p_edges \ {edge}, p_id + 1) in
+                        rest ++ {p_id |-> edge} in
+            make_road_ids_rec(p_edges, 0);
 
 operations
     -- constructor
     -- takes a set of positions that define the intersection nodes
     -- and a tuple of two nat1 that which intersections are connected with an edge
     -- the distance between the intersections is calculated for each edge
-    City : seq of Position * set of (nat1 * nat1) ==> City
+    City : seq of Position * set of Edge ==> City
     City(p_intersection_positions, p_edges) == (
         -- 1. make the roads defined by the edges map
         -- tuple (2, 4) means there is a road between points 2 and 4
+        let road_id_to_edge = make_road_ids(p_edges) in
+            let road_ids = dom road_id_to_edge in
+                roads := {
+                    new RoadSegment(
+                        p_intersection_positions(ip_idx1),
+                        p_intersection_positions(ip_idx2)
+                    )
+                    | mk_(ip_idx1, ip_idx2) in set road_ids
+                }
+            -- for all road_id in set dom road_id_to_edge do
+            --     let mk_(ip_idx1, ip_idx2) = road_id_to_edge(road_id) in
+
 
         -- 2. make the intersections defined by the positions set
         -- passing in the correct roads to each intersection
@@ -34,13 +58,21 @@ operations
         -- we know from the set of tuples which roads to choose
         let roads_per_intersection = [
             {
-                new RoadSegment(p_intersection_positions(ip_idx1), p_intersection_positions(ip_idx2))
-                | mk_(ip_idx1, ip_idx2) in set p_edges & ip_idx1 = ip_idx or ip_idx2 = ip_idx
+                new RoadSegment(
+                    p_intersection_positions(ip_idx1),
+                    p_intersection_positions(ip_idx2)
+                )
+                | mk_(ip_idx1, ip_idx2)
+                in set p_edges & ip_idx1 = ip_idx or ip_idx2 = ip_idx
             }
             | ip_idx in set inds p_intersection_positions
         ] in (
             intersections := {
-                new Intersection(p_intersection_positions(ip_idx), roads_per_intersection(ip_idx))
+                new Intersection(
+                    ip_idx,
+                    p_intersection_positions(ip_idx),
+                    roads_per_intersection(ip_idx)
+                )
                 | ip_idx in set inds p_intersection_positions
             };
             
@@ -53,25 +85,26 @@ operations
     -- add a car to the city
     -- takes a position of an intersection
     -- use intersection to find the a road to start on
-    public AddCar : Car * Position ==> ()
-    AddCar(p_car, p_intersection_position) == (
+    public add_car : Car * Position ==> ()
+    add_car(p_car, p_intersection_position) == (
         -- 1. find the intersection
         -- 2. choose random road from intersection
         -- 3. add car to road
-        let intersection in set intersections be st intersection.position = p_intersection_position in
+        let intersection in set intersections
+        be st intersection.position = p_intersection_position in
             let road in set intersection.connections in
-                road.AddCar(p_car); -- How do I make sure to only do on a single road?
+                road.add_car(p_car);
     );
 
-    public Step : () ==> ()
-    Step() == (
+    public step : () ==> ()
+    step() == (
         -- 1. move the cars
         --    1.1. if car reaches intersection, move it to the next road
         --    1.2. if car reaches an intersection with no new road to move to, remove it
         -- 2. sense cars
         -- 3. turn street lamps on or off
         let cars = dunion {
-            road.GetCars()
+            road.get_cars()
             | road in set roads
         } in
             for all car in set cars do (
@@ -81,9 +114,10 @@ operations
                     direction : int := car.direction;
                 
                 -- update car position
-                let updated_progress = progress + velocity * World`timerRef.step_length in
-                    if abs(updated_progress) >= road.GetLength() then
-                        -- let intersection = 
+                let updated_progress =
+                progress + velocity * World`timerRef.step_length in
+                    if abs(updated_progress) >= road.get_length() then
+                        -- let at_intersection = 
                         skip;
             );
 
@@ -93,7 +127,7 @@ operations
                 | street_lamp in set street_lamps
             } in
                 for all sensor in set sensors do
-                    sensor.Sense();
+                    sensor.sense();
     );
 
 end City

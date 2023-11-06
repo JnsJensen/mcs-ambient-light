@@ -14,12 +14,12 @@ operations
         road := p_road;
     );
 
-    public On : () ==> ()
-    On() ==
+    public on : () ==> ()
+    on() ==
         lamp_state := <ON>;
 
-    public Off : () ==> ()
-    Off() ==
+    public off : () ==> ()
+    off() ==
         lamp_state := <OFF>;
 
 end StreetLamp

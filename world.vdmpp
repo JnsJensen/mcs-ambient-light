@@ -9,8 +9,8 @@ operations
     World() ==
         env := new Environment("inputs/inlines.txt", "inputs/city.txt");
 
-    public Run : () ==> ()
-    Run() == 
-        env.Run();
+    public run : () ==> ()
+    run() == 
+        env.run();
 
 end World

@@ -1,4 +1,4 @@
-class Road
+class Road is subclass of GLOBAL
 
 instance variables
     street_lamps : seq of StreetLamp := [];

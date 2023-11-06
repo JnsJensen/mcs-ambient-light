@@ -11,12 +11,12 @@ values
 operations
 
 public 
-  StepTime: () ==> ()
-  StepTime() == 
+  step_time: () ==> ()
+  step_time() == 
     current_time := current_time + step_length;
 
 public
-  GetTime: () ==> nat 
-  GetTime() == return current_time;
+  get_time: () ==> nat 
+  get_time() == return current_time;
 
 end Timer

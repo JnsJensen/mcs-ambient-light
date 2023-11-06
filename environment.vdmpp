@@ -27,30 +27,30 @@ operations
     );
 
     -- output the outlines
-    public showResult : () ==> ()
-    showResult() ==
+    public show_result : () ==> ()
+    show_result() ==
         def - = io.writeval[seq of outline](outlines) in skip;
     
     -- Function to run through the inlines and generate the outlines
-    public Run : () ==> ()
-    Run() == (
-        while not isFinished() do (
-            HandleInlines();
-            city.Step();
-            World`timerRef.StepTime();
+    public run : () ==> ()
+    run() == (
+        while not is_finished() do (
+            handle_inlines();
+            city.step();
+            World`timerRef.step_time();
         );
     );
 
     -- Function to handle all inlines for the current time
-    private HandleInlines : () ==> ()
-    HandleInlines() == (
+    private handle_inlines : () ==> ()
+    handle_inlines() == (
         if len inlines > 0 then (
-            dcl current_time : Time := World`timerRef.GetTime(),
+            dcl current_time : Time := World`timerRef.get_time(),
                 done : bool := false;
             while not done do (
                 def mk_(position, car, time) = hd inlines in
                     if time <= current_time then (
-                        city.AddCar(car, position);
+                        city.add_car(car, position);
                         inlines := tl inlines;
                         done := len inlines = 0;
                     )
@@ -60,8 +60,9 @@ operations
         else busy := false;
     );
 
-    public isFinished : () ==> bool 
-    isFinished() == 
+    -- I think maybe we should keep simulating until all cars have exited the city
+    public is_finished : () ==> bool 
+    is_finished() == 
         return inlines = [];
 
 end Environment

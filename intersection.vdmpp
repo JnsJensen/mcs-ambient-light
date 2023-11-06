@@ -1,12 +1,14 @@
 class Intersection is subclass of Road
 
 instance variables
+    public ID : IntersectionID;
     public position : Position;
     public connections : set of RoadSegment;
 
 operations
-    public Intersection : Position * set of RoadSegment ==> Intersection
-    Intersection(p_position, p_roads) == (
+    public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
+    Intersection(p_id, p_position, p_roads) == (
+        ID := p_id;
         connections := p_roads;
         position := p_position;
         -- initialise 4 street lamps for an intersection
@@ -14,8 +16,8 @@ operations
 
     -- chooses a random road between available connections
     -- does not choose the road that the car came from
-    public NextRoad : RoadSegment ==> RoadSegment
-    NextRoad(p_from_road) == (
+    public next_road : RoadSegment ==> RoadSegment
+    next_road(p_from_road) == (
         let road in set connections \ {p_from_road} in
             return road
     );

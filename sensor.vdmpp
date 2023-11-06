@@ -16,13 +16,13 @@ operations
     );
 
     -- update the sensor with the cars on the road that are in range
-    public Sense : () ==> ()
-    Sense() == (
-        let all_cars_on_road = road.GetCars() in
+    public sense : () ==> ()
+    sense() == (
+        let all_cars_on_road = road.get_cars() in
             cars := { car | car in set all_cars_on_road & abs(car.progress - position) < 0.1 }
     );
 
-    public GetCars : () ==> set of Car
-    GetCars() == return cars
+    public get_cars : () ==> set of Car
+    get_cars() == return cars
 
 end Sensor

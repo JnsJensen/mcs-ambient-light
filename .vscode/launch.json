@@ -1,12 +1,27 @@
 {
     "configurations": [
         {
+            "name": "Debug Console",
+            "type": "vdm",
+            "request": "launch",
+            "noDebug": false,
+            "defaultName": null
+        },
+        {
             "name": "Lens config: Launch RoadSegment`GetLength",
             "type": "vdm",
             "request": "launch",
             "noDebug": true,
             "defaultName": "RoadSegment",
             "command": "p new RoadSegment(new Position(0, 0), new Position(2, 3)).GetLength()"
+        },
+        {
+            "name": "Launch VDM Debug from ()`",
+            "type": "vdm",
+            "request": "launch",
+            "noDebug": false,
+            "defaultName": "()",
+            "command": "print new ().()"
         }
     ]
 }

@@ -5,5 +5,7 @@ types
     public String = seq of char;
     public Edge = (nat1 * nat1);
     public StreetLampState = <ON> | <OFF>;
+    public RoadID = nat1;
+    public IntersectionID = nat1;
 
 end GLOBAL
