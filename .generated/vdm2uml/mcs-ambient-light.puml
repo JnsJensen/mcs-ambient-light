@@ -1,0 +1,186 @@
+@startuml mcs-ambient-light
+
+hide empty members
+skinparam Shadowing false
+skinparam classAttributeIconSize 0
+skinparam ClassBorderThickness 0.5
+skinparam groupInheritance 5
+skinparam class {
+	BackgroundColor AntiqueWhite
+	ArrowColor Black
+	BorderColor Black
+}
+skinparam defaultTextAlignment center
+
+class Environment
+{
+	-inline : ** <<type>>
+	-outline : ** <<type>>
+	-io : IO
+	-inlines : seq of inline
+	-outlines : seq of outline
+	-city : City
+	-busy : bool
+	+Environment(String, String) : Environment
+	+showResult()
+	+Run()
+	-HandleInlines()
+	+isFinished() : bool
+}
+
+class GLOBAL
+{
+	+Time : nat <<type>>
+	+String : seq of char <<type>>
+	+Edge : nat1 * nat1 <<type>>
+	+StreetLampState : <OFF> | <ON> <<type>>
+}
+
+class Position
+{
+	+x : real
+	+y : real
+	+Position(real, real) : Position
+	+DistanceTo(Position) : real
+}
+
+class World
+{
+	+timerRef : Timer
+	-World() : World
+	+Run()
+}
+
+class Car
+{
+	+velocity : real <<value>>
+	+road : Road
+	+progress : real
+	+direction : int
+	+Car(RoadSegment, real, int) : Car
+}
+
+class City
+{
+	-City(seq of Position, set of *) : City
+	+AddCar(Car, Position)
+	+Step()
+}
+
+class Intersection
+{
+	+position : Position
+	+Intersection(Position, set of RoadSegment) : Intersection
+	+NextRoad(RoadSegment) : RoadSegment
+}
+
+class IO
+{
+	+filedirective : <append> | <start> <<type>>
+	+writeval(@p) : bool <<function>>
+	+fwriteval(seq1 of char, @p, filedirective) : bool <<function>>
+	+freadval(seq1 of char) : bool * [@p] <<function>>
+	+echo(seq of char) : bool
+	+fecho(seq of char, seq of char, [filedirective]) : bool
+	+ferror() : seq of char
+	+print(?)
+	+println(?)
+	+printf(seq of char, seq of ?)
+}
+
+class MATH
+{
+	+sin(real) : real <<function>>
+	+cos(real) : real <<function>>
+	+tan(real) : real <<function>>
+	+cot(real) : real <<function>>
+	+asin(real) : real <<function>>
+	+acos(real) : real <<function>>
+	+atan(real) : real <<function>>
+	+acot(real) : real <<function>>
+	+sqrt(real) : real <<function>>
+	+pi_f() : real <<function>>
+	+srand(int)
+	+rand(int) : int
+	+srand2(int) : int
+	+exp(real) : real <<function>>
+	+ln(real) : real <<function>>
+	+log(real) : real <<function>>
+	+fac(nat) : nat1 <<function>>
+	+pi : real <<value>>
+	-euler : real <<value>>
+}
+
+class VDMUtil
+{
+	+set2seq(set of @T) : seq of @T <<function>>
+	+get_file_pos() : [****] <<function>>
+	+val2seq_of_char(@T) : seq of char <<function>>
+	+seq_of_char2val(seq1 of char) : bool * [@p] <<function>>
+	+classname(@T) : [seq1 of char] <<function>>
+}
+
+class Road
+{
+}
+
+class RoadSegment
+{
+	-st_spacing : real <<value>>
+	-length : real
+	+RoadSegment(Position, Position) : RoadSegment
+	+GetLength() : real
+	+AddCar(Car)
+	+GetCars() : set of Car
+}
+
+class Sensor
+{
+	+range : real <<value>>
+	-road : RoadSegment
+	-position : real
+	+Sensor(RoadSegment, real) : Sensor
+	+Sense()
+	+GetCars() : set of Car
+}
+
+class StreetLamp
+{
+	-on : StreetLampState
+	+sensor : Sensor
+	+road : Road
+	+position : real
+	+StreetLamp(Road, real) : StreetLamp
+	+On()
+	+Off()
+}
+
+class Testing
+{
+	+m : map nat1 to nat1
+	+MapTest(nat1) : nat1
+}
+
+class Timer
+{
+	-current_time : nat
+	+step_length : nat <<value>>
+	+StepTime()
+	+GetTime() : nat
+}
+
+GLOBAL <|-- Environment
+World --> "0..1" Environment : +env
+City --> "*" Intersection : +intersections
+City --> "*" RoadSegment : +roads
+Intersection --> "*" RoadSegment : +connections
+Road <|-- Intersection
+Road --> "(*)" StreetLamp : -street_lamps
+Road --> "*" Road : -connections
+RoadSegment --> "*" Car : -cars
+RoadSegment --> "*" StreetLamp : +street_lamps
+Road <|-- RoadSegment
+Sensor --> "*" Car : -cars
+GLOBAL <|-- StreetLamp
+
+@enduml

@@ -58,9 +58,9 @@ operations
         -- 1. find the intersection
         -- 2. choose random road from intersection
         -- 3. add car to road
-        let intersection = intersection in set intersections and intersection.position = p_intersection_position in
-            let road = road in set intersection.connections in
-                road.AddCar(p_car);
+        let intersection in set intersections be st intersection.position = p_intersection_position in
+            let road in set intersection.connections in
+                road.AddCar(p_car); -- How do I make sure to only do on a single road?
     );
 
     public Step : () ==> ()
@@ -78,16 +78,17 @@ operations
                 dcl velocity : real := car.velocity,
                     road : RoadSegment := car.road,
                     progress : real := car.progress,
-                    direction : Direction := car.direction;
+                    direction : int := car.direction;
                 
                 -- update car position
-                -- let updated_progress = progress + velocity * World`timerRef.stepLength in
-                --     if updated_progress >= road.length then
-                --         let intersection =
+                let updated_progress = progress + velocity * World`timerRef.step_length in
+                    if abs(updated_progress) >= road.GetLength() then
+                        -- let intersection = 
+                        skip;
             );
 
         let street_lamps = dunion {road.street_lamps | road in set roads} in
-            let sensors = dunion {
+            let sensors = {
                 street_lamp.sensor
                 | street_lamp in set street_lamps
             } in
