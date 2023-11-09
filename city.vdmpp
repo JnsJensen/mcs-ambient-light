@@ -14,10 +14,10 @@ instance variables
     -- inv EdgeInv(roads, costs);
 
 -- functions
-    -- -- same amount of costs as roads
-    -- EdgeInv : set of RoadSegment * seq of real -> bool
-    -- EdgeInv(p_roads, p_costs) ==
-    --     card p_roads = len p_costs;
+-- -- same amount of costs as roads
+-- EdgeInv : set of RoadSegment * seq of real -> bool
+-- EdgeInv(p_roads, p_costs) ==
+--     card p_roads = len p_costs;
 functions
     private make_road_ids : set of Edge -> map RoadID to Edge
     make_road_ids(p_edges) ==
@@ -47,7 +47,7 @@ operations
                         p_intersection_positions(ip_idx2)
                     )
                     | mk_(ip_idx1, ip_idx2) in set road_ids
-                }
+                };
             -- for all road_id in set dom road_id_to_edge do
             --     let mk_(ip_idx1, ip_idx2) = road_id_to_edge(road_id) in
 
