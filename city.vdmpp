@@ -9,21 +9,9 @@ instance variables
     public intersections : set of Intersection; -- graph nodes
     public roads : set of RoadSegment; -- graph edges
     public road_to_intersections : RoadGraph; -- graph
-    public intersection_to_roads : IntersectionGraph; -- graph
-    -- costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
+    public intersection_to_roads : IntersectionGraph; -- graph   
 
 functions
-    -- private make_road_ids : set of Edge -> RoadGraph
-    -- make_road_ids(p_edges) ==
-    --     let make_road_ids_rec = lambda p_edges_rec : set of Edge, p_id : RoadID &
-    --         if p_edges_rec = {} then
-    --             { |-> }
-    --         else
-    --             let edge in set p_edges_rec in
-    --                 let rest = make_road_ids_rec(p_edges_rec \ {edge}, p_id + 1) in
-    --                     rest ++ {p_id |-> edge} in
-    --         make_road_ids_rec(p_edges, 0);
-
     private make_road_graph : set of Edge -> RoadGraph
     make_road_graph(p_edges) ==
         make_road_graph_rec(p_edges, 0);
@@ -36,7 +24,6 @@ functions
             let edge in set p_edges_rec in
                 let rest = make_road_graph_rec(p_edges_rec \ {edge}, p_id + 1) in
                     rest ++ {p_id |-> edge}
-                    -- let mk_(intersection1, intersection2) = edge in
     measure card p_edges_rec;
 
     -- infer map from Intersections to Roads from map from Roads to Intersections
@@ -125,6 +112,7 @@ operations
             | road in set roads
         } in
             for all car in set cars do (
+                -- unpacking car for readability
                 dcl velocity : real := car.velocity,
                     road : RoadSegment := car.road,
                     progress : real := car.progress,
@@ -133,9 +121,24 @@ operations
                 -- update car position
                 let updated_progress =
                 progress + velocity * World`timerRef.step_length in
-                    if abs(updated_progress) >= road.get_length() then
-                        -- let at_intersection = 
-                        skip;
+                    if abs(updated_progress) >= road.get_length() then (
+                        -- todo: something something depending on which intersection
+                        --       1 or 2, the direction of the car should correspond
+                        --       going from 2 -> 1 should be -1
+                        --       going from 1 -> 2 should be 1
+                        let next_intersection_id = (if direction = 1 then
+                            road_to_intersections(road.ID).intersection2
+                        else
+                            road_to_intersections(road.ID).intersection1) in
+                            -- question: what if there is no next road?
+                            let next_road_id in set intersection_to_roads(next_intersection_id) \ {road.ID} in
+                                let next_road in set roads be st next_road.ID = next_road_id in (
+                                    road.remove_car(car); -- remove from previous road
+                                    next_road.add_car(car); -- add to next road
+                                    car.progress := updated_progress - direction * road.get_length();
+                                );
+                    )
+                    else car.progress := updated_progress;
             );
 
         let street_lamps = dunion {road.street_lamps | road in set roads} in

@@ -35,6 +35,10 @@ operations
     public add_car : Car ==> ()
     add_car(p_car) ==
         cars := cars union {p_car};
+    
+    public remove_car : Car ==> ()
+    remove_car(p_car) ==
+        cars := cars \ {p_car};
 
     public get_cars : () ==> set of Car
     get_cars() ==
