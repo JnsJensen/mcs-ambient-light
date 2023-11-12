@@ -8,78 +8,82 @@ class City is subclass of GLOBAL
 instance variables
     public intersections : set of Intersection; -- graph nodes
     public roads : set of RoadSegment; -- graph edges
-    public graph : map RoadID to (IntersectionID * IntersectionID); -- graph
+    public road_to_intersections : RoadGraph; -- graph
+    public intersection_to_roads : IntersectionGraph; -- graph
     -- costs : seq of real; -- something something adjacency matrix with dsitances as costs.    
 
-    -- inv EdgeInv(roads, costs);
-
--- functions
--- -- same amount of costs as roads
--- EdgeInv : set of RoadSegment * seq of real -> bool
--- EdgeInv(p_roads, p_costs) ==
---     card p_roads = len p_costs;
 functions
-    private make_road_ids : set of Edge -> map RoadID to Edge
-    make_road_ids(p_edges) ==
-        let make_road_ids_rec = lambda p_edge : set of Edge, p_id : map RoadID to Edge &
-            if p_edges = {} then
-                { |-> }
-            else
-                let edge in set p_edges in
-                    let rest = make_road_ids(p_edges \ {edge}, p_id + 1) in
-                        rest ++ {p_id |-> edge} in
-            make_road_ids_rec(p_edges, 0);
+    -- private make_road_ids : set of Edge -> RoadGraph
+    -- make_road_ids(p_edges) ==
+    --     let make_road_ids_rec = lambda p_edges_rec : set of Edge, p_id : RoadID &
+    --         if p_edges_rec = {} then
+    --             { |-> }
+    --         else
+    --             let edge in set p_edges_rec in
+    --                 let rest = make_road_ids_rec(p_edges_rec \ {edge}, p_id + 1) in
+    --                     rest ++ {p_id |-> edge} in
+    --         make_road_ids_rec(p_edges, 0);
+
+    public make_road_graph : set of Edge -> RoadGraph
+    make_road_graph(p_edges) ==
+        make_road_graph_rec(p_edges, 0);
+
+    private make_road_graph_rec : set of Edge * RoadID -> RoadGraph
+    make_road_graph_rec(p_edges_rec, p_id) ==
+        if p_edges_rec = {} then
+            { |-> }
+        else
+            let edge in set p_edges_rec in
+                let rest = make_road_graph_rec(p_edges_rec \ {edge}, p_id + 1) in
+                    rest ++ {p_id |-> edge}
+                    -- let mk_(intersection1, intersection2) = edge in
+    measure card p_edges_rec;
+
+    -- infer map from Intersections to Roads from map from Roads to Intersections
+    public make_intersection_graph : set of IntersectionID * RoadGraph -> IntersectionGraph
+    make_intersection_graph(p_intersection_ids, p_road_to_intersections) ==
+        {
+            intersection_id |-> {
+                road_id
+                | road_id in set dom p_road_to_intersections &
+                    let edge = p_road_to_intersections(road_id) in
+                        edge.intersection1 = intersection_id or edge.intersection2 = intersection_id
+            }
+            | intersection_id in set p_intersection_ids
+        };
 
 operations
     -- constructor
-    -- takes a set of positions that define the intersection nodes
-    -- and a tuple of two nat1 that which intersections are connected with an edge
-    -- the distance between the intersections is calculated for each edge
+    -- takes a sequence of positions, that define the placement of intersections
+    -- along with the index for the each position as the intersection id
+    -- takes a set of edges which describes which
+    -- intersection ids (indices in the sequence) are connected
     City : seq of Position * set of Edge ==> City
     City(p_intersection_positions, p_edges) == (
-        -- 1. make the roads defined by the edges map
-        -- tuple (2, 4) means there is a road between points 2 and 4
-        let road_id_to_edge = make_road_ids(p_edges) in
-            let road_ids = dom road_id_to_edge in
-                roads := {
-                    new RoadSegment(
-                        p_intersection_positions(ip_idx1),
-                        p_intersection_positions(ip_idx2)
-                    )
-                    | mk_(ip_idx1, ip_idx2) in set road_ids
-                };
-            -- for all road_id in set dom road_id_to_edge do
-            --     let mk_(ip_idx1, ip_idx2) = road_id_to_edge(road_id) in
+        road_to_intersections := make_road_graph(p_edges);
 
+        roads := {
+            new RoadSegment(
+                road_id,
+                p_intersection_positions(road_to_intersections(road_id).intersection1),
+                p_intersection_positions(road_to_intersections(road_id).intersection2)
+            )
+            | road_id in set dom road_to_intersections
+        };
 
-        -- 2. make the intersections defined by the positions set
-        -- passing in the correct roads to each intersection
-        -- both roads that start and end at the intersection
-        -- we know from the set of tuples which roads to choose
-        let roads_per_intersection = [
-            {
-                new RoadSegment(
-                    p_intersection_positions(ip_idx1),
-                    p_intersection_positions(ip_idx2)
-                )
-                | mk_(ip_idx1, ip_idx2)
-                in set p_edges & ip_idx1 = ip_idx or ip_idx2 = ip_idx
-            }
-            | ip_idx in set inds p_intersection_positions
-        ] in (
-            intersections := {
-                new Intersection(
-                    ip_idx,
-                    p_intersection_positions(ip_idx),
-                    roads_per_intersection(ip_idx)
-                )
-                | ip_idx in set inds p_intersection_positions
-            };
-            
-            -- am I guaranteed to get only unique roads here?
-            -- like how does it compare the roads, and filter out all duplicates?
-            roads := dunion elems roads_per_intersection;
-        );
+        intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
+
+        intersections := {
+            new Intersection(
+                intersection_id,
+                p_intersection_positions(intersection_id),
+                {
+                    road
+                    | road in set roads & road.ID in set intersection_to_roads(intersection_id)
+                }
+            )
+            | intersection_id in set dom intersection_to_roads
+        };
     );
 
     -- add a car to the city

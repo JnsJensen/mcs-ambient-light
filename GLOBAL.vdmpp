@@ -3,9 +3,26 @@ class GLOBAL
 types
     public Time = nat;
     public String = seq of char;
-    public Edge = (nat1 * nat1);
     public StreetLampState = <ON> | <OFF>;
     public RoadID = nat1;
     public IntersectionID = nat1;
+    public Edge :: intersection1 : IntersectionID
+                   intersection2 : IntersectionID;
+    public RoadGraph = map RoadID to Edge;
+    public IntersectionGraph = map IntersectionID to set of RoadID;
+
+functions
+    -- -- Y combinator
+    -- public Y : ('a -> 'a) -> 'a
+    -- Y(f) == f(lambda x : 'a & Y(f)(x));
+
+    -- -- Recursive Lambda Expression Example
+    -- RecursiveLambda : [Type] -> [Type]
+    -- RecursiveLambda () = lambda arg : [Type] & 
+    --                     if base_case_condition then 
+    --                         base_case_result 
+    --                     else 
+    --                         RecursiveLambda(modified_arg);
+
 
 end GLOBAL
