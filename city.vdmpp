@@ -24,7 +24,7 @@ functions
     --                     rest ++ {p_id |-> edge} in
     --         make_road_ids_rec(p_edges, 0);
 
-    public make_road_graph : set of Edge -> RoadGraph
+    private make_road_graph : set of Edge -> RoadGraph
     make_road_graph(p_edges) ==
         make_road_graph_rec(p_edges, 0);
 
@@ -40,7 +40,7 @@ functions
     measure card p_edges_rec;
 
     -- infer map from Intersections to Roads from map from Roads to Intersections
-    public make_intersection_graph : set of IntersectionID * RoadGraph -> IntersectionGraph
+    private make_intersection_graph : set of IntersectionID * RoadGraph -> IntersectionGraph
     make_intersection_graph(p_intersection_ids, p_road_to_intersections) ==
         {
             intersection_id |-> {
@@ -51,29 +51,25 @@ functions
             }
             | intersection_id in set p_intersection_ids
         };
+    
 
 operations
-    -- constructor
-    -- takes a sequence of positions, that define the placement of intersections
-    -- along with the index for the each position as the intersection id
-    -- takes a set of edges which describes which
-    -- intersection ids (indices in the sequence) are connected
-    City : seq of Position * set of Edge ==> City
-    City(p_intersection_positions, p_edges) == (
-        road_to_intersections := make_road_graph(p_edges);
-
-        roads := {
+    -- make roads from RoadGraph
+    private make_roads : RoadGraph * seq of Position ==> set of RoadSegment
+    make_roads(p_road_to_intersections, p_intersection_positions) ==
+        return {
             new RoadSegment(
                 road_id,
-                p_intersection_positions(road_to_intersections(road_id).intersection1),
-                p_intersection_positions(road_to_intersections(road_id).intersection2)
+                p_intersection_positions(p_road_to_intersections(road_id).intersection1),
+                p_intersection_positions(p_road_to_intersections(road_id).intersection2)
             )
-            | road_id in set dom road_to_intersections
+            | road_id in set dom p_road_to_intersections
         };
-
-        intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
-
-        intersections := {
+    
+    -- make intersections from IntersectionGraph
+    private make_intersections : seq of Position ==> set of Intersection
+    make_intersections(p_intersection_positions) ==
+        return {
             new Intersection(
                 intersection_id,
                 p_intersection_positions(intersection_id),
@@ -84,6 +80,23 @@ operations
             )
             | intersection_id in set dom intersection_to_roads
         };
+
+    -- constructor
+    -- takes a sequence of positions, that define the placement of intersections
+    -- along with the index for the each position as the intersection id
+    -- takes a set of edges which describes which
+    -- intersection ids (indices in the sequence) are connected
+    City : seq of Position * set of Edge ==> City
+    City(p_intersection_positions, p_edges) == (
+        -- make the graph representation of the city with maps
+        road_to_intersections := make_road_graph(p_edges);
+        intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
+        
+        -- instantiate the roads and intersections
+        -- question: convention
+        --           should these operations set the instance variables themselves?
+        roads := make_roads(road_to_intersections, p_intersection_positions);
+        intersections := make_intersections(p_intersection_positions);
     );
 
     -- add a car to the city
