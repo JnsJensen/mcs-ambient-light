@@ -1,7 +1,7 @@
 class Environment is subclass of GLOBAL
 
 types
-    private inline = Position * Car * Time;
+    private inline = Time * Car;
     private outline = set of (Position * Car) * set of StreetLamp * Time;
 
 instance variables
@@ -15,15 +15,22 @@ instance variables
     private busy : bool := true;
 
 operations
+    -- debug: [io]
+    --        Seems that `success` is false,
+    --        I don't know where to start debugging
     public Environment : String * String ==> Environment
     Environment(p_inline_fname, p_city_fname) == (
-        def mk_(-,input) = io.freadval[seq of inline](p_inline_fname) 
-        in
-            inlines := input;
+        def mk_(success, input) = io.freadval[seq of inline](p_inline_fname) in
+            if success then
+                inlines := input
+            else
+                io.echo("Error reading inlines file\n");
         
-        def mk_(-,input) = io.freadval[City](p_city_fname)
-        in
-            city := input;
+        def mk_(success, input) = io.freadval[City](p_city_fname) in
+            if success then
+                city := input
+            else
+                io.echo("Error reading city file\n");
     );
 
     -- output the outlines
@@ -48,9 +55,9 @@ operations
             dcl current_time : Time := World`timerRef.get_time(),
                 done : bool := false;
             while not done do (
-                def mk_(position, car, time) = hd inlines in
+                def mk_(time, car) = hd inlines in
                     if time <= current_time then (
-                        city.add_car(car, position);
+                        city.add_car(car);
                         inlines := tl inlines;
                         done := len inlines = 0;
                     )

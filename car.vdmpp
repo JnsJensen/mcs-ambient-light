@@ -1,4 +1,4 @@
-class Car
+class Car is subclass of GLOBAL
 
 values
     -- defines speed along a road
@@ -7,7 +7,7 @@ values
 
 instance variables
     -- reference to the road the car is driving on
-    private road : RoadSegment;
+    private road_id : RoadID;
 
     -- the progress of the car along the road
     -- a real number between 0 and the length of the road
@@ -32,9 +32,9 @@ functions
         p_progress + p_direction * p_velocity * p_dt;
 
 operations
-    public Car : RoadSegment * real * int ==> Car
-    Car(p_road, p_progress, p_direction) == (
-        road := p_road;
+    public Car : RoadID * real * int ==> Car
+    Car(p_road_id, p_progress, p_direction) == (
+        road_id := p_road_id;
         progress := p_progress;
         direction := p_direction;
     );
@@ -45,8 +45,8 @@ operations
     public set_progress : real ==> ()
     set_progress(p_progress) == progress := p_progress;
 
-    pure public get_road : () ==> RoadSegment
-    get_road() == return road;
+    pure public get_road_id : () ==> RoadID
+    get_road_id() == return road_id;
 
     public drive : real ==> real
     drive(dt) == (

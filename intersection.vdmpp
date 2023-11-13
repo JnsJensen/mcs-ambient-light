@@ -1,21 +1,21 @@
 class Intersection is subclass of Road
 
 instance variables
-    private ID : IntersectionID;
+    private id : IntersectionID;
     private position : Position;
     private connections : set of RoadSegment;
 
 operations
     public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
     Intersection(p_id, p_position, p_roads) == (
-        ID := p_id;
+        id := p_id;
         connections := p_roads;
         position := p_position;
         -- initialise 4 street lamps for an intersection
     );
 
-    pure public get_ID : () ==> IntersectionID
-    get_ID() == return ID;
+    pure public get_id : () ==> IntersectionID
+    get_id() == return id;
 
     pure public get_position : () ==> Position
     get_position() == return position;

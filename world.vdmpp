@@ -5,12 +5,10 @@ instance variables
     public static timerRef : Timer := new Timer();
 
 operations
-    World : () ==> World
-    World() ==
-        env := new Environment("inputs/inlines.txt", "inputs/city.txt");
+    public World : () ==> World
+    World() == env := new Environment("inputs/inlines.vdmsl", "inputs/city.vdmsl");
 
     public run : () ==> ()
-    run() == 
-        env.run();
+    run() == env.run();
 
 end World
