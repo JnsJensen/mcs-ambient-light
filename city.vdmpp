@@ -148,7 +148,7 @@ operations
                 );
             );
 
-        -- 2. step all sensors
+        -- 2. step all sensors and street lamps (3)
         let street_lamps = dunion {road.get_street_lamps() | road in set roads} in (
             let sensors = {
                 street_lamp.get_sensor()
