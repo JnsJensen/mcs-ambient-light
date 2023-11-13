@@ -27,12 +27,15 @@ class GLOBAL
 class Car
 {
 	+velocity : real <<value>>
-	+road : Road
+	-road : RoadSegment
 	-progress : real
-	+direction : int
+	-direction : int
+	-new_progress(real, real, real, int) : real <<function>>
 	+Car(RoadSegment, real, int) : Car
-	+getProgress() : real
-	+setProgress(real)
+	+get_progress() : real
+	+set_progress(real)
+	+get_road() : RoadSegment
+	+drive(real) : real
 }
 
 class City
@@ -51,9 +54,12 @@ class City
 
 class Intersection
 {
-	+ID : IntersectionID
+	-ID : IntersectionID
 	+Intersection(IntersectionID, Position, set of RoadSegment) : Intersection
-	+next_road(RoadSegment) : RoadSegment
+	+get_ID() : IntersectionID
+	+get_position() : Position
+	+get_connections() : set of RoadSegment
+	+next_road(RoadSegment) : [RoadSegment]
 }
 
 class Road
@@ -63,13 +69,15 @@ class Road
 class RoadSegment
 {
 	-st_spacing : real <<value>>
-	+ID : RoadID
+	-ID : RoadID
 	-length : real
 	+RoadSegment(RoadID, Position, Position) : RoadSegment
+	+get_ID() : RoadID
 	+get_length() : real
+	+get_cars() : set of Car
+	+get_street_lamps() : set of StreetLamp
 	+add_car(Car)
 	+remove_car(Car)
-	+get_cars() : set of Car
 }
 
 class Sensor
@@ -85,20 +93,22 @@ class Sensor
 class StreetLamp
 {
 	-lamp_state : StreetLampState
-	+sensor : Sensor
-	+road : Road
-	+position : real
+	-sensor : Sensor
+	-road : Road
+	-position : real
 	+StreetLamp(Road, real) : StreetLamp
 	+on()
 	+off()
+	+get_sensor() : Sensor
 }
 
 class Timer
 {
-	-current_time : nat
-	+step_length : nat <<value>>
+	-current_time : real
+	-step_length : real <<value>>
 	+step_time()
-	+get_time() : nat
+	+get_time() : real
+	+get_step_length() : real
 }
 
 class Environment
@@ -119,8 +129,8 @@ class Environment
 
 class Position
 {
-	+x : real
-	+y : real
+	-x : real
+	-y : real
 	+Position(real, real) : Position
 	+distance_to(Position) : real
 }
@@ -131,20 +141,18 @@ class World
 	+run()
 }
 
-StreetLamp --> Position : +position
-Sensor --> Position : +position
-Intersection --> Position : +position
+Intersection --> Position : -position
 World --> Timer : +timerRef
 City --> "*" Intersection : +intersections
 City --> "*" RoadSegment : +roads
 GLOBAL <|-- City
-Intersection --> "*" RoadSegment : +connections
+Intersection --> "*" RoadSegment : -connections
 Road <|-- Intersection
 Road --> "(*)" StreetLamp : -street_lamps
 Road --> "*" Road : -connections
 GLOBAL <|-- Road
 RoadSegment --> "*" Car : -cars
-RoadSegment --> "*" StreetLamp : +street_lamps
+RoadSegment --> "*" StreetLamp : -street_lamps
 Road <|-- RoadSegment
 Sensor --> "*" Car : -cars
 GLOBAL <|-- StreetLamp

@@ -108,6 +108,8 @@ operations
         --    1.2. if car reaches an intersection with no new road to move to, remove it
         -- 2. sense cars
         -- 3. turn street lamps on or off
+
+        -- 1. step all cars
         let cars = dunion {
             road.get_cars()
             | road in set roads
@@ -146,13 +148,26 @@ operations
                 );
             );
 
-        let street_lamps = dunion {road.get_street_lamps() | road in set roads} in
+        -- 2. step all sensors
+        let street_lamps = dunion {road.get_street_lamps() | road in set roads} in (
             let sensors = {
                 street_lamp.get_sensor()
                 | street_lamp in set street_lamps
             } in
                 for all sensor in set sensors do
                     sensor.sense();
+        
+            -- 3. street lamp logic
+            -- simple: if the sensor on the streetlamp detects at least one car, turn it on
+            --         else, turn it off
+            -- complex: if there are cars within a certain radius of the streetlamp, turn it on
+            --          else, turn it off
+            for all street_lamp in set street_lamps do
+                if street_lamp.get_sensor().get_cars() <> {} then
+                    street_lamp.on()
+                else
+                    street_lamp.off();
+        );
     );
 
 end City
