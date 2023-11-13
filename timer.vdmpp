@@ -1,7 +1,7 @@
 class Timer 
 
 instance variables
-    current_time : real := 0;
+    private current_time : real := 0;
 
 values 
     private step_length : real = 0.1;

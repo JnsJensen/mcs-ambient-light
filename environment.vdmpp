@@ -1,18 +1,18 @@
 class Environment is subclass of GLOBAL
 
 types
-    inline = Position * Car * Time;
-    outline = set of (Position * Car) * set of StreetLamp * Time;
+    private inline = Position * Car * Time;
+    private outline = set of (Position * Car) * set of StreetLamp * Time;
 
 instance variables
-    io : IO := new IO();
+    private io : IO := new IO();
 
-    inlines : seq of inline := [];
-    outlines : seq of outline := [];
+    private inlines : seq of inline := [];
+    private outlines : seq of outline := [];
 
-    city : City;
+    private city : City;
     
-    busy : bool := true;
+    private busy : bool := true;
 
 operations
     public Environment : String * String ==> Environment

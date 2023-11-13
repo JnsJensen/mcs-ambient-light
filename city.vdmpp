@@ -6,10 +6,10 @@ class City is subclass of GLOBAL
 --      Each road is an edge in the graph
 
 instance variables
-    public intersections : set of Intersection; -- graph nodes
-    public roads : set of RoadSegment; -- graph edges
-    public road_to_intersections : RoadGraph; -- graph
-    public intersection_to_roads : IntersectionGraph; -- graph   
+    private intersections : set of Intersection; -- graph nodes
+    private roads : set of RoadSegment; -- graph edges
+    private road_to_intersections : RoadGraph; -- graph
+    private intersection_to_roads : IntersectionGraph; -- graph   
 
 functions
     private make_road_graph : set of Edge -> RoadGraph

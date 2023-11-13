@@ -3,7 +3,7 @@ class Car
 values
     -- defines speed along a road
     -- negative speed means driving in the opposite direction
-    public velocity : real = 10; -- m/s
+    private velocity : real = 10; -- m/s
 
 instance variables
     -- reference to the road the car is driving on

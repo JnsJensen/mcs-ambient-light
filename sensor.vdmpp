@@ -1,7 +1,7 @@
 class Sensor
 
 values
-    public static range : real = 10.0; -- Range of the sensor in meters
+    private static range : real = 10.0; -- Range of the sensor in meters
 
 instance variables
     private cars : set of Car := {};
