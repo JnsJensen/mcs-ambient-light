@@ -1,9 +1,9 @@
 class Intersection is subclass of Road
 
 instance variables
-    public ID : IntersectionID;
-    public position : Position;
-    public connections : set of RoadSegment;
+    private ID : IntersectionID;
+    private position : Position;
+    private connections : set of RoadSegment;
 
 operations
     public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
@@ -14,13 +14,24 @@ operations
         -- initialise 4 street lamps for an intersection
     );
 
+    pure public get_ID : () ==> IntersectionID
+    get_ID() == return ID;
+
+    pure public get_position : () ==> Position
+    get_position() == return position;
+
+    pure public get_connections : () ==> set of RoadSegment
+    get_connections() == return connections;
+
     -- chooses a random road between available connections
     -- does not choose the road that the car came from
-    public next_road : RoadSegment ==> RoadSegment
+    public next_road : RoadSegment ==> [RoadSegment]
     next_road(p_from_road) == (
-        -- question: what happens if set connections \ {p_from_road} is empty?
-        let road in set connections \ {p_from_road} in
-            return road
+        let available_connections = connections \ {p_from_road} in
+            if card available_connections <> 0 then
+                let road in set available_connections in
+                    return road
+            else return nil
     );
 
 end Intersection

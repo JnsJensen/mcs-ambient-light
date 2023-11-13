@@ -6,10 +6,10 @@ values
 instance variables
     -- public start_position : Position;
     -- public end_position : Position;
-    public ID : RoadID;
+    private ID : RoadID;
     private cars : set of Car := {};
     private length : real;
-    public street_lamps : set of StreetLamp;
+    private street_lamps : set of StreetLamp;
 
 operations
     public RoadSegment : RoadID * Position * Position ==> RoadSegment
@@ -28,20 +28,23 @@ operations
             }
     );
 
-    public get_length : () ==> real
-    get_length() ==
-        return length;
+    pure public get_ID : () ==> RoadID
+    get_ID() == return ID;
+
+    pure public get_length : () ==> real
+    get_length() == return length;
+
+    pure public get_cars : () ==> set of Car
+    get_cars() == return cars;
+
+    pure public get_street_lamps : () ==> set of StreetLamp
+    get_street_lamps() == return street_lamps;
 
     public add_car : Car ==> ()
-    add_car(p_car) ==
-        cars := cars union {p_car};
+    add_car(p_car) == cars := cars union {p_car};
     
     public remove_car : Car ==> ()
-    remove_car(p_car) ==
-        cars := cars \ {p_car};
+    remove_car(p_car) == cars := cars \ {p_car};
 
-    public get_cars : () ==> set of Car
-    get_cars() ==
-        return cars;
 
 end RoadSegment

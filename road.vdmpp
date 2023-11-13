@@ -1,7 +1,7 @@
 class Road is subclass of GLOBAL
 
 instance variables
-    street_lamps : seq of StreetLamp := [];
-    connections : set of Road := {};
+    private street_lamps : seq of StreetLamp := [];
+    private connections : set of Road := {};
 
 end Road

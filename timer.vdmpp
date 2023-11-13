@@ -1,22 +1,19 @@
 class Timer 
 
 instance variables
-
-  current_time : nat := 0;
+    current_time : real := 0;
 
 values 
-
-  public step_length : nat = 100;
+    private step_length : real = 0.1;
 
 operations
+    public step_time: () ==> ()
+    step_time() == current_time := current_time + step_length;
 
-public 
-  step_time: () ==> ()
-  step_time() == 
-    current_time := current_time + step_length;
+    public get_time: () ==> real 
+    get_time() == return current_time;
 
-public
-  get_time: () ==> nat 
-  get_time() == return current_time;
+    pure public get_step_length: () ==> real
+    get_step_length() == return step_length;
 
 end Timer

@@ -3,8 +3,8 @@ class Position
 -- coordinates interpreted at a meter scale
 
 instance variables
-    public x : real;
-    public y : real;
+    private x : real;
+    private y : real;
 
 operations
     public Position : real * real ==> Position
