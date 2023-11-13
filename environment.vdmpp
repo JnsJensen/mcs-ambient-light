@@ -2,7 +2,7 @@ class Environment is subclass of GLOBAL
 
 types
     private inline = Time * Car;
-    private outline = set of (Position * Car) * set of StreetLamp * Time;
+    private outline = Time * set of Car * set of StreetLamp;
 
 instance variables
     private io : IO := new IO();
