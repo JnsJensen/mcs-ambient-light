@@ -14,7 +14,7 @@ instance variables
 functions
     private make_road_graph : set of Edge -> RoadGraph
     make_road_graph(p_edges) ==
-        make_road_graph_rec(p_edges, 0);
+        make_road_graph_rec(p_edges, 1);
 
     private make_road_graph_rec : set of Edge * RoadID -> RoadGraph
     make_road_graph_rec(p_edges_rec, p_id) ==
@@ -38,7 +38,15 @@ functions
             }
             | intersection_id in set p_intersection_ids
         };
-    
+
+    -- returns the road of a specific road id
+    -- question: [static]
+    --           I want this static function,
+    --           such that any class can call it
+    -- static public lookup_road_id : RoadID -> RoadSegment
+    -- lookup_road_id(p_road_id) ==
+    --     let road in set roads be st road.get_id() = p_road_id in
+    --         road;
 
 operations
     -- note: make function
@@ -75,7 +83,7 @@ operations
     -- along with the index for the each position as the intersection id
     -- takes a set of edges which describes which
     -- intersection ids (indices in the sequence) are connected
-    City : seq of Position * set of Edge ==> City
+    public City : seq of Position * set of Edge ==> City
     City(p_intersection_positions, p_edges) == (
         -- make the graph representation of the city with maps
         road_to_intersections := make_road_graph(p_edges);
@@ -174,5 +182,21 @@ operations
                     street_lamp.off();
         );
     );
+
+    -- public getter for all cars
+    public get_cars : () ==> set of Car
+    get_cars() ==
+        return dunion {
+            road.get_cars()
+            | road in set roads
+        };
+    
+    -- public getter for all street lamps
+    public get_street_lamps : () ==> set of StreetLamp
+    get_street_lamps() ==
+        return dunion {
+            road.get_street_lamps()
+            | road in set roads
+        };
 
 end City

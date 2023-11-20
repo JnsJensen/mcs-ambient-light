@@ -1,4 +1,4 @@
-class World
+class World is subclass of GLOBAL
 
 instance variables
     public static env : [Environment] := nil;

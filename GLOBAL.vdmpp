@@ -1,7 +1,7 @@
 class GLOBAL
 
 types
-    public Time = nat;
+    public Time = real;
     public String = seq of char;
     public StreetLampState = <ON> | <OFF>;
     public RoadID = nat1;

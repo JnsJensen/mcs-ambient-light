@@ -1,4 +1,4 @@
-class Sensor
+class Sensor is subclass of GLOBAL
 
 values
     private static range : real = 10.0; -- Range of the sensor in meters
@@ -6,6 +6,7 @@ values
 instance variables
     private cars : set of Car := {};
     private road : RoadSegment; -- Reference to the road it is part of
+    private road_id : RoadID;
     private position : real; -- position along the road in meters
 
 operations
@@ -13,6 +14,7 @@ operations
     Sensor(p_road, p_position) == (
         position := p_position;
         road := p_road;
+        road_id := p_road.get_id();
     );
 
     -- update the sensor with the cars on the road that are in range

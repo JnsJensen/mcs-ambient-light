@@ -8,35 +8,90 @@ instance variables
     private io : IO := new IO();
 
     private inlines : seq of inline := [];
+    -- private inlines : seq of inline := [
+    --     mk_(0.0, new Car(1, 0.0,  1)),
+    --     mk_(1.0, new Car(2, 0.0,  1)),
+    --     mk_(2.0, new Car(3, 0.0,  1)),
+    --     mk_(3.0, new Car(4, 0.0,  1)),
+    --     mk_(4.0, new Car(5, 0.0, -1))
+    -- ];
     private outlines : seq of outline := [];
 
     private city : City;
+    -- public static city : City := new City(
+    --     [
+    --         new Position(   0.0,    0.0),
+    --         new Position(   0.0,   50.0),
+    --         new Position( 100.0,   50.0),
+    --         new Position( 100.0,    0.0),
+    --         new Position(-170.0, -170.0)
+    --     ],
+    --     {
+    --         mk_Edge(1, 2),
+    --         mk_Edge(2, 3),
+    --         mk_Edge(3, 4),
+    --         mk_Edge(4, 1),
+    --         mk_Edge(1, 5)
+    --     }
+    -- );
     
     private busy : bool := true;
 
 operations
     -- debug: [io]
-    --        Seems that `success` is false,
+    --        Seems that `success` is always false,
     --        I don't know where to start debugging
     public Environment : String * String ==> Environment
     Environment(p_inline_fname, p_city_fname) == (
-        def mk_(success, input) = io.freadval[seq of inline](p_inline_fname) in
-            if success then
-                inlines := input
-            else
-                io.echo("Error reading inlines file\n");
+        -- let f1 = io.echo("Inline file: " ^ p_inline_fname ^ "\n") in
+        -- let f2 = io.echo("City file: " ^ p_city_fname ^ "\n") in
+        -- def mk_(success, input) = io.freadval[seq of inline](p_inline_fname) in
+        --     if success then
+        --         inlines := input
+        --     else
+        --         io.echo("Error reading inlines file\n");
         
-        def mk_(success, input) = io.freadval[City](p_city_fname) in
-            if success then
-                city := input
-            else
-                io.echo("Error reading city file\n");
+        -- def mk_(success, input) = io.freadval[City](p_city_fname) in
+        --     if success then
+        --         city := input
+        --     else
+        --         io.echo("Error reading city file\n");
+        inlines := [
+            mk_(0.0, new Car(1, 0.0,  1)),
+            mk_(1.0, new Car(2, 0.0,  1)),
+            mk_(2.0, new Car(3, 0.0,  1)),
+            mk_(3.0, new Car(4, 0.0,  1)),
+            mk_(4.0, new Car(5, 0.0, -1))
+        ];
+        city := new City(
+            [
+                new Position(   0.0,    0.0),
+                new Position(   0.0,   50.0),
+                new Position( 100.0,   50.0),
+                new Position( 100.0,    0.0),
+                new Position(-170.0, -170.0)
+            ],
+            {
+                mk_Edge(1, 2),
+                mk_Edge(2, 3),
+                mk_Edge(3, 4),
+                mk_Edge(4, 1),
+                mk_Edge(1, 5)
+            }
+        );
     );
 
     -- output the outlines
     public show_result : () ==> ()
     show_result() ==
         def - = io.writeval[seq of outline](outlines) in skip;
+    
+    -- write outlines to file
+    -- question: [io]
+    --           How to write to file?
+    -- public write_result : String ==> ()
+    -- write_result(p_fname) ==
+    --     def - = io.fwriteval[seq of outline](p_fname, outlines, io.) in skip;
     
     -- Function to run through the inlines and generate the outlines
     public run : () ==> ()
@@ -45,7 +100,9 @@ operations
             handle_inlines();
             city.step();
             World`timerRef.step_time();
+            make_outline();
         );
+        show_result();
     );
 
     -- Function to handle all inlines for the current time
@@ -67,9 +124,16 @@ operations
         else busy := false;
     );
 
+    -- Function to make an outline for the current time
+    private make_outline : () ==> ()
+    make_outline() == (
+        let mk_(time, cars, lamps) = mk_(World`timerRef.get_time(), city.get_cars(), city.get_street_lamps()) in
+            outlines := outlines ^ [mk_(time, cars, lamps)];
+    );
+
     -- I think maybe we should keep simulating until all cars have exited the city
     public is_finished : () ==> bool 
     is_finished() == 
-        return inlines = [];
+        return not busy;
 
 end Environment
