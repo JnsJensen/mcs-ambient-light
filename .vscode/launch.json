@@ -8,12 +8,12 @@
             "defaultName": null
         },
         {
-            "name": "Lens config: Launch Testing`mult",
+            "name": "Lens config: Launch World`run",
             "type": "vdm",
             "request": "launch",
             "noDebug": true,
-            "defaultName": "Testing",
-            "command": "p mult(1, 1.1)"
+            "defaultName": "World",
+            "command": "p new World().run()"
         },
         {
             "name": "Launch VDM Debug from ()`",

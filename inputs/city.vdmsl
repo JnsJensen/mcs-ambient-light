@@ -1,13 +1,13 @@
 new City(
     [
-        new Position(   0.0,    0.0),
+        new Position(   0.0,    0.0), -- intersection 1
         new Position(   0.0,   50.0),
         new Position( 100.0,   50.0),
         new Position( 100.0,    0.0),
         new Position(-170.0, -170.0)
     ],
     {
-        mk_Edge(1, 2),
+        mk_Edge(1, 2), -- road from intersection 1 to intersection 2
         mk_Edge(2, 3),
         mk_Edge(3, 4),
         mk_Edge(4, 1),

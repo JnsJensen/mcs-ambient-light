@@ -39,3 +39,29 @@ class Outline:
 
     def __repr__(self):
         return f"Outline(time={self.time}, cars={self.cars}, street_lamps={self.street_lamps})"
+
+def parse_vdm_city(content):
+    """
+    Parse the VDMSL city data to extract intersections and roads.
+
+    Args:
+    content (str): The content of the VDMSL file.
+
+    Returns:
+    tuple: A tuple containing two lists, one for intersections and one for roads.
+    """
+    intersections = []
+    roads = []
+
+    lines = content.splitlines()
+    for line in lines:
+        if "new Position" in line:
+            parts = line.split('(')[1].split(')')[0].split(',')
+            x, y = float(parts[0].strip()), float(parts[1].strip())
+            intersections.append((int(x), int(y)))
+        elif "mk_Edge" in line:
+            parts = line.split('(')[1].split(')')[0].split(',')
+            start, end = int(parts[0].strip()), int(parts[1].strip())
+            roads.append((start, end))
+
+    return intersections, roads

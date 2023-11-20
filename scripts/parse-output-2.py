@@ -1,11 +1,48 @@
 import re
 import sys
 from utils import Car, Sensor, StreetLamp, Outline
+from pathlib import Path
+import argparse
 
-filename = sys.argv[1]
+# Check if rich is installed, and only import it if it is.
+try:
+    from rich import pretty, print
+
+    pretty.install()
+except ImportError or ModuleNotFoundError:
+    pass
+
+# Parsing the arguments
+# -f --file: The path to the file to be parsed
+parser = argparse.ArgumentParser(description='Parse the VDM output file.')
+parser.add_argument('-f', '--file', type=str, required=True, help='The path to the file to be parsed')
+
+args = parser.parse_args()
+
+if not args.file:
+    parser.print_help()
+    sys.exit(1)
+
+file = Path(args.file).resolve()
+if not file.exists():
+    print(f"File {file} does not exist.")
+    sys.exit(1)
+
 
 # Adjusted parsing function to skip recursive elements and focus on simpler elements
 def parse_vdm_output_adjusted(file_path):
+    """
+    Parse the VDM output from the given file path.
+
+    Parameters:
+        file_path (str): The path to the file to be parsed.
+
+    Returns:
+        Outline: An Outline object containing the parsed data.
+    
+    Raises:
+        FileNotFoundError: If the file could not be found.
+    """
     with open(file_path, 'r') as file:
         content = file.read()
 
@@ -48,6 +85,6 @@ def parse_vdm_output_adjusted(file_path):
     return Outline(time, cars, street_lamps)
 
 # Parse the file with adjusted logic
-parsed_outline_adjusted = parse_vdm_output_adjusted(filename)
+parsed_outline_adjusted = parse_vdm_output_adjusted(file)
 print(parsed_outline_adjusted)
 
