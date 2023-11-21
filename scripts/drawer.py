@@ -107,6 +107,10 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
         for pos in intersections:
             rl.draw_circle(pos[0], pos[1], intersection_size, colors["intersection"])
 
+        # o = outlines[0]
+        # cars = o.cars
+        # for car in cars:
+            
         # draw debug circle in center of world
         # rl.draw_circle(0, 0, 5, rl.RED)
 
