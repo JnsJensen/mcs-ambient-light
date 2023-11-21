@@ -18,6 +18,7 @@ operations
     );
 
     -- update the sensor with the cars on the road that are in range
+    -- attention: maybe combine sense and get cars?
     public sense : () ==> ()
     sense() == (
         let all_cars_on_road = road.get_cars() in
@@ -25,6 +26,9 @@ operations
     );
 
     pure public get_cars : () ==> set of Car
-    get_cars() == return cars
+    get_cars() == return cars;
+
+    pure public get_position : () ==> real
+    get_position() == return position;
 
 end Sensor

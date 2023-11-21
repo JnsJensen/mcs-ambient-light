@@ -10,6 +10,7 @@ instance variables
     private cars : set of Car := {};
     private length : real;
     private street_lamps : set of StreetLamp;
+    private sensors : set of Sensor;
 
 operations
     public RoadSegment : RoadID * Position * Position ==> RoadSegment
@@ -21,11 +22,16 @@ operations
         let st_positions = {
             distance * st_spacing
             | distance in set {1,...,length / st_spacing}
-        } in
+        } in (
             street_lamps := {
                 new StreetLamp(self, st_position)
                 | st_position in set st_positions
+            };
+            sensors := {
+                new Sensor(self, st_position)
+                | st_position in set st_positions
             }
+        );
     );
 
     pure public get_id : () ==> RoadID
@@ -39,6 +45,9 @@ operations
 
     pure public get_street_lamps : () ==> set of StreetLamp
     get_street_lamps() == return street_lamps;
+
+    pure public get_sensors : () ==> set of Sensor
+    get_sensors() == return sensors;
 
     public add_car : Car ==> ()
     add_car(p_car) == cars := cars union {p_car};

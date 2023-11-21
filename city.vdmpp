@@ -161,26 +161,47 @@ operations
                 );
             );
 
-        -- 2. step all sensors and street lamps (3)
-        let street_lamps = dunion {road.get_street_lamps() | road in set roads} in (
-            let sensors = {
-                street_lamp.get_sensor()
-                | street_lamp in set street_lamps
-            } in
-                for all sensor in set sensors do
-                    sensor.sense();
+        -- -- 2. step all sensors and street lamps (3)
+        -- let street_lamps = dunion {road.get_street_lamps() | road in set roads} in (
+        --     let sensors = {
+        --         street_lamp.get_sensor()
+        --         | street_lamp in set street_lamps
+        --     } in
+        --         for all sensor in set sensors do
+        --             sensor.sense();
         
-            -- 3. street lamp logic
-            -- simple: if the sensor on the streetlamp detects at least one car, turn it on
-            --         else, turn it off
-            -- complex: if there are cars within a certain radius of the streetlamp, turn it on
-            --          else, turn it off
+        --     -- 3. street lamp logic
+        --     -- simple: if the sensor on the streetlamp detects at least one car, turn it on
+        --     --         else, turn it off
+        --     -- complex: if there are cars within a certain radius of the streetlamp, turn it on
+        --     --          else, turn it off
+        --     for all street_lamp in set street_lamps do
+        --         if street_lamp.get_sensor().get_cars() <> {} then
+        --             street_lamp.on()
+        --         else
+        --             street_lamp.off();
+        -- );
+
+        -- 2. step all sensors
+        let sensors = dunion {
+            road.get_sensors()
+            | road in set roads
+        } in
+            for all sensor in set sensors do
+                sensor.sense();
+        
+        -- 3. step all street lamps
+        let street_lamps = dunion {
+            road.get_street_lamps()
+            | road in set roads
+        } in
             for all street_lamp in set street_lamps do
-                if street_lamp.get_sensor().get_cars() <> {} then
-                    street_lamp.on()
-                else
-                    street_lamp.off();
-        );
+                let road in set roads be st road.get_id() = street_lamp.get_road_id() in
+                    let sensor in set road.get_sensors() be st sensor.get_position() = street_lamp.get_position() in
+                        if sensor.get_cars() <> {} then
+                            street_lamp.on()
+                        else
+                            street_lamp.off();
     );
 
     -- public getter for all cars

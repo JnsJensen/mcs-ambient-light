@@ -1,7 +1,8 @@
-import pyray as rl
-from utils import parse_vdm_city
-from pathlib import Path
 import argparse
+import sys
+import pyray as rl
+from pathlib import Path
+from utils import parse_vdm_city, parse_vdm_output
 
 # Check if rich is installed, and only import it if it is.
 try:
@@ -14,7 +15,8 @@ except ImportError or ModuleNotFoundError:
 # Parsing the arguments
 # -f --file: The path to the file to be parsed
 parser = argparse.ArgumentParser(description='Draw the city')
-parser.add_argument('-cf', '--city-file', type=str, required=True, help='Path to the city file')
+parser.add_argument('-cf', '--city-file', type=str, required=True, help='Path to the VDM city file')
+parser.add_argument('-of', '--outlines-file', type=str, required=True, help='Path to the VDM outlines file')
 
 args = parser.parse_args()
 
@@ -25,6 +27,15 @@ if not args.city_file:
 city_file = Path(args.city_file).resolve()
 if not city_file.exists():
     print(f"File {city_file} does not exist.")
+    sys.exit(1)
+
+if not args.outlines_file:
+    parser.print_help()
+    sys.exit(1)
+
+outlines_file = Path(args.outlines_file).resolve()
+if not outlines_file.exists():
+    print(f"File {outlines_file} does not exist.")
     sys.exit(1)
 
 def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5):
@@ -78,13 +89,19 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
         elif (camera.zoom < 0.1):
             camera.zoom = 0.1
 
+        # ╭--------------------------------------------------------------------╮
+        # │                          🏙️ 2D World Drawing                       ▕
+        # ╰--------------------------------------------------------------------╯
         rl.begin_mode_2d(camera)
 
         # Draw roads
         for road in roads:
             start = intersections[road[0] - 1]
             end = intersections[road[1] - 1]
-            rl.draw_line(start[0], start[1], end[0], end[1], colors["road"])
+            # rl.draw_line(start[0], start[1], end[0], end[1], colors["road"])
+            rl.draw_line_ex(start, end, 8, colors["road"])
+            # draw the road as a rectangle
+            # rl.draw_rectangle_lines(start[0], start[1], end[0] - start[0], end[1] - start[1], colors["road"])
 
         # Draw intersections
         for pos in intersections:
@@ -94,13 +111,7 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
         # rl.draw_circle(0, 0, 5, rl.RED)
 
         rl.end_mode_2d()
-
-        # draw debug circle in center of screen
-        # print(window_size[0] / 2, window_size[1] / 2)
-        # rl.draw_circle(int(window_size[0] / 2), int(window_size[1] / 2), 5, rl.RED)
-
         rl.end_drawing()
-
     rl.close_window()
 
 # Parse the city data
@@ -108,6 +119,11 @@ city_contents = city_file.read_text()
 intersections, roads = parse_vdm_city(city_contents)
 print(intersections)
 print(roads)
+
+# Parse the outlines
+outlines_contents = outlines_file.read_text()
+outlines = parse_vdm_output(outlines_contents)
+print(outlines)
 
 # Adjust the window size if needed
 window_size = (800, 600)

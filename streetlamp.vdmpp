@@ -2,7 +2,7 @@ class StreetLamp is subclass of GLOBAL
 
 instance variables
     private lamp_state : StreetLampState := <OFF>;
-    private sensor : Sensor;
+    -- private sensor : Sensor;
     -- private road : RoadSegment;
     private road_id : RoadID;
     private position : real; -- position along the road in meters
@@ -11,7 +11,7 @@ operations
     public StreetLamp : RoadSegment * real ==> StreetLamp
     StreetLamp(p_road, p_position) == (
         position := p_position;
-        sensor := new Sensor(p_road, p_position);
+        -- sensor := new Sensor(p_road, p_position);
         -- road := p_road;
         road_id := p_road.get_id();
     );
@@ -22,7 +22,13 @@ operations
     public off : () ==> ()
     off() == lamp_state := <OFF>;
 
-    pure public get_sensor : () ==> Sensor
-    get_sensor() == return sensor;
+    -- pure public get_sensor : () ==> Sensor
+    -- get_sensor() == return sensor;
+
+    pure public get_road_id : () ==> RoadID
+    get_road_id() == return road_id;
+
+    pure public get_position : () ==> real
+    get_position() == return position;
 
 end StreetLamp
