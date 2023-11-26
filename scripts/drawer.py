@@ -2,7 +2,9 @@ import argparse
 import sys
 import pyray as rl
 from pathlib import Path
-from utils import parse_vdm_city, parse_vdm_output
+from utils import parse_vdm_city, parse_vdm_output, Outline, Car, StreetLamp
+from drawing_utils import draw_car, draw_street_lamp
+import time
 
 # Check if rich is installed, and only import it if it is.
 try:
@@ -38,7 +40,7 @@ if not outlines_file.exists():
     print(f"File {outlines_file} does not exist.")
     sys.exit(1)
 
-def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5):
+def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outline], window_size=(800, 600), intersection_size=5):
     rl.init_window(window_size[0], window_size[1], "City Visualization")
     rl.set_target_fps(60)
     intersection_size = 5
@@ -51,15 +53,33 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
 
     # Catppuccin color palette
     colors = {
-        "background": rl.Color(36, 39, 58, 255),      # Mocha
-        "intersection": rl.Color(244, 219, 214, 255), # Rosewater
-        "road": rl.Color(183, 189, 248, 255),         # Lavender
+        "background": rl.Color(36, 39, 58, 255),        # Mocha base
+        "intersection": rl.Color(73, 77, 100, 255),     # surface1
+        "road": rl.Color(54, 58, 79, 255),              # surface0
+        "street_lamp_on": rl.Color(223, 142, 29, 255),  # Yellow
+        "street_lamp_off": rl.Color(82, 75, 65, 255),   # Muted yellow
+        "car": rl.Color(238, 153, 160, 255),            # maroon
     }
 
     # previous mouse position
     prev_mouse_pos = rl.get_mouse_position()
-
+    start_time = time.time()
+    last_time = time.time()
     while not rl.window_should_close():
+        new_time = time.time()
+
+        total_delta_time = new_time - start_time
+        print(f"Total time: {total_delta_time}")
+
+        delta_time = new_time - last_time
+        if delta_time > 0.1:
+            last_time = new_time
+            print(f"outline lenght: {len(outlines)}")
+            if len(outlines) > 1:
+                outlines.pop(0)
+            else:
+                print("Continuing to draw last outline")
+
         rl.begin_drawing()
         rl.clear_background(colors["background"])
 
@@ -107,6 +127,28 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
         for pos in intersections:
             rl.draw_circle(pos[0], pos[1], intersection_size, colors["intersection"])
 
+        o = outlines[0]
+        
+        # Draw street lamps
+        for lamp in o.street_lamps:
+            draw_street_lamp(
+                lamp,
+                intersections,
+                roads,
+                size = intersection_size/2,
+                on_color = colors["street_lamp_on"],
+                off_color = colors["street_lamp_off"]
+            )
+        # Draw cars
+        for car in o.cars:
+            draw_car(
+            car,
+            intersections,
+            roads,
+            size = intersection_size/2,
+            color = colors["car"]
+        )
+
         # o = outlines[0]
         # cars = o.cars
         # for car in cars:
@@ -116,7 +158,8 @@ def draw_city(intersections, roads, window_size=(800, 600), intersection_size=5)
 
         rl.end_mode_2d()
         rl.end_drawing()
-    rl.close_window()
+    # keep window open until user closes it
+    # rl.close_window()
 
 # Parse the city data
 city_contents = city_file.read_text()
@@ -133,4 +176,4 @@ print(outlines)
 window_size = (800, 600)
 
 # Draw the city
-draw_city(intersections, roads, window_size)
+draw_city(intersections, roads, outlines, window_size)

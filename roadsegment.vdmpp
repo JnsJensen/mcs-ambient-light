@@ -20,7 +20,7 @@ operations
         length := p_position1.distance_to(p_position2);
         -- equally space street lamps along the road segment
         let st_positions = {
-            distance * st_spacing
+            distance * st_spacing - (st_spacing / 2)
             | distance in set {1,...,length / st_spacing}
         } in (
             street_lamps := {

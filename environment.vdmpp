@@ -71,13 +71,13 @@ operations
                 new Position( 100.0,    0.0),
                 new Position(-170.0, -170.0)
             ],
-            {
+            [
                 mk_Edge(1, 2),
                 mk_Edge(2, 3),
                 mk_Edge(3, 4),
                 mk_Edge(4, 1),
                 mk_Edge(1, 5)
-            }
+            ]
         );
     );
 
@@ -86,6 +86,10 @@ operations
     show_result() ==
         def - = io.writeval[seq of outline](outlines) in skip;
     
+    public show_city : () ==> ()
+    show_city() ==
+        def - = io.writeval[City](city) in skip;
+
     -- write outlines to file
     -- question: [io]
     --           How to write to file?
@@ -103,6 +107,7 @@ operations
             make_outline();
         );
         show_result();
+        -- show_city();
     );
 
     -- Function to handle all inlines for the current time
@@ -126,10 +131,23 @@ operations
 
     -- Function to make an outline for the current time
     private make_outline : () ==> ()
-    make_outline() == (
-        let mk_(time, cars, lamps) = mk_(World`timerRef.get_time(), city.get_cars(), city.get_street_lamps()) in
-            outlines := outlines ^ [mk_(time, cars, lamps)];
-    );
+    make_outline() ==
+        let time = World`timerRef.get_time() in
+            let cars = {
+                new Car(
+                    car.get_road_id(),
+                    car.get_progress(),
+                    car.get_direction()
+                ) | car in set city.get_cars()
+            } in 
+                let lamps = {
+                    new StreetLamp(
+                        lamp.get_road_id(),
+                        lamp.get_position(),
+                        lamp.get_state()
+                    ) | lamp in set city.get_street_lamps()
+                } in
+                    outlines := outlines ^ [mk_(time, cars, lamps)];
 
     -- I think maybe we should keep simulating until all cars have exited the city
     public is_finished : () ==> bool 

@@ -48,6 +48,9 @@ operations
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
+    pure public get_direction : () ==> int
+    get_direction() == return direction;
+
     public drive : real ==> real
     drive(dt) == (
         progress := new_progress(progress, velocity, dt, direction);

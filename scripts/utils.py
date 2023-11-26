@@ -1,7 +1,7 @@
 import re
 
 class Car:
-    def __init__(self, road_id, progress=0, direction=1):
+    def __init__(self, road_id: int, progress: float = 0, direction: int = 1):
         self.road_id = road_id
         self.progress = progress
         self.direction = direction
@@ -13,7 +13,7 @@ class Car:
 class Sensor:
     RANGE = 10.0
 
-    def __init__(self, road_id, position, cars=None):
+    def __init__(self, road_id: int, position: float, cars=None):
         self.cars = cars if cars is not None else set()
         self.road_id = road_id
         self.position = position
@@ -22,7 +22,7 @@ class Sensor:
         return f"Sensor(road_id={self.road_id}, position={self.position}, cars={self.cars})"
 
 class StreetLamp:
-    def __init__(self, lamp_state, road_id, position):
+    def __init__(self, lamp_state: bool, road_id: int, position: float):
         self.lamp_state = lamp_state
         self.road_id = road_id
         self.position = position
@@ -31,7 +31,7 @@ class StreetLamp:
         return f"StreetLamp(lamp_state={self.lamp_state}, road_id={self.road_id}, position={self.position})"
 
 class Outline:
-    def __init__(self, time, cars, street_lamps):
+    def __init__(self, time: float, cars, street_lamps):
         self.time = time
         self.cars = set(cars)
         self.street_lamps = set(street_lamps)
@@ -101,7 +101,7 @@ def parse_vdm_outline(output: str):
         progress = match.groupdict()["progress"]
         road_id = match.groupdict()["road_id"]
 
-        car = Car(road_id, float(progress), int(direction))
+        car = Car(int(road_id), float(progress), int(direction))
         cars.add(car)
 
     # Parsing street lamps
@@ -112,8 +112,10 @@ def parse_vdm_outline(output: str):
         lamp_state = match_dict["state"]
         position = match_dict["position"]
         road_id = match_dict["road_id"]
+
+        lamp_state = True if lamp_state == "<ON>" else False
         
-        street_lamp = StreetLamp(lamp_state, road_id, float(position))
+        street_lamp = StreetLamp(lamp_state, int(road_id), float(position))
         street_lamps.add(street_lamp)
 
     # Assuming the time is at the start of the file in the format 'Time: [value]'

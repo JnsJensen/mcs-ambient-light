@@ -16,6 +16,13 @@ operations
         road_id := p_road.get_id();
     );
 
+    public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp
+    StreetLamp(p_road_id, p_position, p_lamp_state) == (
+        position := p_position;
+        lamp_state := p_lamp_state;
+        road_id := p_road_id;
+    );
+
     public on : () ==> ()
     on() == lamp_state := <ON>;
 
@@ -30,5 +37,8 @@ operations
 
     pure public get_position : () ==> real
     get_position() == return position;
+
+    pure public get_state : () ==> StreetLampState
+    get_state() == return lamp_state;
 
 end StreetLamp
