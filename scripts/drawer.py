@@ -49,7 +49,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
     camera = rl.Camera2D()
     camera.offset = rl.Vector2(window_size[0] / 2, window_size[1] / 2)
     camera.rotation = 0.0
-    camera.zoom = 1.0 # Initial zoom level
+    camera.zoom = 2.0 # Initial zoom level
+    camera.target = rl.Vector2(-30.0, -50.0)
 
     # Catppuccin color palette
     colors = {
@@ -59,6 +60,7 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
         "street_lamp_on": rl.Color(223, 142, 29, 255),  # Yellow
         "street_lamp_off": rl.Color(82, 75, 65, 255),   # Muted yellow
         "car": rl.Color(238, 153, 160, 255),            # maroon
+        "car_reverse": rl.Color(198, 160, 246, 255),    # mauve
     }
 
     # previous mouse position
@@ -69,12 +71,12 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
         new_time = time.time()
 
         total_delta_time = new_time - start_time
-        print(f"Total time: {total_delta_time}")
+        # print(f"Total time: {total_delta_time}")
 
         delta_time = new_time - last_time
         if delta_time > 0.1:
             last_time = new_time
-            print(f"outline lenght: {len(outlines)}")
+            # print(f"outline lenght: {len(outlines)}")
             if len(outlines) > 1:
                 outlines.pop(0)
             else:
@@ -141,13 +143,17 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
             )
         # Draw cars
         for car in o.cars:
-            draw_car(
-            car,
-            intersections,
-            roads,
-            size = intersection_size/2,
+            # last car draw with a different color
             color = colors["car"]
-        )
+            if car.direction == -1:
+                color = colors["car_reverse"]
+            draw_car(
+                car,
+                intersections,
+                roads,
+                size = intersection_size/2,
+                color = color
+            )
 
         # o = outlines[0]
         # cars = o.cars
@@ -170,7 +176,7 @@ print(roads)
 # Parse the outlines
 outlines_contents = outlines_file.read_text()
 outlines = parse_vdm_output(outlines_contents)
-print(outlines)
+# print(outlines)
 
 # Adjust the window size if needed
 window_size = (800, 600)

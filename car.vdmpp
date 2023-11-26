@@ -48,6 +48,9 @@ operations
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
+    public set_road_id : RoadID ==> ()
+    set_road_id(p_road_id) == road_id := p_road_id;
+
     pure public get_direction : () ==> int
     get_direction() == return direction;
 

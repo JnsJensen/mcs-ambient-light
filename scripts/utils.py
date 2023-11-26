@@ -89,7 +89,7 @@ def parse_vdm_outline(output: str):
     Raises:
         FileNotFoundError: If the file could not be found.
     """
-    car_pattern = re.compile(r"Car.*?direction:=(?P<direction>\d+(.\d+)?).*?progress:=(?P<progress>\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?)")
+    car_pattern = re.compile(r"Car.*?direction:=(?P<direction>-?\d+(.\d+)?).*?progress:=(?P<progress>\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?)")
     street_lamp_pattern = re.compile(r"StreetLamp.*?position:=(?P<position>\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?).*?lamp_state:=(?P<state><ON>|<OFF>)")
 
     # Parsing cars
