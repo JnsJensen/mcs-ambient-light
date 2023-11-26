@@ -22,7 +22,7 @@ operations
     public sense : () ==> ()
     sense() == (
         let all_cars_on_road = road.get_cars() in
-            cars := { car | car in set all_cars_on_road & abs(car.get_progress() - position) < 0.1 }
+            cars := { car | car in set all_cars_on_road & abs(car.get_progress() - position) < range }
     );
 
     pure public get_cars : () ==> set of Car
