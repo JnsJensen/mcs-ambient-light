@@ -106,13 +106,11 @@ operations
         -- 3. add car to road
         -- question: let <x> in set <y>
         --           means i essentially take a random element in the set?
-        -- let intersection in set intersections be st intersection.get_id() = p_intersection_id in
-        --     let road in set intersection.get_connections() in
-        --         road.add_car(p_car);
         let road_id = p_car.get_road_id() in
             let road in set roads be st road.get_id() = road_id in
                 road.add_car(p_car);
-    );
+    )
+    pre p_car.get_road_id() in set dom road_to_intersections;
 
     public step : () ==> ()
     step() == (
@@ -130,7 +128,7 @@ operations
             for all car in set cars do (
                 -- Then the steps would be
                 -- 1. drive the car
-                -- check if the car has oversteppet a road
+                -- check if the car has overstepped a road
                 --     1. remove the car from the road
                 --     2. car.progress < road.length -> choose intersection1
                 --     3. car.progress > road.length -> choose intersection2
@@ -152,6 +150,10 @@ operations
                                         let next_road = intersection.next_road(road) in
                                             if next_road <> nil then (
                                                 next_road.add_car(car);
+                                                if intersection_id = road_to_intersections(next_road.get_id()).intersection1 then
+                                                    car.set_direction(1)
+                                                else
+                                                    car.set_direction(-1);
                                                 if road_to_intersections(next_road.get_id()).intersection1 = intersection_id then
                                                     car.set_progress(progress_remainder)
                                                 else
@@ -160,27 +162,6 @@ operations
                                     );
                     );
             );
-
-        -- -- 2. step all sensors and street lamps (3)
-        -- let street_lamps = dunion {road.get_street_lamps() | road in set roads} in (
-        --     let sensors = {
-        --         street_lamp.get_sensor()
-        --         | street_lamp in set street_lamps
-        --     } in
-        --         for all sensor in set sensors do
-        --             sensor.sense();
-        
-        --     -- 3. street lamp logic
-        --     -- simple: if the sensor on the streetlamp detects at least one car, turn it on
-        --     --         else, turn it off
-        --     -- complex: if there are cars within a certain radius of the streetlamp, turn it on
-        --     --          else, turn it off
-        --     for all street_lamp in set street_lamps do
-        --         if street_lamp.get_sensor().get_cars() <> {} then
-        --             street_lamp.on()
-        --         else
-        --             street_lamp.off();
-        -- );
 
         -- 2. step all sensors
         let sensors = dunion {
@@ -205,7 +186,7 @@ operations
     );
 
     -- public getter for all cars
-    public get_cars : () ==> set of Car
+    pure public get_cars : () ==> set of Car
     get_cars() ==
         return dunion {
             road.get_cars()
@@ -213,7 +194,7 @@ operations
         };
     
     -- public getter for all street lamps
-    public get_street_lamps : () ==> set of StreetLamp
+    pure public get_street_lamps : () ==> set of StreetLamp
     get_street_lamps() ==
         return dunion {
             road.get_street_lamps()

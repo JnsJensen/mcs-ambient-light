@@ -2,7 +2,7 @@ import argparse
 import sys
 import pyray as rl
 from pathlib import Path
-from utils import parse_vdm_city, parse_vdm_output, Outline, Car, StreetLamp
+from utils import parse_vdm_city, parse_vdm_output, Outline
 from drawing_utils import draw_car, draw_street_lamp
 import time
 
@@ -49,8 +49,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
     camera = rl.Camera2D()
     camera.offset = rl.Vector2(window_size[0] / 2, window_size[1] / 2)
     camera.rotation = 0.0
-    camera.zoom = 2.0 # Initial zoom level
-    camera.target = rl.Vector2(-30.0, -50.0)
+    camera.zoom = 2.5 # Initial zoom level
+    camera.target = rl.Vector2(-30.0, -100.0)
 
     # Catppuccin color palette
     colors = {
@@ -65,12 +65,13 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
 
     # previous mouse position
     prev_mouse_pos = rl.get_mouse_position()
-    start_time = time.time()
+    # start_time = time.time()
     last_time = time.time()
+    last = False
     while not rl.window_should_close():
         new_time = time.time()
 
-        total_delta_time = new_time - start_time
+        # total_delta_time = new_time - start_time
         # print(f"Total time: {total_delta_time}")
 
         delta_time = new_time - last_time
@@ -79,7 +80,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
             # print(f"outline lenght: {len(outlines)}")
             if len(outlines) > 1:
                 outlines.pop(0)
-            else:
+            elif not last:
+                last = True
                 print("Continuing to draw last outline")
 
         rl.begin_drawing()
@@ -177,9 +179,10 @@ print(roads)
 outlines_contents = outlines_file.read_text()
 outlines = parse_vdm_output(outlines_contents)
 # print(outlines)
+print(outlines[60].cars)
 
 # Adjust the window size if needed
-window_size = (800, 600)
+window_size = (1200, 900)
 
 # Draw the city
 draw_city(intersections, roads, outlines, window_size)

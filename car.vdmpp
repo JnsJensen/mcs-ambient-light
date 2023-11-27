@@ -45,15 +45,23 @@ operations
     public set_progress : real ==> ()
     set_progress(p_progress) == progress := p_progress;
 
+    -- attention: pre road exists?
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
+    -- attention: pre road exists?
     public set_road_id : RoadID ==> ()
     set_road_id(p_road_id) == road_id := p_road_id;
 
     pure public get_direction : () ==> int
-    get_direction() == return direction;
+    get_direction() == return direction
+    post RESULT in set {-1, 1};
 
+    public set_direction : int ==> ()
+    set_direction(p_direction) == direction := p_direction
+    pre p_direction in set {-1, 1};
+
+    -- attention: should this operation ensure that we dont drive off the road?
     public drive : real ==> real
     drive(dt) == (
         progress := new_progress(progress, velocity, dt, direction);
