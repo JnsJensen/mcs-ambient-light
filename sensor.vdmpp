@@ -5,12 +5,12 @@ values
 
 instance variables
     private cars : set of Car := {};
-    private road : RoadSegment; -- Reference to the road it is part of
+    private road : Road; -- Reference to the road it is part of
     private road_id : RoadID;
     private position : real; -- position along the road in meters
 
 operations
-    public Sensor : RoadSegment * real ==> Sensor
+    public Sensor : Road * real ==> Sensor
     Sensor(p_road, p_position) == (
         position := p_position;
         road := p_road;

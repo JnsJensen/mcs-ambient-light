@@ -76,8 +76,6 @@ operations
         def - = io.writeval[City](city) in skip;
 
     -- write outlines to file
-    -- question: [io]
-    --           How to write to file?
     public write_result : String ==> ()
     write_result(p_fname) ==
         def - = io.fwriteval[seq of outline](p_fname, outlines, <start>) in skip;
@@ -88,11 +86,11 @@ operations
         while not is_finished() do (
             handle_inlines();
             city.step();
-            World`timerRef.step_time();
+            World`timer_ref.step_time();
             make_outline();
         );
-        show_result();
         write_result("out.txt");
+        -- show_result();
         -- show_city();
     );
 
@@ -100,7 +98,7 @@ operations
     private handle_inlines : () ==> ()
     handle_inlines() == (
         if len inlines > 0 then (
-            dcl current_time : Time := World`timerRef.get_time(),
+            dcl current_time : Time := World`timer_ref.get_time(),
                 done : bool := false;
             while not done do (
                 def mk_(time, car) = hd inlines in
@@ -118,7 +116,7 @@ operations
     -- Function to make an outline for the current time
     private make_outline : () ==> ()
     make_outline() ==
-        let time = World`timerRef.get_time() in
+        let time = World`timer_ref.get_time() in
             let cars = {
                 new Car(
                     car.get_road_id(),
@@ -139,6 +137,6 @@ operations
     public is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
-            return card cars = 0 and not busy or World`timerRef.get_time() >= time_max;
+            return card cars = 0 and not busy or World`timer_ref.get_time() >= time_max;
 
 end Environment

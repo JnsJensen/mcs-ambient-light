@@ -1,10 +1,10 @@
 class Timer 
 
-instance variables
-    private current_time : real := 0;
-
 values 
     private step_length : real = 0.1;
+
+instance variables
+    private current_time : real := 0;
 
 operations
     public step_time: () ==> ()

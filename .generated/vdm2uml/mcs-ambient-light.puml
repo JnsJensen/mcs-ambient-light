@@ -12,58 +12,6 @@ skinparam class {
 }
 skinparam defaultTextAlignment center
 
-
-class Road
-{
-}
-
-class Position
-{
-	-x : real
-	-y : real
-	+Position(real, real) : Position
-	+distance_to(Position) : real
-}
-
-class GLOBAL
-{
-	+Time : real <<type>>
-	+String : seq of char <<type>>
-	+StreetLampState : <OFF> | <ON> <<type>>
-	+RoadID : nat1 <<type>>
-	+IntersectionID : nat1 <<type>>
-	+Edge : {intersection1 : intersection2} <<type>>
-	+RoadGraph : map RoadID to Edge <<type>>
-	+IntersectionGraph : map IntersectionID to set... <<type>>
-}
-
-class Intersection
-{
-	-id : IntersectionID
-	-position : Position
-	+Intersection(IntersectionID, Position, set of RoadSegment) : Intersection
-	+get_id() : IntersectionID
-	+get_position() : Position
-	+get_connections() : set of RoadSegment
-	+next_road(RoadSegment) : [RoadSegment]
-}
-
-class Timer
-{
-	-current_time : real
-	-step_length : real <<value>>
-	+step_time()
-	+get_time() : real
-	+get_step_length() : real
-}
-
-class World
-{
-	+timerRef : Timer
-	+World() : World
-	+run()
-}
-
 class Car
 {
 	-velocity : real <<value>>
@@ -88,7 +36,7 @@ class City
 	-make_road_graph(seq of Edge) : RoadGraph <<function>>
 	-make_road_graph_rec(seq of Edge, RoadID) : RoadGraph <<function>>
 	-make_intersection_graph(set of IntersectionID, RoadGraph) : IntersectionGraph <<function>>
-	-make_roads(RoadGraph, seq of Position) : set of RoadSegment
+	-make_roads(RoadGraph, seq of Position) : set of Road
 	-make_intersections(seq of Position, IntersectionGraph) : set of Intersection
 	+City(seq of Position, seq of Edge) : City
 	+add_car(Car)
@@ -108,7 +56,6 @@ class Environment
 	-io : IO
 	-inlines : seq of inline
 	-outlines : seq of outline
-	-city : City
 	-busy : bool
 	+Environment() : Environment
 	+show_result()
@@ -120,12 +67,43 @@ class Environment
 	+is_finished() : bool
 }
 
-class RoadSegment
+class GLOBAL
+{
+	+Time : real <<type>>
+	+String : seq of char <<type>>
+	+StreetLampState : <OFF> | <ON> <<type>>
+	+RoadID : nat1 <<type>>
+	+IntersectionID : nat1 <<type>>
+	+Edge : {intersection1 : intersection2} <<type>>
+	+RoadGraph : map RoadID to Edge <<type>>
+	+IntersectionGraph : map IntersectionID to set... <<type>>
+}
+
+class Intersection
+{
+	-id : IntersectionID
+	-position : Position
+	+Intersection(IntersectionID, Position, set of Road) : Intersection
+	+get_id() : IntersectionID
+	+get_position() : Position
+	+get_connections() : set of Road
+	+next_road(Road) : [Road]
+}
+
+class Position
+{
+	-x : real
+	-y : real
+	+Position(real, real) : Position
+	+distance_to(Position) : real
+}
+
+class Road
 {
 	-st_spacing : real <<value>>
 	-id : RoadID
 	-length : real
-	+RoadSegment(RoadID, Position, Position) : RoadSegment
+	+Road(RoadID, Position, Position) : Road
 	+get_id() : RoadID
 	+get_length() : real
 	+get_cars() : set of Car
@@ -138,10 +116,10 @@ class RoadSegment
 class Sensor
 {
 	-range : real <<value>>
-	-road : RoadSegment
+	-road : Road
 	-road_id : RoadID
 	-position : real
-	+Sensor(RoadSegment, real) : Sensor
+	+Sensor(Road, real) : Sensor
 	+sense()
 	+get_cars() : set of Car
 	+get_position() : real
@@ -152,7 +130,7 @@ class StreetLamp
 	-lamp_state : StreetLampState
 	-road_id : RoadID
 	-position : real
-	+StreetLamp(RoadSegment, real) : StreetLamp
+	+StreetLamp(Road, real) : StreetLamp
 	+StreetLamp(RoadID, real, StreetLampState) : StreetLamp
 	+on()
 	+off()
@@ -161,24 +139,38 @@ class StreetLamp
 	+get_state() : StreetLampState
 }
 
-Road --> "(*)" StreetLamp : -street_lamps
-Road --> "*" Road : -connections
-GLOBAL <|-- Road
-Intersection --> "*" RoadSegment : -connections
-Road <|-- Intersection
-World --> "0..1" Environment : +env
-GLOBAL <|-- World
+class Timer
+{
+	-current_time : real
+	-step_length : real <<value>>
+	+step_time()
+	+get_time() : real
+	+get_step_length() : real
+}
+
+class World
+{
+	+timer_ref : Timer
+	+World() : World
+	+run()
+}
+
+Environment --> "0..1" City : -city
 GLOBAL <|-- Car
 City --> "*" Intersection : -intersections
-City --> "*" RoadSegment : -roads
+City --> "*" Road : -roads
 GLOBAL <|-- City
 GLOBAL <|-- Environment
-RoadSegment --> "*" Car : -cars
-RoadSegment --> "*" StreetLamp : -street_lamps
-RoadSegment --> "*" Sensor : -sensors
-Road <|-- RoadSegment
+Intersection --> "*" Road : -connections
+GLOBAL <|-- Intersection
+Road --> "*" Car : -cars
+Road --> "*" StreetLamp : -street_lamps
+Road --> "*" Sensor : -sensors
+GLOBAL <|-- Road
 Sensor --> "*" Car : -cars
 GLOBAL <|-- Sensor
 GLOBAL <|-- StreetLamp
+World --> "0..1" Environment : +env
+GLOBAL <|-- World
 
 @enduml

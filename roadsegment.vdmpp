@@ -1,4 +1,4 @@
-class RoadSegment is subclass of Road
+class Road is subclass of GLOBAL
 
 values
     private st_spacing : real = 10.0;
@@ -13,8 +13,8 @@ instance variables
     private sensors : set of Sensor;
 
 operations
-    public RoadSegment : RoadID * Position * Position ==> RoadSegment
-    RoadSegment(p_id, p_position1, p_position2) == (
+    public Road : RoadID * Position * Position ==> Road
+    Road(p_id, p_position1, p_position2) == (
         id := p_id;
         -- make road between two positions
         length := p_position1.distance_to(p_position2);
@@ -59,4 +59,4 @@ operations
     remove_car(p_car) == cars := cars \ {p_car};
 
 
-end RoadSegment
+end Road

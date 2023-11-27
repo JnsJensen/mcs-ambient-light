@@ -1,14 +1,14 @@
 class World is subclass of GLOBAL
 
 instance variables
-    public static env : [Environment] := nil;
-    public static timerRef : Timer := new Timer();
+    public static environment : [Environment] := nil;
+    public static timer_ref : Timer := new Timer();
 
 operations
     public World : () ==> World
-    World() == env := new Environment();
+    World() == environment := new Environment();
 
     public run : () ==> ()
-    run() == env.run();
+    run() == environment.run();
 
 end World

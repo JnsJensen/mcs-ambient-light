@@ -1,13 +1,13 @@
 class City is subclass of GLOBAL
 
--- The City is a collection of RoadSegments and Intersections
+-- The City is a collection of Roads and Intersections
 -- See it as a graph
 --      Each intersection is a node in the graph
 --      Each road is an edge in the graph
 
 instance variables
     private intersections : set of Intersection; -- graph nodes
-    private roads : set of RoadSegment; -- graph edges
+    private roads : set of Road; -- graph edges
     private road_to_intersections : RoadGraph; -- graph
     private intersection_to_roads : IntersectionGraph; -- graph   
 
@@ -41,10 +41,10 @@ functions
 
 operations
     -- make roads from RoadGraph
-    private make_roads : RoadGraph * seq of Position ==> set of RoadSegment
+    private make_roads : RoadGraph * seq of Position ==> set of Road
     make_roads(p_road_to_intersections, p_intersection_positions) ==
         return {
-            new RoadSegment(
+            new Road(
                 road_id,
                 p_intersection_positions(p_road_to_intersections(road_id).intersection1),
                 p_intersection_positions(p_road_to_intersections(road_id).intersection2)
@@ -132,7 +132,7 @@ operations
                 --     4. select a new road from the intersection
                 --     5. add the car to the new road
                 
-                let new_progress = car.drive(World`timerRef.get_step_length()) in 
+                let new_progress = car.drive(World`timer_ref.get_step_length()) in 
                     let road in set roads be st road.get_id() = car.get_road_id() in (
                         let mk_(intersection_id, progress_remainder) = (
                             if new_progress > road.get_length() then

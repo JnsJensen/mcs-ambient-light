@@ -1,17 +1,17 @@
-class Intersection is subclass of Road
+class Intersection is subclass of GLOBAL
 
 instance variables
     private id : IntersectionID;
     private position : Position;
-    private connections : set of RoadSegment;
+    private connections : set of Road;
 
 functions
-    -- private road_set2seq : set of RoadSegment -> seq of RoadSegment
+    -- private road_set2seq : set of Road -> seq of Road
     -- road_set2seq(s) == 
     --     ;
 
 operations
-    public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
+    public Intersection : IntersectionID * Position * set of Road ==> Intersection
     Intersection(p_id, p_position, p_roads) == (
         id := p_id;
         connections := p_roads;
@@ -24,20 +24,17 @@ operations
     pure public get_position : () ==> Position
     get_position() == return position;
 
-    pure public get_connections : () ==> set of RoadSegment
+    pure public get_connections : () ==> set of Road
     get_connections() == return connections;
 
     -- chooses a random road between available connections
-    -- does not choose the road that the car came from
-    -- question: does this choose a random road?
     -- todo: should part of this be a function?
-    public next_road : RoadSegment ==> [RoadSegment]
-    next_road(p_from_road) == (
+    public next_road : Road ==> [Road]
+    next_road(p_from_road) == 
         let available_connections = connections \ {p_from_road} in
-            let connections_seq = new VDMUtil().set2seq[RoadSegment](available_connections) in
+            let connections_seq = new VDMUtil().set2seq[Road](available_connections) in
                 let rand_idx = new MATH().rand(len connections_seq) + 1 in
                     return connections_seq(rand_idx)
-    )
     pre p_from_road in set connections
 
 end Intersection
