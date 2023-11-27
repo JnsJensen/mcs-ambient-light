@@ -1,0 +1,81 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class StreetLamp is subclass of GLOBAL
+
+instance variables
+    private lamp_state : StreetLampState := (*@\vdmnotcovered{<OFF}@*)>;
+    -- private sensor : Sensor;
+    -- private road : RoadSegment;
+    private road_id : RoadID;
+    private position : real; -- position along the road in meters
+
+operations
+    public StreetLamp : RoadSegment * real ==> StreetLamp
+    StreetLamp(p_road, p_position) == (
+        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+        -- sensor := new Sensor(p_road, p_position);
+        -- road := p_road;
+        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d();
+    );
+
+    public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp
+    StreetLamp(p_road_id, p_position, p_lamp_state) == (
+        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+        (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{p\_lamp\_stat}@*)e;
+        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_road\_i}@*)d;
+    );
+
+    public on : () ==> ()
+    on() == (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{<ON}@*)>;
+
+    public off : () ==> ()
+    off() == (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{<OFF}@*)>;
+
+    -- pure public get_sensor : () ==> Sensor
+    -- get_sensor() == return sensor;
+
+    pure public get_road_id : () ==> RoadID
+    get_road_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{road\_i}@*)d;
+
+    pure public get_position : () ==> real
+    get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
+
+    pure public get_state : () ==> StreetLampState
+    get_state() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{lamp\_stat}@*)e;
+
+end StreetLamp
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+StreetLamp & 0.0\% & 0 \\
+\hline
+StreetLamp & 0.0\% & 0 \\
+\hline
+StreetLamp:19 & 0.0\% & 0 \\
+\hline
+get\_position & 0.0\% & 0 \\
+\hline
+get\_road\_id & 0.0\% & 0 \\
+\hline
+get\_state & 0.0\% & 0 \\
+\hline
+off & 0.0\% & 0 \\
+\hline
+on & 0.0\% & 0 \\
+\hline
+\hline
+streetlamp.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

@@ -8,10 +8,10 @@
             "defaultName": null
         },
         {
-            "name": "Lens config: Debug World`run",
+            "name": "Lens config: Launch World`run",
             "type": "vdm",
             "request": "launch",
-            "noDebug": false,
+            "noDebug": true,
             "defaultName": "World",
             "command": "p new World().run()"
         },

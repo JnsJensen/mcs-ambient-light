@@ -5,13 +5,17 @@ instance variables
     private position : Position;
     private connections : set of RoadSegment;
 
+functions
+    -- private road_set2seq : set of RoadSegment -> seq of RoadSegment
+    -- road_set2seq(s) == 
+    --     ;
+
 operations
     public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
     Intersection(p_id, p_position, p_roads) == (
         id := p_id;
         connections := p_roads;
         position := p_position;
-        -- initialise 4 street lamps for an intersection
     );
 
     pure public get_id : () ==> IntersectionID
@@ -25,13 +29,15 @@ operations
 
     -- chooses a random road between available connections
     -- does not choose the road that the car came from
+    -- question: does this choose a random road?
+    -- todo: should part of this be a function?
     public next_road : RoadSegment ==> [RoadSegment]
     next_road(p_from_road) == (
         let available_connections = connections \ {p_from_road} in
-            if card available_connections <> 0 then
-                let road in set available_connections in
-                    return road
-            else return nil
-    );
+            let connections_seq = new VDMUtil().set2seq[RoadSegment](available_connections) in
+                let rand_idx = new MATH().rand(len connections_seq) + 1 in
+                    return connections_seq(rand_idx)
+    )
+    pre p_from_road in set connections
 
 end Intersection

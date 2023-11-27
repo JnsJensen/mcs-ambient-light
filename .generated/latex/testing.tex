@@ -1,0 +1,52 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Testing
+
+instance variables
+    public m : map nat1 to nat1 := (*@\vdmnotcovered{}@*){ (*@\vdmnotcovered{}@*)1 |-> (*@\vdmnotcovered{}@*)2, (*@\vdmnotcovered{}@*)2 |-> (*@\vdmnotcovered{}@*)3, (*@\vdmnotcovered{}@*)3 |-> (*@\vdmnotcovered{}@*)4};
+
+operations
+    public MapTest : nat1 ==> nat1
+    MapTest(x) == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{}@*)m((*@\vdmnotcovered{}@*)x);
+
+functions
+    public SetTest : set of nat1 * nat1 -> [nat1]
+    SetTest(s, x) == (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{}@*)s (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{}@*)1 (*@\vdmnotcovered{an}@*)d (*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{}@*)s then (*@\vdmnotcovered{ni}@*)l else (*@\vdmnotcovered{le}@*)t y in set (*@\vdmnotcovered{}@*)s (*@\vdmnotcovered{}@*)\ (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)x} in (*@\vdmnotcovered{}@*)y;
+    -- SetTest(s, x) == let y in set s \ {x} in if y <> nil then y else -1;
+
+    public add : int * real -> real
+    add(x, y) == (*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{}@*)y;
+
+    public mult : int * real -> real
+    mult(x, y) == (*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{}@*)y;
+
+end Testing 
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+MapTest & 0.0\% & 0 \\
+\hline
+SetTest & 0.0\% & 0 \\
+\hline
+Testing & 0.0\% & 0 \\
+\hline
+add & 0.0\% & 0 \\
+\hline
+mult & 0.0\% & 0 \\
+\hline
+\hline
+testing.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

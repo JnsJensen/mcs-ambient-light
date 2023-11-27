@@ -1,0 +1,112 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Car is subclass of GLOBAL
+
+values
+    -- defines speed along a road
+    -- negative speed means driving in the opposite direction
+    private velocity : real = (*@\vdmnotcovered{1}@*)0; -- m/s
+
+instance variables
+    -- reference to the road the car is driving on
+    private road_id : RoadID;
+
+    -- the progress of the car along the road
+    -- a real number between 0 and the length of the road
+    private progress : real := (*@\vdmnotcovered{}@*)0; -- m
+
+    -- direction denoted by either 1 or -1
+    -- invariant should exist to make sure this holds
+    -- question: I could also use a specific type,
+    --           but that's not as convenient
+    -- note: Discuss this in the report
+    --       Removing the semantics of having a direction on the road
+    --         - The current intersection1 and intersection2
+    --       This would mean that the car wouldn't neet a direction either
+    --       We just need to keep track of which intersection it came from
+    private direction : int := (*@\vdmnotcovered{}@*)1;
+    inv (*@\vdmnotcovered{directio}@*)n (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)1};
+
+functions
+    -- calculate progress
+    private new_progress : real * real * real * int -> real
+    new_progress(p_progress, p_velocity, p_dt, p_direction) ==
+        (*@\vdmnotcovered{p\_progres}@*)s (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{p\_directio}@*)n (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{p\_velocit}@*)y (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{p\_d}@*)t;
+
+operations
+    public Car : RoadID * real * int ==> Car
+    Car(p_road_id, p_progress, p_direction) == (
+        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_road\_i}@*)d;
+        (*@\vdmnotcovered{progres}@*)s := (*@\vdmnotcovered{p\_progres}@*)s;
+        (*@\vdmnotcovered{directio}@*)n := (*@\vdmnotcovered{p\_directio}@*)n;
+    );
+
+    pure public get_progress : () ==> real
+    get_progress() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{progres}@*)s;
+
+    public set_progress : real ==> ()
+    set_progress(p_progress) == (*@\vdmnotcovered{progres}@*)s := (*@\vdmnotcovered{p\_progres}@*)s;
+
+    -- attention: pre road exists?
+    pure public get_road_id : () ==> RoadID
+    get_road_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{road\_i}@*)d;
+
+    -- attention: pre road exists?
+    public set_road_id : RoadID ==> ()
+    set_road_id(p_road_id) == (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_road\_i}@*)d;
+
+    pure public get_direction : () ==> int
+    get_direction() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{directio}@*)n
+    post (*@\vdmnotcovered{RESUL}@*)T (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)1};
+
+    public set_direction : int ==> ()
+    set_direction(p_direction) == (*@\vdmnotcovered{directio}@*)n := (*@\vdmnotcovered{p\_directio}@*)n
+    pre (*@\vdmnotcovered{p\_directio}@*)n (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)1};
+
+    -- attention: should this operation ensure that we dont drive off the road?
+    public drive : real ==> real
+    drive(dt) == (
+        (*@\vdmnotcovered{progres}@*)s := (*@\vdmnotcovered{new\_progres}@*)s((*@\vdmnotcovered{progres}@*)s, (*@\vdmnotcovered{velocit}@*)y, (*@\vdmnotcovered{d}@*)t, (*@\vdmnotcovered{directio}@*)n);
+        (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{progres}@*)s;
+    );
+
+end Car
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Car & 0.0\% & 0 \\
+\hline
+Car & 0.0\% & 0 \\
+\hline
+drive & 0.0\% & 0 \\
+\hline
+get\_direction & 0.0\% & 0 \\
+\hline
+get\_progress & 0.0\% & 0 \\
+\hline
+get\_road\_id & 0.0\% & 0 \\
+\hline
+new\_progress & 0.0\% & 0 \\
+\hline
+set\_direction & 0.0\% & 0 \\
+\hline
+set\_progress & 0.0\% & 0 \\
+\hline
+set\_road\_id & 0.0\% & 0 \\
+\hline
+\hline
+car.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

@@ -1,0 +1,30 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Road is subclass of GLOBAL
+
+instance variables
+    private street_lamps : seq of StreetLamp := (*@\vdmnotcovered{}@*)[];
+    private connections : set of Road := (*@\vdmnotcovered{}@*){};
+
+end Road
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Road & 0.0\% & 0 \\
+\hline
+\hline
+road.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

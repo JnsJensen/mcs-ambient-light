@@ -6,7 +6,7 @@ instance variables
 
 operations
     public World : () ==> World
-    World() == env := new Environment("inputs/inlines.vdmsl", "inputs/city.vdmsl");
+    World() == env := new Environment();
 
     public run : () ==> ()
     run() == env.run();

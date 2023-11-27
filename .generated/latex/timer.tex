@@ -1,0 +1,48 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Timer 
+
+instance variables
+    private current_time : real := (*@\vdmnotcovered{}@*)0;
+
+values 
+    private step_length : real = (*@\vdmnotcovered{0.}@*)1;
+
+operations
+    public step_time: () ==> ()
+    step_time() == (*@\vdmnotcovered{current\_tim}@*)e := (*@\vdmnotcovered{current\_tim}@*)e (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{step\_lengt}@*)h;
+
+    public get_time: () ==> real 
+    get_time() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{current\_tim}@*)e;
+
+    pure public get_step_length: () ==> real
+    get_step_length() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{step\_lengt}@*)h;
+
+end Timer
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Timer & 0.0\% & 0 \\
+\hline
+get\_step\_length & 0.0\% & 0 \\
+\hline
+get\_time & 0.0\% & 0 \\
+\hline
+step\_time & 0.0\% & 0 \\
+\hline
+\hline
+timer.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

@@ -1,0 +1,101 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class RoadSegment is subclass of Road
+
+values
+    private st_spacing : real = (*@\vdmnotcovered{10.}@*)0;
+
+instance variables
+    -- public start_position : Position;
+    -- public end_position : Position;
+    private id : RoadID;
+    private cars : set of Car := (*@\vdmnotcovered{}@*){};
+    private length : real;
+    private street_lamps : set of StreetLamp;
+    private sensors : set of Sensor;
+
+operations
+    public RoadSegment : RoadID * Position * Position ==> RoadSegment
+    RoadSegment(p_id, p_position1, p_position2) == (
+        (*@\vdmnotcovered{i}@*)d := (*@\vdmnotcovered{p\_i}@*)d;
+        -- make road between two positions
+        (*@\vdmnotcovered{lengt}@*)h := (*@\vdmnotcovered{p\_position}@*)1.(*@\vdmnotcovered{distance\_t}@*)o((*@\vdmnotcovered{p\_position}@*)2);
+        -- equally space street lamps along the road segment
+        (*@\vdmnotcovered{le}@*)t st_positions = (*@\vdmnotcovered{}@*){
+            (*@\vdmnotcovered{distanc}@*)e (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{st\_spacin}@*)g (*@\vdmnotcovered{}@*)- ((*@\vdmnotcovered{st\_spacin}@*)g (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{}@*)2)
+            | distance in set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)1,...,(*@\vdmnotcovered{lengt}@*)h (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{st\_spacin}@*)g}
+        } in (
+            (*@\vdmnotcovered{street\_lamp}@*)s := (*@\vdmnotcovered{}@*){
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{StreetLam}@*)p((*@\vdmnotcovered{sel}@*)f, (*@\vdmnotcovered{st\_positio}@*)n)
+                | st_position in set (*@\vdmnotcovered{st\_position}@*)s
+            };
+            (*@\vdmnotcovered{sensor}@*)s := (*@\vdmnotcovered{}@*){
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Senso}@*)r((*@\vdmnotcovered{sel}@*)f, (*@\vdmnotcovered{st\_positio}@*)n)
+                | st_position in set (*@\vdmnotcovered{st\_position}@*)s
+            }
+        );
+    );
+
+    pure public get_id : () ==> RoadID
+    get_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{i}@*)d;
+
+    pure public get_length : () ==> real
+    get_length() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{lengt}@*)h;
+
+    pure public get_cars : () ==> set of Car
+    get_cars() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{car}@*)s;
+
+    pure public get_street_lamps : () ==> set of StreetLamp
+    get_street_lamps() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{street\_lamp}@*)s;
+
+    pure public get_sensors : () ==> set of Sensor
+    get_sensors() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{sensor}@*)s;
+
+    public add_car : Car ==> ()
+    add_car(p_car) == (
+        (*@\vdmnotcovered{p\_ca}@*)r.set_road_id((*@\vdmnotcovered{i}@*)d);
+        (*@\vdmnotcovered{car}@*)s := (*@\vdmnotcovered{car}@*)s (*@\vdmnotcovered{unio}@*)n (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{p\_ca}@*)r};
+    );
+    
+    public remove_car : Car ==> ()
+    remove_car(p_car) == (*@\vdmnotcovered{car}@*)s := (*@\vdmnotcovered{car}@*)s (*@\vdmnotcovered{}@*)\ (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{p\_ca}@*)r};
+
+
+end RoadSegment
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+RoadSegment & 0.0\% & 0 \\
+\hline
+RoadSegment & 0.0\% & 0 \\
+\hline
+add\_car & 0.0\% & 0 \\
+\hline
+get\_cars & 0.0\% & 0 \\
+\hline
+get\_id & 0.0\% & 0 \\
+\hline
+get\_length & 0.0\% & 0 \\
+\hline
+get\_sensors & 0.0\% & 0 \\
+\hline
+get\_street\_lamps & 0.0\% & 0 \\
+\hline
+remove\_car & 0.0\% & 0 \\
+\hline
+\hline
+roadsegment.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

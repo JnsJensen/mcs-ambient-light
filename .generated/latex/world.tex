@@ -1,0 +1,41 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class World is subclass of GLOBAL
+
+instance variables
+    public static env : [Environment] := (*@\vdmnotcovered{ni}@*)l;
+    public static timerRef : Timer := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Time}@*)r();
+
+operations
+    public World : () ==> World
+    World() == (*@\vdmnotcovered{en}@*)v := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Environmen}@*)t((*@\vdmnotcovered{"inputs/inlines.vdmsl}@*)", (*@\vdmnotcovered{"inputs/city.vdmsl}@*)");
+
+    public run : () ==> ()
+    run() == (*@\vdmnotcovered{en}@*)v.run();
+
+end World
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+World & 0.0\% & 0 \\
+\hline
+World & 0.0\% & 0 \\
+\hline
+run & 0.0\% & 0 \\
+\hline
+\hline
+world.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

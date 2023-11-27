@@ -1,0 +1,49 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Position
+-- Defines a 2D (x, y) position
+-- coordinates interpreted at a meter scale
+
+instance variables
+    private x : real;
+    private y : real;
+
+operations
+    public Position : real * real ==> Position
+    Position(p_x, p_y) == (
+        (*@\vdmnotcovered{}@*)x := (*@\vdmnotcovered{p\_}@*)x;
+        (*@\vdmnotcovered{}@*)y := (*@\vdmnotcovered{p\_}@*)y;
+    );
+
+    -- Returns the distance from the current point to the given point
+    public distance_to : Position ==> real
+    distance_to(p_to_position) == (
+        (*@\vdmnotcovered{MATH`sqr}@*)t(((*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{p\_to\_positio}@*)n.(*@\vdmnotcovered{}@*)x)(*@\vdmnotcovered{*}@*)*(*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)+ ((*@\vdmnotcovered{}@*)y (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{p\_to\_positio}@*)n.(*@\vdmnotcovered{}@*)y)(*@\vdmnotcovered{*}@*)*(*@\vdmnotcovered{}@*)2)
+    );
+
+end Position
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Position & 0.0\% & 0 \\
+\hline
+Position & 0.0\% & 0 \\
+\hline
+distance\_to & 0.0\% & 0 \\
+\hline
+\hline
+position.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

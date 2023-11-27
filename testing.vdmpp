@@ -18,4 +18,8 @@ functions
     public mult : int * real -> real
     mult(x, y) == x * y;
 
+operations
+    public randTest : int ==> int
+    randTest(x) == new MATH().rand(x);
+
 end Testing 

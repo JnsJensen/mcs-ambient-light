@@ -1,0 +1,180 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class MATH
+
+--  VDMTools STANDARD LIBRARY: MATH
+--      --------------------------------------------
+-- 
+-- Standard library for the VDMTools Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+
+  functions
+public static
+    sin:real +> real
+    sin(v) ==
+    is not yet specified    
+    post (*@\vdmnotcovered{ab}@*)s (*@\vdmnotcovered{RESUL}@*)T (*@\vdmnotcovered{<}@*)= (*@\vdmnotcovered{}@*)1;
+
+public static
+    cos:real +> real
+    cos(v) ==
+    is not yet specified
+    post (*@\vdmnotcovered{ab}@*)s (*@\vdmnotcovered{RESUL}@*)T (*@\vdmnotcovered{<}@*)= (*@\vdmnotcovered{}@*)1;
+
+public static
+    tan:real -> real
+    tan(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{co}@*)s((*@\vdmnotcovered{}@*)a) (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*)0;
+
+public static
+    cot:real -> real 
+    cot(a) ==
+    is not yet specified -- Could also be: 1/tan(r)
+    pre (*@\vdmnotcovered{si}@*)n((*@\vdmnotcovered{}@*)a) (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*)0;
+
+public static
+    asin:real -> real
+    asin(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{ab}@*)s (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{<}@*)= (*@\vdmnotcovered{}@*)1;
+
+public static
+    acos:real -> real
+    acos(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{ab}@*)s (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{<}@*)= (*@\vdmnotcovered{}@*)1;
+
+public static
+    atan:real +> real
+    atan(v) ==
+    is not yet specified;
+
+public static
+    acot:real +> real
+    acot(a) ==
+    (*@\vdmnotcovered{ata}@*)n((*@\vdmnotcovered{}@*)1(*@\vdmnotcovered{}@*)/(*@\vdmnotcovered{}@*)a)
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*)0;
+
+public static
+    sqrt:real -> real
+    sqrt(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)0;
+
+public static
+    pi_f:() +> real
+    pi_f () ==
+    is not yet specified
+
+  operations
+
+public static
+    srand:int ==> ()
+    srand(a) ==
+    (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{MATH`srand}@*)2((*@\vdmnotcovered{}@*)a) in (*@\vdmnotcovered{ski}@*)p
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1;
+
+public static
+    rand:int ==> int 
+    rand(a) ==
+    is not yet specified;
+
+public static
+    srand2:int ==> int 
+    srand2(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1
+
+  functions
+
+public static
+    exp:real +> real
+    exp(a) ==
+    is not yet specified;
+
+public static
+    ln:real -> real
+    ln(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{}@*)> (*@\vdmnotcovered{}@*)0;
+
+public static
+    log:real -> real
+    log(a) ==
+    is not yet specified
+    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{}@*)> (*@\vdmnotcovered{}@*)0;
+
+public static
+    fac:nat -> nat1
+    fac(a) ==
+    is not yet specified
+    -- pre a < 21;
+
+values
+public
+    pi = (*@\vdmnotcovered{pi\_}@*)f();
+    euler = (*@\vdmnotcovered{ex}@*)p((*@\vdmnotcovered{}@*)1);
+
+ 
+end MATH
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+MATH & 0.0\% & 0 \\
+\hline
+acos & 0.0\% & 0 \\
+\hline
+acot & 0.0\% & 0 \\
+\hline
+asin & 0.0\% & 0 \\
+\hline
+atan & 0.0\% & 0 \\
+\hline
+cos & 0.0\% & 0 \\
+\hline
+cot & 0.0\% & 0 \\
+\hline
+exp & 0.0\% & 0 \\
+\hline
+fac & 0.0\% & 0 \\
+\hline
+ln & 0.0\% & 0 \\
+\hline
+log & 0.0\% & 0 \\
+\hline
+pi\_f & 0.0\% & 0 \\
+\hline
+rand & 0.0\% & 0 \\
+\hline
+sin & 0.0\% & 0 \\
+\hline
+sqrt & 0.0\% & 0 \\
+\hline
+srand & 0.0\% & 0 \\
+\hline
+srand2 & 0.0\% & 0 \\
+\hline
+tan & 0.0\% & 0 \\
+\hline
+\hline
+MATH.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

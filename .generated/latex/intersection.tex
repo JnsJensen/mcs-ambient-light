@@ -1,0 +1,72 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Intersection is subclass of Road
+
+instance variables
+    private id : IntersectionID;
+    private position : Position;
+    private connections : set of RoadSegment;
+
+operations
+    public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
+    Intersection(p_id, p_position, p_roads) == (
+        (*@\vdmnotcovered{i}@*)d := (*@\vdmnotcovered{p\_i}@*)d;
+        (*@\vdmnotcovered{connection}@*)s := (*@\vdmnotcovered{p\_road}@*)s;
+        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+    );
+
+    pure public get_id : () ==> IntersectionID
+    get_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{i}@*)d;
+
+    pure public get_position : () ==> Position
+    get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
+
+    pure public get_connections : () ==> set of RoadSegment
+    get_connections() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{connection}@*)s;
+
+    -- chooses a random road between available connections
+    -- does not choose the road that the car came from
+    -- question: does this choose a random road?
+    -- todo: should part of this be a function?
+    public next_road : RoadSegment ==> [RoadSegment]
+    next_road(p_from_road) == (
+        (*@\vdmnotcovered{le}@*)t available_connections = (*@\vdmnotcovered{connection}@*)s (*@\vdmnotcovered{}@*)\ (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{p\_from\_roa}@*)d} in
+            (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{available\_connection}@*)s (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*)0 then
+                (*@\vdmnotcovered{le}@*)t road in set (*@\vdmnotcovered{available\_connection}@*)s in
+                    (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{roa}@*)d
+            else (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{ni}@*)l
+    )
+    pre (*@\vdmnotcovered{p\_from\_roa}@*)d (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{connection}@*)s
+
+end Intersection
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Intersection & 0.0\% & 0 \\
+\hline
+Intersection & 0.0\% & 0 \\
+\hline
+get\_connections & 0.0\% & 0 \\
+\hline
+get\_id & 0.0\% & 0 \\
+\hline
+get\_position & 0.0\% & 0 \\
+\hline
+next\_road & 0.0\% & 0 \\
+\hline
+\hline
+intersection.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

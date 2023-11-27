@@ -1,0 +1,217 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Environment is subclass of GLOBAL
+
+types
+    private inline = Time * Car;
+    private outline = Time * set of Car * set of StreetLamp;
+
+values
+    private time_max : Time = (*@\vdmnotcovered{60.}@*)0;
+
+instance variables
+    private io : IO := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{I}@*)O();
+
+    private inlines : seq of inline := (*@\vdmnotcovered{}@*)[];
+    -- private inlines : seq of inline := [
+    --     mk_(0.0, new Car(1, 0.0,  1)),
+    --     mk_(1.0, new Car(2, 0.0,  1)),
+    --     mk_(2.0, new Car(3, 0.0,  1)),
+    --     mk_(3.0, new Car(4, 0.0,  1)),
+    --     mk_(4.0, new Car(5, 0.0, -1))
+    -- ];
+    private outlines : seq of outline := (*@\vdmnotcovered{}@*)[];
+
+    private city : City;
+    -- public static city : City := new City(
+    --     [
+    --         new Position(   0.0,    0.0),
+    --         new Position(   0.0,   50.0),
+    --         new Position( 100.0,   50.0),
+    --         new Position( 100.0,    0.0),
+    --         new Position(-170.0, -170.0)
+    --     ],
+    --     {
+    --         mk_Edge(1, 2),
+    --         mk_Edge(2, 3),
+    --         mk_Edge(3, 4),
+    --         mk_Edge(4, 1),
+    --         mk_Edge(1, 5)
+    --     }
+    -- );
+    
+    private busy : bool := (*@\vdmnotcovered{tru}@*)e;
+
+operations
+    -- debug: [io]
+    --        Seems that `success` is always false,
+    --        I don't know where to start debugging
+    public Environment : String * String ==> Environment
+    Environment(p_inline_fname, p_city_fname) == (
+        -- let f1 = io.echo("Inline file: " ^ p_inline_fname ^ "\n") in
+        -- let f2 = io.echo("City file: " ^ p_city_fname ^ "\n") in
+        -- def mk_(success, input) = io.freadval[seq of inline](p_inline_fname) in
+        --     if success then
+        --         inlines := input
+        --     else
+        --         io.echo("Error reading inlines file\n");
+        
+        -- def mk_(success, input) = io.freadval[City](p_city_fname) in
+        --     if success then
+        --         city := input
+        --     else
+        --         io.echo("Error reading city file\n");
+        -- note: cant read files does not work with custom typs/classes
+        (*@\vdmnotcovered{inline}@*)s := (*@\vdmnotcovered{}@*)[
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{1.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)2, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{1.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)3, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{2.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)4, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{2.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)5, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{2.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)6, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{3.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)7, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{3.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)2, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{3.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)3, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{4.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)4, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{4.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)3, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{5.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)6, (*@\vdmnotcovered{0.}@*)0,  (*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{5.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)5, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1)),
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{5.}@*)0, (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r((*@\vdmnotcovered{}@*)8, (*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1))
+        ];
+        (*@\vdmnotcovered{cit}@*)y := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Cit}@*)y(
+            (*@\vdmnotcovered{}@*)[
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n(   (*@\vdmnotcovered{0.}@*)0,    (*@\vdmnotcovered{0.}@*)0), -- intersection 1
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n(   (*@\vdmnotcovered{0.}@*)0,   (*@\vdmnotcovered{50.}@*)0), -- intersection 2
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n( (*@\vdmnotcovered{100.}@*)0,   (*@\vdmnotcovered{50.}@*)0), -- intersection 3
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n( (*@\vdmnotcovered{100.}@*)0,    (*@\vdmnotcovered{0.}@*)0), -- intersection 4
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{170.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{170.}@*)0), -- intersection 5
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n(  (*@\vdmnotcovered{50.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{100.}@*)0), -- intersection 6
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n( (*@\vdmnotcovered{120.}@*)0, (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{120.}@*)0), -- intersection 7
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n( (*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{100.}@*)0,(*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{250.}@*)0)  -- intersection 8
+            ],
+            (*@\vdmnotcovered{}@*)[
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)2), -- road from intersection 1 to intersection 2
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)2, (*@\vdmnotcovered{}@*)3),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)3, (*@\vdmnotcovered{}@*)4),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)4, (*@\vdmnotcovered{}@*)1),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)5),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)4, (*@\vdmnotcovered{}@*)6),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)4, (*@\vdmnotcovered{}@*)7),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)6, (*@\vdmnotcovered{}@*)7),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)1, (*@\vdmnotcovered{}@*)6),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)6, (*@\vdmnotcovered{}@*)8),
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)8, (*@\vdmnotcovered{}@*)5)
+            ]
+        );
+    );
+
+    -- output the outlines
+    public show_result : () ==> ()
+    show_result() ==
+        (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[seq of outline]((*@\vdmnotcovered{outline}@*)s) in (*@\vdmnotcovered{ski}@*)p;
+    
+    public show_city : () ==> ()
+    show_city() ==
+        (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[City]((*@\vdmnotcovered{cit}@*)y) in (*@\vdmnotcovered{ski}@*)p;
+
+    -- write outlines to file
+    -- question: [io]
+    --           How to write to file?
+    -- public write_result : String ==> ()
+    -- write_result(p_fname) ==
+    --     def - = io.fwriteval[seq of outline](p_fname, outlines, io.) in skip;
+    
+    -- Function to run through the inlines and generate the outlines
+    public run : () ==> ()
+    run() == (
+        (*@\vdmnotcovered{whil}@*)e (*@\vdmnotcovered{no}@*)t (*@\vdmnotcovered{is\_finishe}@*)d() do (
+            (*@\vdmnotcovered{handle\_inline}@*)s();
+            (*@\vdmnotcovered{cit}@*)y.step();
+            (*@\vdmnotcovered{World`timerRe}@*)f.step_time();
+            (*@\vdmnotcovered{make\_outlin}@*)e();
+        );
+        (*@\vdmnotcovered{show\_resul}@*)t();
+        -- show_city();
+    );
+
+    -- Function to handle all inlines for the current time
+    private handle_inlines : () ==> ()
+    handle_inlines() == (
+        (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{le}@*)n (*@\vdmnotcovered{inline}@*)s (*@\vdmnotcovered{}@*)> (*@\vdmnotcovered{}@*)0 then (
+            dcl current_time : Time := (*@\vdmnotcovered{World`timerRe}@*)f.(*@\vdmnotcovered{get\_tim}@*)e(),
+                done : bool := (*@\vdmnotcovered{fals}@*)e;
+            (*@\vdmnotcovered{whil}@*)e (*@\vdmnotcovered{no}@*)t (*@\vdmnotcovered{don}@*)e do (
+                (*@\vdmnotcovered{de}@*)f mk_(time, car) = (*@\vdmnotcovered{h}@*)d (*@\vdmnotcovered{inline}@*)s in
+                    (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{tim}@*)e (*@\vdmnotcovered{<}@*)= (*@\vdmnotcovered{current\_tim}@*)e then (
+                        (*@\vdmnotcovered{cit}@*)y.add_car((*@\vdmnotcovered{ca}@*)r);
+                        (*@\vdmnotcovered{inline}@*)s := (*@\vdmnotcovered{t}@*)l (*@\vdmnotcovered{inline}@*)s;
+                        (*@\vdmnotcovered{don}@*)e := (*@\vdmnotcovered{le}@*)n (*@\vdmnotcovered{inline}@*)s (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{}@*)0;
+                    )
+                    else (*@\vdmnotcovered{don}@*)e := (*@\vdmnotcovered{tru}@*)e;
+            )
+        )
+        else (*@\vdmnotcovered{bus}@*)y := (*@\vdmnotcovered{fals}@*)e;
+    );
+
+    -- Function to make an outline for the current time
+    private make_outline : () ==> ()
+    make_outline() ==
+        (*@\vdmnotcovered{le}@*)t time = (*@\vdmnotcovered{World`timerRe}@*)f.(*@\vdmnotcovered{get\_tim}@*)e() in
+            (*@\vdmnotcovered{le}@*)t cars = (*@\vdmnotcovered{}@*){
+                (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Ca}@*)r(
+                    (*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_road\_i}@*)d(),
+                    (*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_progres}@*)s(),
+                    (*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_directio}@*)n()
+                ) | car in set (*@\vdmnotcovered{cit}@*)y.(*@\vdmnotcovered{get\_car}@*)s()
+            } in 
+                (*@\vdmnotcovered{le}@*)t lamps = (*@\vdmnotcovered{}@*){
+                    (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{StreetLam}@*)p(
+                        (*@\vdmnotcovered{lam}@*)p.(*@\vdmnotcovered{get\_road\_i}@*)d(),
+                        (*@\vdmnotcovered{lam}@*)p.(*@\vdmnotcovered{get\_positio}@*)n(),
+                        (*@\vdmnotcovered{lam}@*)p.(*@\vdmnotcovered{get\_stat}@*)e()
+                    ) | lamp in set (*@\vdmnotcovered{cit}@*)y.(*@\vdmnotcovered{get\_street\_lamp}@*)s()
+                } in
+                    (*@\vdmnotcovered{outline}@*)s := (*@\vdmnotcovered{outline}@*)s (*@\vdmnotcovered{}@*)^ (*@\vdmnotcovered{}@*)[(*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{tim}@*)e, (*@\vdmnotcovered{car}@*)s, (*@\vdmnotcovered{lamp}@*)s)];
+
+    -- I think maybe we should keep simulating until all cars have exited the city
+    public is_finished : () ==> bool 
+    is_finished() == 
+        (*@\vdmnotcovered{le}@*)t cars = (*@\vdmnotcovered{cit}@*)y.(*@\vdmnotcovered{get\_car}@*)s() in
+            (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{car}@*)s (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{}@*)0 (*@\vdmnotcovered{an}@*)d (*@\vdmnotcovered{no}@*)t (*@\vdmnotcovered{bus}@*)y (*@\vdmnotcovered{o}@*)r (*@\vdmnotcovered{World`timerRe}@*)f.(*@\vdmnotcovered{get\_tim}@*)e() (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{time\_ma}@*)x;
+
+end Environment
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Environment & 0.0\% & 0 \\
+\hline
+Environment & 0.0\% & 0 \\
+\hline
+handle\_inlines & 0.0\% & 0 \\
+\hline
+is\_finished & 0.0\% & 0 \\
+\hline
+make\_outline & 0.0\% & 0 \\
+\hline
+run & 0.0\% & 0 \\
+\hline
+show\_city & 0.0\% & 0 \\
+\hline
+show\_result & 0.0\% & 0 \\
+\hline
+\hline
+environment.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

@@ -1,0 +1,125 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class IO
+
+--  VDMTools STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the VDMTools Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+
+types
+ 
+public
+filedirective = <start>|<append> 
+
+functions
+
+-- Write VDM value in ASCII format to std out:
+public
+writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+-- Write VDM value in ASCII format to file.
+-- fdir = <start> will overwrite existing file,
+-- fdir = <append> will append output to the file (created if
+-- not existing).
+public
+fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+-- Read VDM value in ASCII format from file
+public
+freadval[@p]:seq1 of char -> bool * [@p]
+freadval(filename) ==
+  is not yet specified
+  post (*@\vdmnotcovered{le}@*)t mk_(b,t) = (*@\vdmnotcovered{RESUL}@*)T in (*@\vdmnotcovered{no}@*)t (*@\vdmnotcovered{}@*)b (*@\vdmnotcovered{=}@*)> (*@\vdmnotcovered{}@*)t (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{ni}@*)l;
+
+operations
+
+-- Write text to std out. Surrounding double quotes will be stripped,
+-- backslashed characters should be interpreted.
+public
+echo: seq of char ==> bool
+echo(text) ==
+  (*@\vdmnotcovered{fech}@*)o ((*@\vdmnotcovered{"}@*)",(*@\vdmnotcovered{tex}@*)t,(*@\vdmnotcovered{ni}@*)l);
+
+-- Write text to file like 'echo'
+public
+fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre (*@\vdmnotcovered{filenam}@*)e (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{"}@*)" (*@\vdmnotcovered{<=}@*)> (*@\vdmnotcovered{fdi}@*)r (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{ni}@*)l;
+
+-- The in/out functions  will return false if an error occur. In this
+-- case an internal error string will be set. 'ferror' returns this
+-- string and set it to "".
+public
+ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+public static print: ? ==> ()
+print(arg) ==
+ is not yet specified;
+
+public static println: ? ==> ()
+println(arg) ==
+ is not yet specified;
+
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+ is not yet specified;
+
+end IO
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+IO & 0.0\% & 0 \\
+\hline
+echo & 0.0\% & 0 \\
+\hline
+fecho & 0.0\% & 0 \\
+\hline
+ferror & 0.0\% & 0 \\
+\hline
+freadval & 0.0\% & 0 \\
+\hline
+fwriteval & 0.0\% & 0 \\
+\hline
+print & 0.0\% & 0 \\
+\hline
+printf & 0.0\% & 0 \\
+\hline
+println & 0.0\% & 0 \\
+\hline
+writeval & 0.0\% & 0 \\
+\hline
+\hline
+IO.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}

@@ -1,0 +1,65 @@
+\documentclass[a4paper]{article}
+\usepackage{longtable}
+\usepackage[color]{vdmlisting}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{}
+\author{}
+\begin{vdm_al}
+class Sensor is subclass of GLOBAL
+
+values
+    private static range : real = (*@\vdmnotcovered{20.}@*)0; -- Range of the sensor in meters
+
+instance variables
+    private cars : set of Car := (*@\vdmnotcovered{}@*){};
+    private road : RoadSegment; -- Reference to the road it is part of
+    private road_id : RoadID;
+    private position : real; -- position along the road in meters
+
+operations
+    public Sensor : RoadSegment * real ==> Sensor
+    Sensor(p_road, p_position) == (
+        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+        (*@\vdmnotcovered{roa}@*)d := (*@\vdmnotcovered{p\_roa}@*)d;
+        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d();
+    );
+
+    -- update the sensor with the cars on the road that are in range
+    -- attention: maybe combine sense and get cars?
+    public sense : () ==> ()
+    sense() == (
+        (*@\vdmnotcovered{le}@*)t all_cars_on_road = (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_car}@*)s() in
+            (*@\vdmnotcovered{car}@*)s := (*@\vdmnotcovered{}@*){ (*@\vdmnotcovered{ca}@*)r | car in set (*@\vdmnotcovered{all\_cars\_on\_roa}@*)d & (*@\vdmnotcovered{ab}@*)s((*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_progres}@*)s() (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{positio}@*)n) (*@\vdmnotcovered{}@*)< (*@\vdmnotcovered{rang}@*)e }
+    );
+
+    pure public get_cars : () ==> set of Car
+    get_cars() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{car}@*)s;
+
+    pure public get_position : () ==> real
+    get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
+
+end Sensor
+\end{vdm_al}
+\bigskip
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+Sensor & 0.0\% & 0 \\
+\hline
+Sensor & 0.0\% & 0 \\
+\hline
+get\_cars & 0.0\% & 0 \\
+\hline
+get\_position & 0.0\% & 0 \\
+\hline
+sense & 0.0\% & 0 \\
+\hline
+\hline
+sensor.vdmpp & 0.0\% & 0 \\
+\hline
+\end{longtable}
+\end{document}
