@@ -15,13 +15,6 @@ instance variables
 
     -- direction denoted by either 1 or -1
     -- invariant should exist to make sure this holds
-    -- question: I could also use a specific type,
-    --           but that's not as convenient
-    -- note: Discuss this in the report
-    --       Removing the semantics of having a direction on the road
-    --         - The current intersection1 and intersection2
-    --       This would mean that the car wouldn't neet a direction either
-    --       We just need to keep track of which intersection it came from
     private direction : int := 1;
     inv direction in set {-1, 1};
 
@@ -45,11 +38,9 @@ operations
     public set_progress : real ==> ()
     set_progress(p_progress) == progress := p_progress;
 
-    -- attention: pre road exists?
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
-    -- attention: pre road exists?
     public set_road_id : RoadID ==> ()
     set_road_id(p_road_id) == road_id := p_road_id;
 
@@ -61,7 +52,6 @@ operations
     set_direction(p_direction) == direction := p_direction
     pre p_direction in set {-1, 1};
 
-    -- attention: should this operation ensure that we dont drive off the road?
     public drive : real ==> real
     drive(dt) == (
         progress := new_progress(progress, velocity, dt, direction);

@@ -34,7 +34,7 @@ functions
                 road_id
                 | road_id in set dom p_road_to_intersections &
                     let edge = p_road_to_intersections(road_id) in
-                        edge.intersection1 = intersection_id or edge.intersection2 = intersection_id
+                        edge.from_intersection = intersection_id or edge.to_intersection = intersection_id
             }
             | intersection_id in set p_intersection_ids
         };
@@ -46,8 +46,8 @@ operations
         return {
             new Road(
                 road_id,
-                p_intersection_positions(p_road_to_intersections(road_id).intersection1),
-                p_intersection_positions(p_road_to_intersections(road_id).intersection2)
+                p_intersection_positions(p_road_to_intersections(road_id).from_intersection),
+                p_intersection_positions(p_road_to_intersections(road_id).to_intersection)
             )
             | road_id in set dom p_road_to_intersections
         };
@@ -127,8 +127,8 @@ operations
                 -- 1. drive the car
                 -- check if the car has overstepped a road
                 --     1. remove the car from the road
-                --     2. car.progress < road.length -> choose intersection1
-                --     3. car.progress > road.length -> choose intersection2
+                --     2. car.progress < road.length -> choose from_intersection
+                --     3. car.progress > road.length -> choose to_intersection
                 --     4. select a new road from the intersection
                 --     5. add the car to the new road
                 
@@ -136,9 +136,9 @@ operations
                     let road in set roads be st road.get_id() = car.get_road_id() in (
                         let mk_(intersection_id, progress_remainder) = (
                             if new_progress > road.get_length() then
-                                mk_(road_to_intersections(road.get_id()).intersection2, new_progress - road.get_length())
+                                mk_(road_to_intersections(road.get_id()).to_intersection, new_progress - road.get_length())
                             elseif new_progress < 0 then
-                                mk_(road_to_intersections(road.get_id()).intersection1, abs(new_progress))
+                                mk_(road_to_intersections(road.get_id()).from_intersection, abs(new_progress))
                             else mk_(nil, nil)
                             ) in
                                 if intersection_id <> nil then
@@ -147,11 +147,11 @@ operations
                                         let next_road = intersection.next_road(road) in
                                             if next_road <> nil then (
                                                 next_road.add_car(car);
-                                                if intersection_id = road_to_intersections(next_road.get_id()).intersection1 then
+                                                if intersection_id = road_to_intersections(next_road.get_id()).from_intersection then
                                                     car.set_direction(1)
                                                 else
                                                     car.set_direction(-1);
-                                                if road_to_intersections(next_road.get_id()).intersection1 = intersection_id then
+                                                if road_to_intersections(next_road.get_id()).from_intersection = intersection_id then
                                                     car.set_progress(progress_remainder)
                                                 else
                                                     car.set_progress(next_road.get_length() - progress_remainder);

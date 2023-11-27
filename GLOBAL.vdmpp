@@ -6,8 +6,8 @@ types
     public StreetLampState = <ON> | <OFF>;
     public RoadID = nat1;
     public IntersectionID = nat1;
-    public Edge :: intersection1 : IntersectionID
-                   intersection2 : IntersectionID;
+    public Edge :: from_intersection : IntersectionID
+                   to_intersection : IntersectionID;
     public RoadGraph = map RoadID to Edge;
     public IntersectionGraph = map IntersectionID to set of RoadID;
 
