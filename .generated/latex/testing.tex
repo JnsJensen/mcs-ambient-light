@@ -27,6 +27,10 @@ functions
     public mult : int * real -> real
     mult(x, y) == (*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{}@*)y;
 
+operations
+    public randTest : int ==> int
+    randTest(x) == new (*@\vdmnotcovered{MAT}@*)H().rand((*@\vdmnotcovered{}@*)x);
+
 end Testing 
 \end{vdm_al}
 \bigskip
@@ -44,6 +48,8 @@ Testing & 0.0\% & 0 \\
 add & 0.0\% & 0 \\
 \hline
 mult & 0.0\% & 0 \\
+\hline
+randTest & 0.0\% & 0 \\
 \hline
 \hline
 testing.vdmpp & 0.0\% & 0 \\

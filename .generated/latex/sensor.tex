@@ -10,10 +10,10 @@
 class Sensor is subclass of GLOBAL
 
 values
-    private static range : real = (*@\vdmnotcovered{20.}@*)0; -- Range of the sensor in meters
+    private static range : real = 20.0; -- Range of the sensor in meters
 
 instance variables
-    private cars : set of Car := (*@\vdmnotcovered{}@*){};
+    private cars : set of Car := {};
     private road : RoadSegment; -- Reference to the road it is part of
     private road_id : RoadID;
     private position : real; -- position along the road in meters
@@ -21,24 +21,24 @@ instance variables
 operations
     public Sensor : RoadSegment * real ==> Sensor
     Sensor(p_road, p_position) == (
-        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
-        (*@\vdmnotcovered{roa}@*)d := (*@\vdmnotcovered{p\_roa}@*)d;
-        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d();
+        position := p_position;
+        road := p_road;
+        road_id := p_road.get_id();
     );
 
     -- update the sensor with the cars on the road that are in range
     -- attention: maybe combine sense and get cars?
     public sense : () ==> ()
     sense() == (
-        (*@\vdmnotcovered{le}@*)t all_cars_on_road = (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_car}@*)s() in
-            (*@\vdmnotcovered{car}@*)s := (*@\vdmnotcovered{}@*){ (*@\vdmnotcovered{ca}@*)r | car in set (*@\vdmnotcovered{all\_cars\_on\_roa}@*)d & (*@\vdmnotcovered{ab}@*)s((*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_progres}@*)s() (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{positio}@*)n) (*@\vdmnotcovered{}@*)< (*@\vdmnotcovered{rang}@*)e }
+        let all_cars_on_road = road.get_cars() in
+            cars := { car | car in set all_cars_on_road & abs(car.get_progress() - position) < range }
     );
 
     pure public get_cars : () ==> set of Car
-    get_cars() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{car}@*)s;
+    get_cars() == return cars;
 
     pure public get_position : () ==> real
-    get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
+    get_position() == return position;
 
 end Sensor
 \end{vdm_al}
@@ -48,18 +48,18 @@ end Sensor
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Sensor & 0.0\% & 0 \\
+Sensor & 100.0\% & 1 \\
 \hline
-Sensor & 0.0\% & 0 \\
+Sensor & 100.0\% & 126 \\
 \hline
-get\_cars & 0.0\% & 0 \\
+get\_cars & 100.0\% & 75600 \\
 \hline
-get\_position & 0.0\% & 0 \\
+get\_position & 100.0\% & 578400 \\
 \hline
-sense & 0.0\% & 0 \\
+sense & 100.0\% & 75600 \\
 \hline
 \hline
-sensor.vdmpp & 0.0\% & 0 \\
+sensor.vdmpp & 100.0\% & 729727 \\
 \hline
 \end{longtable}
 \end{document}

@@ -10,15 +10,15 @@
 class World is subclass of GLOBAL
 
 instance variables
-    public static env : [Environment] := (*@\vdmnotcovered{ni}@*)l;
-    public static timerRef : Timer := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Time}@*)r();
+    public static env : [Environment] := nil;
+    public static timerRef : Timer := new Timer();
 
 operations
     public World : () ==> World
-    World() == (*@\vdmnotcovered{en}@*)v := (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Environmen}@*)t((*@\vdmnotcovered{"inputs/inlines.vdmsl}@*)", (*@\vdmnotcovered{"inputs/city.vdmsl}@*)");
+    World() == env := new Environment();
 
     public run : () ==> ()
-    run() == (*@\vdmnotcovered{en}@*)v.run();
+    run() == env.run();
 
 end World
 \end{vdm_al}
@@ -28,14 +28,14 @@ end World
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-World & 0.0\% & 0 \\
+World & 100.0\% & 1 \\
 \hline
-World & 0.0\% & 0 \\
+World & 100.0\% & 1 \\
 \hline
-run & 0.0\% & 0 \\
+run & 100.0\% & 2 \\
 \hline
 \hline
-world.vdmpp & 0.0\% & 0 \\
+world.vdmpp & 100.0\% & 4 \\
 \hline
 \end{longtable}
 \end{document}

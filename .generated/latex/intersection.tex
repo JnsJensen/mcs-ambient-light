@@ -14,16 +14,21 @@ instance variables
     private position : Position;
     private connections : set of RoadSegment;
 
+functions
+    -- private road_set2seq : set of RoadSegment -> seq of RoadSegment
+    -- road_set2seq(s) == 
+    --     ;
+
 operations
     public Intersection : IntersectionID * Position * set of RoadSegment ==> Intersection
     Intersection(p_id, p_position, p_roads) == (
-        (*@\vdmnotcovered{i}@*)d := (*@\vdmnotcovered{p\_i}@*)d;
-        (*@\vdmnotcovered{connection}@*)s := (*@\vdmnotcovered{p\_road}@*)s;
-        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+        id := p_id;
+        connections := p_roads;
+        position := p_position;
     );
 
     pure public get_id : () ==> IntersectionID
-    get_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{i}@*)d;
+    get_id() == return id;
 
     pure public get_position : () ==> Position
     get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
@@ -37,13 +42,12 @@ operations
     -- todo: should part of this be a function?
     public next_road : RoadSegment ==> [RoadSegment]
     next_road(p_from_road) == (
-        (*@\vdmnotcovered{le}@*)t available_connections = (*@\vdmnotcovered{connection}@*)s (*@\vdmnotcovered{}@*)\ (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{p\_from\_roa}@*)d} in
-            (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{available\_connection}@*)s (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*)0 then
-                (*@\vdmnotcovered{le}@*)t road in set (*@\vdmnotcovered{available\_connection}@*)s in
-                    (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{roa}@*)d
-            else (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{ni}@*)l
+        let available_connections = connections \ {p_from_road} in
+            let connections_seq = new VDMUtil().set2seq[RoadSegment](available_connections) in
+                let rand_idx = new MATH().rand(len connections_seq) + 1 in
+                    return connections_seq(rand_idx)
     )
-    pre (*@\vdmnotcovered{p\_from\_roa}@*)d (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{connection}@*)s
+    pre p_from_road in set connections
 
 end Intersection
 \end{vdm_al}
@@ -53,20 +57,20 @@ end Intersection
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Intersection & 0.0\% & 0 \\
+Intersection & 100.0\% & 8 \\
 \hline
-Intersection & 0.0\% & 0 \\
+Intersection & 88.8\% & 8 \\
 \hline
 get\_connections & 0.0\% & 0 \\
 \hline
-get\_id & 0.0\% & 0 \\
+get\_id & 100.0\% & 320 \\
 \hline
 get\_position & 0.0\% & 0 \\
 \hline
-next\_road & 0.0\% & 0 \\
+next\_road & 100.0\% & 82 \\
 \hline
 \hline
-intersection.vdmpp & 0.0\% & 0 \\
+intersection.vdmpp & 88.8\% & 418 \\
 \hline
 \end{longtable}
 \end{document}

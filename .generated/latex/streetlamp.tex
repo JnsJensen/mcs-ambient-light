@@ -10,7 +10,7 @@
 class StreetLamp is subclass of GLOBAL
 
 instance variables
-    private lamp_state : StreetLampState := (*@\vdmnotcovered{<OFF}@*)>;
+    private lamp_state : StreetLampState := <OFF>;
     -- private sensor : Sensor;
     -- private road : RoadSegment;
     private road_id : RoadID;
@@ -19,36 +19,36 @@ instance variables
 operations
     public StreetLamp : RoadSegment * real ==> StreetLamp
     StreetLamp(p_road, p_position) == (
-        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
+        position := p_position;
         -- sensor := new Sensor(p_road, p_position);
         -- road := p_road;
-        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d();
+        road_id := p_road.get_id();
     );
 
     public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp
     StreetLamp(p_road_id, p_position, p_lamp_state) == (
-        (*@\vdmnotcovered{positio}@*)n := (*@\vdmnotcovered{p\_positio}@*)n;
-        (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{p\_lamp\_stat}@*)e;
-        (*@\vdmnotcovered{road\_i}@*)d := (*@\vdmnotcovered{p\_road\_i}@*)d;
+        position := p_position;
+        lamp_state := p_lamp_state;
+        road_id := p_road_id;
     );
 
     public on : () ==> ()
-    on() == (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{<ON}@*)>;
+    on() == lamp_state := <ON>;
 
     public off : () ==> ()
-    off() == (*@\vdmnotcovered{lamp\_stat}@*)e := (*@\vdmnotcovered{<OFF}@*)>;
+    off() == lamp_state := <OFF>;
 
     -- pure public get_sensor : () ==> Sensor
     -- get_sensor() == return sensor;
 
     pure public get_road_id : () ==> RoadID
-    get_road_id() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{road\_i}@*)d;
+    get_road_id() == return road_id;
 
     pure public get_position : () ==> real
-    get_position() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{positio}@*)n;
+    get_position() == return position;
 
     pure public get_state : () ==> StreetLampState
-    get_state() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{lamp\_stat}@*)e;
+    get_state() == return lamp_state;
 
 end StreetLamp
 \end{vdm_al}
@@ -58,24 +58,24 @@ end StreetLamp
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-StreetLamp & 0.0\% & 0 \\
+StreetLamp & 100.0\% & 75726 \\
 \hline
-StreetLamp & 0.0\% & 0 \\
+StreetLamp & 100.0\% & 126 \\
 \hline
-StreetLamp:19 & 0.0\% & 0 \\
+StreetLamp:19 & 100.0\% & 75600 \\
 \hline
-get\_position & 0.0\% & 0 \\
+get\_position & 100.0\% & 654000 \\
 \hline
-get\_road\_id & 0.0\% & 0 \\
+get\_road\_id & 100.0\% & 521400 \\
 \hline
-get\_state & 0.0\% & 0 \\
+get\_state & 100.0\% & 75600 \\
 \hline
-off & 0.0\% & 0 \\
+off & 100.0\% & 54099 \\
 \hline
-on & 0.0\% & 0 \\
+on & 100.0\% & 21501 \\
 \hline
 \hline
-streetlamp.vdmpp & 0.0\% & 0 \\
+streetlamp.vdmpp & 100.0\% & 1478052 \\
 \hline
 \end{longtable}
 \end{document}

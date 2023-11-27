@@ -10,8 +10,8 @@
 class Road is subclass of GLOBAL
 
 instance variables
-    private street_lamps : seq of StreetLamp := (*@\vdmnotcovered{}@*)[];
-    private connections : set of Road := (*@\vdmnotcovered{}@*){};
+    private street_lamps : seq of StreetLamp := [];
+    private connections : set of Road := {};
 
 end Road
 \end{vdm_al}
@@ -21,10 +21,10 @@ end Road
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Road & 0.0\% & 0 \\
+Road & 100.0\% & 19 \\
 \hline
 \hline
-road.vdmpp & 0.0\% & 0 \\
+road.vdmpp & 100.0\% & 19 \\
 \hline
 \end{longtable}
 \end{document}

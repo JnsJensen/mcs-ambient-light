@@ -23,66 +23,57 @@ instance variables
 functions
     private make_road_graph : seq of Edge -> RoadGraph
     make_road_graph(p_edges) ==
-        (*@\vdmnotcovered{make\_road\_graph\_re}@*)c((*@\vdmnotcovered{p\_edge}@*)s, (*@\vdmnotcovered{}@*)1);
+        make_road_graph_rec(p_edges, 1);
 
     private make_road_graph_rec : seq of Edge * RoadID -> RoadGraph
     make_road_graph_rec(p_edges_rec, p_id) ==
-        (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{p\_edges\_re}@*)c (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{}@*)[] then
-            (*@\vdmnotcovered{}@*){ |-> }
+        if p_edges_rec = [] then
+            { |-> }
         else
-            (*@\vdmnotcovered{le}@*)t edge = (*@\vdmnotcovered{h}@*)d (*@\vdmnotcovered{p\_edges\_re}@*)c in
-                (*@\vdmnotcovered{le}@*)t rest = (*@\vdmnotcovered{make\_road\_graph\_re}@*)c((*@\vdmnotcovered{t}@*)l (*@\vdmnotcovered{p\_edges\_re}@*)c, (*@\vdmnotcovered{p\_i}@*)d (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{}@*)1) in
-                    (*@\vdmnotcovered{res}@*)t (*@\vdmnotcovered{+}@*)+ (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{p\_i}@*)d |-> (*@\vdmnotcovered{edg}@*)e}
-    measure (*@\vdmnotcovered{le}@*)n (*@\vdmnotcovered{p\_edges\_re}@*)c;
+            let edge = hd p_edges_rec in
+                let rest = make_road_graph_rec(tl p_edges_rec, p_id + 1) in
+                    rest ++ {p_id |-> edge}
+    measure len p_edges_rec;
 
     -- infer map from Intersections to Roads from map from Roads to Intersections
     private make_intersection_graph : set of IntersectionID * RoadGraph -> IntersectionGraph
     make_intersection_graph(p_intersection_ids, p_road_to_intersections) ==
-        (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{intersection\_i}@*)d |-> (*@\vdmnotcovered{}@*){
-                (*@\vdmnotcovered{road\_i}@*)d
-                | road_id in set (*@\vdmnotcovered{do}@*)m (*@\vdmnotcovered{p\_road\_to\_intersection}@*)s &
-                    (*@\vdmnotcovered{le}@*)t edge = (*@\vdmnotcovered{p\_road\_to\_intersection}@*)s((*@\vdmnotcovered{road\_i}@*)d) in
-                        (*@\vdmnotcovered{edg}@*)e.(*@\vdmnotcovered{intersection}@*)1 (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{intersection\_i}@*)d (*@\vdmnotcovered{o}@*)r (*@\vdmnotcovered{edg}@*)e.(*@\vdmnotcovered{intersection}@*)2 (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{intersection\_i}@*)d
+        {
+            intersection_id |-> {
+                road_id
+                | road_id in set dom p_road_to_intersections &
+                    let edge = p_road_to_intersections(road_id) in
+                        edge.intersection1 = intersection_id or edge.intersection2 = intersection_id
             }
-            | intersection_id in set (*@\vdmnotcovered{p\_intersection\_id}@*)s
+            | intersection_id in set p_intersection_ids
         };
-
-    -- returns the road of a specific road id
-    -- question: [static]
-    --           I want this static function,
-    --           such that any class can call it
-    -- static public lookup_road_id : RoadID -> RoadSegment
-    -- lookup_road_id(p_road_id) ==
-    --     let road in set roads be st road.get_id() = p_road_id in
-    --         road;
 
 operations
     -- make roads from RoadGraph
     private make_roads : RoadGraph * seq of Position ==> set of RoadSegment
     make_roads(p_road_to_intersections, p_intersection_positions) ==
-        (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{RoadSegmen}@*)t(
-                (*@\vdmnotcovered{road\_i}@*)d,
-                (*@\vdmnotcovered{p\_intersection\_position}@*)s((*@\vdmnotcovered{p\_road\_to\_intersection}@*)s((*@\vdmnotcovered{road\_i}@*)d).(*@\vdmnotcovered{intersection}@*)1),
-                (*@\vdmnotcovered{p\_intersection\_position}@*)s((*@\vdmnotcovered{p\_road\_to\_intersection}@*)s((*@\vdmnotcovered{road\_i}@*)d).(*@\vdmnotcovered{intersection}@*)2)
+        return {
+            new RoadSegment(
+                road_id,
+                p_intersection_positions(p_road_to_intersections(road_id).intersection1),
+                p_intersection_positions(p_road_to_intersections(road_id).intersection2)
             )
-            | road_id in set (*@\vdmnotcovered{do}@*)m (*@\vdmnotcovered{p\_road\_to\_intersection}@*)s
+            | road_id in set dom p_road_to_intersections
         };
     
     -- make intersections from IntersectionGraph
     private make_intersections : seq of Position * IntersectionGraph ==> set of Intersection
     make_intersections(p_intersection_positions, p_intersection_to_roads) ==
-        (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Intersectio}@*)n(
-                (*@\vdmnotcovered{intersection\_i}@*)d,
-                (*@\vdmnotcovered{p\_intersection\_position}@*)s((*@\vdmnotcovered{intersection\_i}@*)d),
-                (*@\vdmnotcovered{}@*){
-                    (*@\vdmnotcovered{roa}@*)d
-                    | road in set (*@\vdmnotcovered{road}@*)s & (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d() (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{p\_intersection\_to\_road}@*)s((*@\vdmnotcovered{intersection\_i}@*)d)
+        return {
+            new Intersection(
+                intersection_id,
+                p_intersection_positions(intersection_id),
+                {
+                    road
+                    | road in set roads & road.get_id() in set p_intersection_to_roads(intersection_id)
                 }
             )
-            | intersection_id in set (*@\vdmnotcovered{do}@*)m (*@\vdmnotcovered{p\_intersection\_to\_road}@*)s
+            | intersection_id in set dom p_intersection_to_roads
         };
 
     -- constructor
@@ -93,14 +84,12 @@ operations
     public City : seq of Position * seq of Edge ==> City
     City(p_intersection_positions, p_edges) == (
         -- make the graph representation of the city with maps
-        (*@\vdmnotcovered{road\_to\_intersection}@*)s := (*@\vdmnotcovered{make\_road\_grap}@*)h((*@\vdmnotcovered{p\_edge}@*)s);
-        (*@\vdmnotcovered{intersection\_to\_road}@*)s := (*@\vdmnotcovered{make\_intersection\_grap}@*)h((*@\vdmnotcovered{ind}@*)s (*@\vdmnotcovered{p\_intersection\_position}@*)s, (*@\vdmnotcovered{road\_to\_intersection}@*)s);
+        road_to_intersections := make_road_graph(p_edges);
+        intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
         
         -- instantiate the roads and intersections
-        -- question: convention
-        --           should these operations set the instance variables themselves?
-        (*@\vdmnotcovered{road}@*)s := (*@\vdmnotcovered{make\_road}@*)s((*@\vdmnotcovered{road\_to\_intersection}@*)s, (*@\vdmnotcovered{p\_intersection\_position}@*)s);
-        (*@\vdmnotcovered{intersection}@*)s := (*@\vdmnotcovered{make\_intersection}@*)s((*@\vdmnotcovered{p\_intersection\_position}@*)s, (*@\vdmnotcovered{intersection\_to\_road}@*)s);
+        roads := make_roads(road_to_intersections, p_intersection_positions);
+        intersections := make_intersections(p_intersection_positions, intersection_to_roads);
     );
 
     -- add a car to the city
@@ -111,13 +100,11 @@ operations
         -- 1. find the intersection
         -- 2. choose random road from intersection
         -- 3. add car to road
-        -- question: let <x> in set <y>
-        --           means i essentially take a random element in the set?
-        (*@\vdmnotcovered{le}@*)t road_id = (*@\vdmnotcovered{p\_ca}@*)r.(*@\vdmnotcovered{get\_road\_i}@*)d() in
-            (*@\vdmnotcovered{le}@*)t road in set (*@\vdmnotcovered{road}@*)s be st (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d() (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{road\_i}@*)d in
-                (*@\vdmnotcovered{roa}@*)d.add_car((*@\vdmnotcovered{p\_ca}@*)r);
+        let road_id = p_car.get_road_id() in
+            let road in set roads be st road.get_id() = road_id in
+                road.add_car(p_car);
     )
-    pre (*@\vdmnotcovered{p\_ca}@*)r.(*@\vdmnotcovered{get\_road\_i}@*)d() (*@\vdmnotcovered{i}@*)n set (*@\vdmnotcovered{do}@*)m (*@\vdmnotcovered{road\_to\_intersection}@*)s;
+    pre p_car.get_road_id() in set dom road_to_intersections;
 
     public step : () ==> ()
     step() == (
@@ -128,23 +115,23 @@ operations
         -- 3. turn street lamps on or off
 
         -- 1. step all cars
-        (*@\vdmnotcovered{step\_car}@*)s();
+        step_cars();
 
         -- 2. step all sensors
-        (*@\vdmnotcovered{step\_sensor}@*)s();
+        step_sensors();
         
         -- 3. step all street lamps
-        (*@\vdmnotcovered{step\_street\_lamp}@*)s();
+        step_street_lamps();
     );
 
     -- 1. step all cars
     public step_cars : () ==> ()
     step_cars() ==
-        (*@\vdmnotcovered{le}@*)t cars = (*@\vdmnotcovered{dunio}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_car}@*)s()
-            | road in set (*@\vdmnotcovered{road}@*)s
+        let cars = dunion {
+            road.get_cars()
+            | road in set roads
         } in
-            (*@\vdmnotcovered{fo}@*)r all car in set (*@\vdmnotcovered{car}@*)s do (
+            for all car in set cars do (
                 -- Then the steps would be
                 -- 1. drive the car
                 -- check if the car has overstepped a road
@@ -154,29 +141,29 @@ operations
                 --     4. select a new road from the intersection
                 --     5. add the car to the new road
                 
-                (*@\vdmnotcovered{le}@*)t new_progress = (*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{driv}@*)e((*@\vdmnotcovered{World`timerRe}@*)f.(*@\vdmnotcovered{get\_step\_lengt}@*)h()) in 
-                    (*@\vdmnotcovered{le}@*)t road in set (*@\vdmnotcovered{road}@*)s be st (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d() (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{ca}@*)r.(*@\vdmnotcovered{get\_road\_i}@*)d() in (
-                        (*@\vdmnotcovered{le}@*)t mk_(intersection_id, progress_remainder) = (
-                            (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{new\_progres}@*)s (*@\vdmnotcovered{}@*)> (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_lengt}@*)h() then
-                                (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{road\_to\_intersection}@*)s((*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d()).(*@\vdmnotcovered{intersection}@*)2, (*@\vdmnotcovered{new\_progres}@*)s (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_lengt}@*)h())
-                            elseif (*@\vdmnotcovered{new\_progres}@*)s (*@\vdmnotcovered{}@*)< (*@\vdmnotcovered{}@*)0 then
-                                (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{road\_to\_intersection}@*)s((*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d()).(*@\vdmnotcovered{intersection}@*)1, (*@\vdmnotcovered{ab}@*)s((*@\vdmnotcovered{new\_progres}@*)s))
-                            else (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{ni}@*)l, (*@\vdmnotcovered{ni}@*)l)
+                let new_progress = car.drive(World`timerRef.get_step_length()) in 
+                    let road in set roads be st road.get_id() = car.get_road_id() in (
+                        let mk_(intersection_id, progress_remainder) = (
+                            if new_progress > road.get_length() then
+                                mk_(road_to_intersections(road.get_id()).intersection2, new_progress - road.get_length())
+                            elseif new_progress < 0 then
+                                mk_(road_to_intersections(road.get_id()).intersection1, abs(new_progress))
+                            else mk_(nil, nil)
                             ) in
-                                (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{intersection\_i}@*)d (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{ni}@*)l then
-                                    (*@\vdmnotcovered{le}@*)t intersection in set (*@\vdmnotcovered{intersection}@*)s be st (*@\vdmnotcovered{intersectio}@*)n.(*@\vdmnotcovered{get\_i}@*)d() (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{intersection\_i}@*)d in (
-                                        (*@\vdmnotcovered{roa}@*)d.remove_car((*@\vdmnotcovered{ca}@*)r);
-                                        (*@\vdmnotcovered{le}@*)t next_road = (*@\vdmnotcovered{intersectio}@*)n.(*@\vdmnotcovered{next\_roa}@*)d((*@\vdmnotcovered{roa}@*)d) in
-                                            (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{next\_roa}@*)d (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{ni}@*)l then (
-                                                (*@\vdmnotcovered{next\_roa}@*)d.add_car((*@\vdmnotcovered{ca}@*)r);
-                                                (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{intersection\_i}@*)d (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{road\_to\_intersection}@*)s((*@\vdmnotcovered{next\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d()).(*@\vdmnotcovered{intersection}@*)1 then
-                                                    (*@\vdmnotcovered{ca}@*)r.set_direction((*@\vdmnotcovered{}@*)1)
+                                if intersection_id <> nil then
+                                    let intersection in set intersections be st intersection.get_id() = intersection_id in (
+                                        road.remove_car(car);
+                                        let next_road = intersection.next_road(road) in
+                                            if next_road <> nil then (
+                                                next_road.add_car(car);
+                                                if intersection_id = road_to_intersections(next_road.get_id()).intersection1 then
+                                                    car.set_direction(1)
                                                 else
-                                                    (*@\vdmnotcovered{ca}@*)r.set_direction((*@\vdmnotcovered{}@*)-(*@\vdmnotcovered{}@*)1);
-                                                (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{road\_to\_intersection}@*)s((*@\vdmnotcovered{next\_roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d()).(*@\vdmnotcovered{intersection}@*)1 (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{intersection\_i}@*)d then
-                                                    (*@\vdmnotcovered{ca}@*)r.set_progress((*@\vdmnotcovered{progress\_remainde}@*)r)
+                                                    car.set_direction(-1);
+                                                if road_to_intersections(next_road.get_id()).intersection1 = intersection_id then
+                                                    car.set_progress(progress_remainder)
                                                 else
-                                                    (*@\vdmnotcovered{ca}@*)r.set_progress((*@\vdmnotcovered{next\_roa}@*)d.(*@\vdmnotcovered{get\_lengt}@*)h() (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{progress\_remainde}@*)r);
+                                                    car.set_progress(next_road.get_length() - progress_remainder);
                                             );
                                     );
                     );
@@ -185,42 +172,42 @@ operations
     -- 2. step all sensors
     public step_sensors : () ==> ()
     step_sensors() ==
-        (*@\vdmnotcovered{le}@*)t sensors = (*@\vdmnotcovered{dunio}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_sensor}@*)s()
-            | road in set (*@\vdmnotcovered{road}@*)s
+        let sensors = dunion {
+            road.get_sensors()
+            | road in set roads
         } in
-            (*@\vdmnotcovered{fo}@*)r all sensor in set (*@\vdmnotcovered{sensor}@*)s do
-                (*@\vdmnotcovered{senso}@*)r.sense();
+            for all sensor in set sensors do
+                sensor.sense();
 
     -- 3. step all street lamps
     public step_street_lamps : () ==> ()
     step_street_lamps() ==
-        (*@\vdmnotcovered{le}@*)t street_lamps = (*@\vdmnotcovered{dunio}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_street\_lamp}@*)s()
-            | road in set (*@\vdmnotcovered{road}@*)s
+        let street_lamps = dunion {
+            road.get_street_lamps()
+            | road in set roads
         } in
-            (*@\vdmnotcovered{fo}@*)r all street_lamp in set (*@\vdmnotcovered{street\_lamp}@*)s do
-                (*@\vdmnotcovered{le}@*)t road in set (*@\vdmnotcovered{road}@*)s be st (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_i}@*)d() (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{street\_lam}@*)p.(*@\vdmnotcovered{get\_road\_i}@*)d() in
-                    (*@\vdmnotcovered{le}@*)t sensor in set (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_sensor}@*)s() be st (*@\vdmnotcovered{senso}@*)r.(*@\vdmnotcovered{get\_positio}@*)n() (*@\vdmnotcovered{}@*)= (*@\vdmnotcovered{street\_lam}@*)p.(*@\vdmnotcovered{get\_positio}@*)n() in
-                        (*@\vdmnotcovered{i}@*)f (*@\vdmnotcovered{senso}@*)r.(*@\vdmnotcovered{get\_car}@*)s() (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{}@*){} then
-                            (*@\vdmnotcovered{street\_lam}@*)p.on()
+            for all street_lamp in set street_lamps do
+                let road in set roads be st road.get_id() = street_lamp.get_road_id() in
+                    let sensor in set road.get_sensors() be st sensor.get_position() = street_lamp.get_position() in
+                        if sensor.get_cars() <> {} then
+                            street_lamp.on()
                         else
-                            (*@\vdmnotcovered{street\_lam}@*)p.off();
+                            street_lamp.off();
 
     -- public getter for all cars
     pure public get_cars : () ==> set of Car
     get_cars() ==
-        (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{dunio}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_car}@*)s()
-            | road in set (*@\vdmnotcovered{road}@*)s
+        return dunion {
+            road.get_cars()
+            | road in set roads
         };
     
     -- public getter for all street lamps
     pure public get_street_lamps : () ==> set of StreetLamp
     get_street_lamps() ==
-        (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{dunio}@*)n (*@\vdmnotcovered{}@*){
-            (*@\vdmnotcovered{roa}@*)d.(*@\vdmnotcovered{get\_street\_lamp}@*)s()
-            | road in set (*@\vdmnotcovered{road}@*)s
+        return dunion {
+            road.get_street_lamps()
+            | road in set roads
         };
 
 end City
@@ -231,36 +218,36 @@ end City
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-City & 0.0\% & 0 \\
+City & 100.0\% & 1 \\
 \hline
-City & 0.0\% & 0 \\
+City & 100.0\% & 1 \\
 \hline
-add\_car & 0.0\% & 0 \\
+add\_car & 100.0\% & 14 \\
 \hline
-get\_cars & 0.0\% & 0 \\
+get\_cars & 100.0\% & 1201 \\
 \hline
-get\_street\_lamps & 0.0\% & 0 \\
+get\_street\_lamps & 100.0\% & 600 \\
 \hline
-make\_intersection\_graph & 0.0\% & 0 \\
+make\_intersection\_graph & 100.0\% & 1 \\
 \hline
-make\_intersections & 0.0\% & 0 \\
+make\_intersections & 100.0\% & 1 \\
 \hline
-make\_road\_graph & 0.0\% & 0 \\
+make\_road\_graph & 100.0\% & 1 \\
 \hline
-make\_road\_graph\_rec & 0.0\% & 0 \\
+make\_road\_graph\_rec & 100.0\% & 12 \\
 \hline
-make\_roads & 0.0\% & 0 \\
+make\_roads & 100.0\% & 1 \\
 \hline
-step & 0.0\% & 0 \\
+step & 100.0\% & 600 \\
 \hline
-step\_cars & 0.0\% & 0 \\
+step\_cars & 100.0\% & 600 \\
 \hline
-step\_sensors & 0.0\% & 0 \\
+step\_sensors & 100.0\% & 600 \\
 \hline
-step\_street\_lamps & 0.0\% & 0 \\
+step\_street\_lamps & 100.0\% & 600 \\
 \hline
 \hline
-city.vdmpp & 0.0\% & 0 \\
+city.vdmpp & 100.0\% & 4233 \\
 \hline
 \end{longtable}
 \end{document}

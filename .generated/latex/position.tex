@@ -18,14 +18,14 @@ instance variables
 operations
     public Position : real * real ==> Position
     Position(p_x, p_y) == (
-        (*@\vdmnotcovered{}@*)x := (*@\vdmnotcovered{p\_}@*)x;
-        (*@\vdmnotcovered{}@*)y := (*@\vdmnotcovered{p\_}@*)y;
+        x := p_x;
+        y := p_y;
     );
 
     -- Returns the distance from the current point to the given point
     public distance_to : Position ==> real
     distance_to(p_to_position) == (
-        (*@\vdmnotcovered{MATH`sqr}@*)t(((*@\vdmnotcovered{}@*)x (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{p\_to\_positio}@*)n.(*@\vdmnotcovered{}@*)x)(*@\vdmnotcovered{*}@*)*(*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)+ ((*@\vdmnotcovered{}@*)y (*@\vdmnotcovered{}@*)- (*@\vdmnotcovered{p\_to\_positio}@*)n.(*@\vdmnotcovered{}@*)y)(*@\vdmnotcovered{*}@*)*(*@\vdmnotcovered{}@*)2)
+        MATH`sqrt((x - p_to_position.x)**2 + (y - p_to_position.y)**2)
     );
 
 end Position
@@ -36,14 +36,14 @@ end Position
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Position & 0.0\% & 0 \\
+Position & 100.0\% & 8 \\
 \hline
-Position & 0.0\% & 0 \\
+Position & 100.0\% & 8 \\
 \hline
-distance\_to & 0.0\% & 0 \\
+distance\_to & 100.0\% & 11 \\
 \hline
 \hline
-position.vdmpp & 0.0\% & 0 \\
+position.vdmpp & 100.0\% & 27 \\
 \hline
 \end{longtable}
 \end{document}

@@ -72,7 +72,7 @@ public static
     sqrt:real -> real
     sqrt(a) ==
     is not yet specified
-    pre (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)0;
+    pre a >= 0;
 
 public static
     pi_f:() +> real
@@ -125,8 +125,8 @@ public static
 
 values
 public
-    pi = (*@\vdmnotcovered{pi\_}@*)f();
-    euler = (*@\vdmnotcovered{ex}@*)p((*@\vdmnotcovered{}@*)1);
+    pi = pi_f();
+    euler = exp(1);
 
  
 end MATH
@@ -137,7 +137,7 @@ end MATH
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-MATH & 0.0\% & 0 \\
+MATH & 10.9\% & 0 \\
 \hline
 acos & 0.0\% & 0 \\
 \hline
@@ -165,7 +165,7 @@ rand & 0.0\% & 0 \\
 \hline
 sin & 0.0\% & 0 \\
 \hline
-sqrt & 0.0\% & 0 \\
+sqrt & 100.0\% & 11 \\
 \hline
 srand & 0.0\% & 0 \\
 \hline
@@ -174,7 +174,7 @@ srand2 & 0.0\% & 0 \\
 tan & 0.0\% & 0 \\
 \hline
 \hline
-MATH.vdmpp & 0.0\% & 0 \\
+MATH.vdmpp & 10.9\% & 11 \\
 \hline
 \end{longtable}
 \end{document}

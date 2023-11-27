@@ -12,9 +12,22 @@ skinparam class {
 }
 skinparam defaultTextAlignment center
 
+
+class Road
+{
+}
+
+class Position
+{
+	-x : real
+	-y : real
+	+Position(real, real) : Position
+	+distance_to(Position) : real
+}
+
 class GLOBAL
 {
-	+Time : nat <<type>>
+	+Time : real <<type>>
 	+String : seq of char <<type>>
 	+StreetLampState : <OFF> | <ON> <<type>>
 	+RoadID : nat1 <<type>>
@@ -24,82 +37,15 @@ class GLOBAL
 	+IntersectionGraph : map IntersectionID to set... <<type>>
 }
 
-class Car
-{
-	+velocity : real <<value>>
-	-road : RoadSegment
-	-progress : real
-	-direction : int
-	-new_progress(real, real, real, int) : real <<function>>
-	+Car(RoadSegment, real, int) : Car
-	+get_progress() : real
-	+set_progress(real)
-	+get_road() : RoadSegment
-	+drive(real) : real
-}
-
-class City
-{
-	+road_to_intersections : RoadGraph
-	+intersection_to_roads : IntersectionGraph
-	-make_road_graph(set of Edge) : RoadGraph <<function>>
-	-make_road_graph_rec(set of Edge, RoadID) : RoadGraph <<function>>
-	-make_intersection_graph(set of IntersectionID, RoadGraph) : IntersectionGraph <<function>>
-	-make_roads(RoadGraph, seq of Position) : set of RoadSegment
-	-make_intersections(seq of Position) : set of Intersection
-	-City(seq of Position, set of Edge) : City
-	+add_car(Car, Position)
-	+step()
-}
-
 class Intersection
 {
-	-ID : IntersectionID
+	-id : IntersectionID
+	-position : Position
 	+Intersection(IntersectionID, Position, set of RoadSegment) : Intersection
-	+get_ID() : IntersectionID
+	+get_id() : IntersectionID
 	+get_position() : Position
 	+get_connections() : set of RoadSegment
 	+next_road(RoadSegment) : [RoadSegment]
-}
-
-class Road
-{
-}
-
-class RoadSegment
-{
-	-st_spacing : real <<value>>
-	-ID : RoadID
-	-length : real
-	+RoadSegment(RoadID, Position, Position) : RoadSegment
-	+get_ID() : RoadID
-	+get_length() : real
-	+get_cars() : set of Car
-	+get_street_lamps() : set of StreetLamp
-	+add_car(Car)
-	+remove_car(Car)
-}
-
-class Sensor
-{
-	+range : real <<value>>
-	-road : RoadSegment
-	-position : real
-	+Sensor(RoadSegment, real) : Sensor
-	+sense()
-	+get_cars() : set of Car
-}
-
-class StreetLamp
-{
-	-lamp_state : StreetLampState
-	-sensor : Sensor
-	-road : Road
-	-position : real
-	+StreetLamp(Road, real) : StreetLamp
-	+on()
-	+off()
-	+get_sensor() : Sensor
 }
 
 class Timer
@@ -111,52 +57,128 @@ class Timer
 	+get_step_length() : real
 }
 
+class World
+{
+	+timerRef : Timer
+	+World() : World
+	+run()
+}
+
+class Car
+{
+	-velocity : real <<value>>
+	-road_id : RoadID
+	-progress : real
+	-direction : int
+	-new_progress(real, real, real, int) : real <<function>>
+	+Car(RoadID, real, int) : Car
+	+get_progress() : real
+	+set_progress(real)
+	+get_road_id() : RoadID
+	+set_road_id(RoadID)
+	+get_direction() : int
+	+set_direction(int)
+	+drive(real) : real
+}
+
+class City
+{
+	-road_to_intersections : RoadGraph
+	-intersection_to_roads : IntersectionGraph
+	-make_road_graph(seq of Edge) : RoadGraph <<function>>
+	-make_road_graph_rec(seq of Edge, RoadID) : RoadGraph <<function>>
+	-make_intersection_graph(set of IntersectionID, RoadGraph) : IntersectionGraph <<function>>
+	-make_roads(RoadGraph, seq of Position) : set of RoadSegment
+	-make_intersections(seq of Position, IntersectionGraph) : set of Intersection
+	+City(seq of Position, seq of Edge) : City
+	+add_car(Car)
+	+step()
+	+step_cars()
+	+step_sensors()
+	+step_street_lamps()
+	+get_cars() : set of Car
+	+get_street_lamps() : set of StreetLamp
+}
+
 class Environment
 {
-	-inline : ** <<type>>
+	-inline : Time * Car <<type>>
 	-outline : ** <<type>>
+	-time_max : Time <<value>>
 	-io : IO
 	-inlines : seq of inline
 	-outlines : seq of outline
 	-city : City
 	-busy : bool
-	+Environment(String, String) : Environment
+	+Environment() : Environment
 	+show_result()
+	+show_city()
+	+write_result(String)
 	+run()
 	-handle_inlines()
+	-make_outline()
 	+is_finished() : bool
 }
 
-class Position
+class RoadSegment
 {
-	-x : real
-	-y : real
-	+Position(real, real) : Position
-	+distance_to(Position) : real
+	-st_spacing : real <<value>>
+	-id : RoadID
+	-length : real
+	+RoadSegment(RoadID, Position, Position) : RoadSegment
+	+get_id() : RoadID
+	+get_length() : real
+	+get_cars() : set of Car
+	+get_street_lamps() : set of StreetLamp
+	+get_sensors() : set of Sensor
+	+add_car(Car)
+	+remove_car(Car)
 }
 
-class World
+class Sensor
 {
-	-World() : World
-	+run()
+	-range : real <<value>>
+	-road : RoadSegment
+	-road_id : RoadID
+	-position : real
+	+Sensor(RoadSegment, real) : Sensor
+	+sense()
+	+get_cars() : set of Car
+	+get_position() : real
 }
 
-Intersection --> Position : -position
-World --> Timer : +timerRef
-City --> "*" Intersection : +intersections
-City --> "*" RoadSegment : +roads
-GLOBAL <|-- City
-Intersection --> "*" RoadSegment : -connections
-Road <|-- Intersection
+class StreetLamp
+{
+	-lamp_state : StreetLampState
+	-road_id : RoadID
+	-position : real
+	+StreetLamp(RoadSegment, real) : StreetLamp
+	+StreetLamp(RoadID, real, StreetLampState) : StreetLamp
+	+on()
+	+off()
+	+get_road_id() : RoadID
+	+get_position() : real
+	+get_state() : StreetLampState
+}
+
 Road --> "(*)" StreetLamp : -street_lamps
 Road --> "*" Road : -connections
 GLOBAL <|-- Road
+Intersection --> "*" RoadSegment : -connections
+Road <|-- Intersection
+World --> "0..1" Environment : +env
+GLOBAL <|-- World
+GLOBAL <|-- Car
+City --> "*" Intersection : -intersections
+City --> "*" RoadSegment : -roads
+GLOBAL <|-- City
+GLOBAL <|-- Environment
 RoadSegment --> "*" Car : -cars
 RoadSegment --> "*" StreetLamp : -street_lamps
+RoadSegment --> "*" Sensor : -sensors
 Road <|-- RoadSegment
 Sensor --> "*" Car : -cars
+GLOBAL <|-- Sensor
 GLOBAL <|-- StreetLamp
-GLOBAL <|-- Environment
-World --> "0..1" Environment : +env
 
 @enduml

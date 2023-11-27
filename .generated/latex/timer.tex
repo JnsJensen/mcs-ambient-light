@@ -10,20 +10,20 @@
 class Timer 
 
 instance variables
-    private current_time : real := (*@\vdmnotcovered{}@*)0;
+    private current_time : real := 0;
 
 values 
-    private step_length : real = (*@\vdmnotcovered{0.}@*)1;
+    private step_length : real = 0.1;
 
 operations
     public step_time: () ==> ()
-    step_time() == (*@\vdmnotcovered{current\_tim}@*)e := (*@\vdmnotcovered{current\_tim}@*)e (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{step\_lengt}@*)h;
+    step_time() == current_time := current_time + step_length;
 
     public get_time: () ==> real 
-    get_time() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{current\_tim}@*)e;
+    get_time() == return current_time;
 
     pure public get_step_length: () ==> real
-    get_step_length() == (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{step\_lengt}@*)h;
+    get_step_length() == return step_length;
 
 end Timer
 \end{vdm_al}
@@ -33,16 +33,16 @@ end Timer
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Timer & 0.0\% & 0 \\
+Timer & 100.0\% & 1 \\
 \hline
-get\_step\_length & 0.0\% & 0 \\
+get\_step\_length & 100.0\% & 7995 \\
 \hline
-get\_time & 0.0\% & 0 \\
+get\_time & 100.0\% & 1253 \\
 \hline
-step\_time & 0.0\% & 0 \\
+step\_time & 100.0\% & 600 \\
 \hline
 \hline
-timer.vdmpp & 0.0\% & 0 \\
+timer.vdmpp & 100.0\% & 9849 \\
 \hline
 \end{longtable}
 \end{document}
