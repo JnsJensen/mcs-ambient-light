@@ -15,7 +15,7 @@ class IO
 -- case an internal error string will be set (see 'ferror').
 
 types
- 
+
 public
 filedirective = <start>|<append> 
 
