@@ -127,18 +127,18 @@ operations
                 -- 1. drive the car
                 -- check if the car has overstepped a road
                 --     1. remove the car from the road
-                --     2. car.progress < road.length -> choose from_intersection
-                --     3. car.progress > road.length -> choose to_intersection
+                --     2. car.distance < road.length -> choose from_intersection
+                --     3. car.distance > road.length -> choose to_intersection
                 --     4. select a new road from the intersection
                 --     5. add the car to the new road
                 
-                let new_progress = car.drive(World`timer_ref.get_step_length()) in 
+                let new_distance = car.drive(World`timer_ref.get_step_length()) in 
                     let road in set roads be st road.get_id() = car.get_road_id() in (
-                        let mk_(intersection_id, progress_remainder) = (
-                            if new_progress > road.get_length() then
-                                mk_(road_to_intersections(road.get_id()).to_intersection, new_progress - road.get_length())
-                            elseif new_progress < 0 then
-                                mk_(road_to_intersections(road.get_id()).from_intersection, abs(new_progress))
+                        let mk_(intersection_id, distance_remainder) = (
+                            if new_distance > road.get_length() then
+                                mk_(road_to_intersections(road.get_id()).to_intersection, new_distance - road.get_length())
+                            elseif new_distance < 0 then
+                                mk_(road_to_intersections(road.get_id()).from_intersection, abs(new_distance))
                             else mk_(nil, nil)
                             ) in
                                 if intersection_id <> nil then
@@ -152,9 +152,9 @@ operations
                                                 else
                                                     car.set_direction(-1);
                                                 if road_to_intersections(next_road.get_id()).from_intersection = intersection_id then
-                                                    car.set_progress(progress_remainder)
+                                                    car.set_distance(distance_remainder)
                                                 else
-                                                    car.set_progress(next_road.get_length() - progress_remainder);
+                                                    car.set_distance(next_road.get_length() - distance_remainder);
                                             );
                                     );
                     );

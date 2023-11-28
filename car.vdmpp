@@ -9,9 +9,9 @@ instance variables
     -- reference to the road the car is driving on
     private road_id : RoadID;
 
-    -- the progress of the car along the road
+    -- the distance of the car along the road
     -- a real number between 0 and the length of the road
-    private progress : real := 0; -- m
+    private distance : real := 0; -- m
 
     -- direction denoted by either 1 or -1
     -- invariant should exist to make sure this holds
@@ -19,24 +19,24 @@ instance variables
     inv direction in set {-1, 1};
 
 functions
-    -- calculate progress
-    private new_progress : real * real * real * int -> real
-    new_progress(p_progress, p_velocity, p_dt, p_direction) ==
-        p_progress + p_direction * p_velocity * p_dt;
+    -- calculate distance
+    private new_distance : real * real * real * int -> real
+    new_distance(p_distance, p_velocity, p_dt, p_direction) ==
+        p_distance + p_direction * p_velocity * p_dt;
 
 operations
     public Car : RoadID * real * int ==> Car
-    Car(p_road_id, p_progress, p_direction) == (
+    Car(p_road_id, p_distance, p_direction) == (
         road_id := p_road_id;
-        progress := p_progress;
+        distance := p_distance;
         direction := p_direction;
     );
 
-    pure public get_progress : () ==> real
-    get_progress() == return progress;
+    pure public get_distance : () ==> real
+    get_distance() == return distance;
 
-    public set_progress : real ==> ()
-    set_progress(p_progress) == progress := p_progress;
+    public set_distance : real ==> ()
+    set_distance(p_distance) == distance := p_distance;
 
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
@@ -54,8 +54,8 @@ operations
 
     public drive : real ==> real
     drive(dt) == (
-        progress := new_progress(progress, velocity, dt, direction);
-        return progress;
+        distance := new_distance(distance, velocity, dt, direction);
+        return distance;
     );
 
 end Car

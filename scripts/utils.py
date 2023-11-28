@@ -1,14 +1,14 @@
 import re
 
 class Car:
-    def __init__(self, road_id: int, progress: float = 0, direction: int = 1):
+    def __init__(self, road_id: int, distance: float = 0, direction: int = 1):
         self.road_id = road_id
-        self.progress = progress
+        self.distance = distance
         self.direction = direction
         assert direction in {-1, 1}, "Invalid direction value"
 
     def __repr__(self):
-        return f"Car(road_id={self.road_id}, progress={self.progress}, direction={self.direction})"
+        return f"Car(road_id={self.road_id}, distance={self.distance}, direction={self.direction})"
 
 class Sensor:
     RANGE = 10.0
@@ -89,7 +89,7 @@ def parse_vdm_outline(output: str):
     Raises:
         FileNotFoundError: If the file could not be found.
     """
-    car_pattern = re.compile(r"Car.*?direction:=(?P<direction>-?\d+(.\d+)?).*?progress:=(?P<progress>\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?)")
+    car_pattern = re.compile(r"Car.*?direction:=(?P<direction>-?\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?).*?distance:=(?P<distance>\d+(.\d+)?)")
     street_lamp_pattern = re.compile(r"StreetLamp.*?position:=(?P<position>\d+(.\d+)?).*?road_id:=(?P<road_id>\d+(.\d+)?).*?lamp_state:=(?P<state><ON>|<OFF>)")
 
     # Parsing cars
@@ -98,10 +98,10 @@ def parse_vdm_outline(output: str):
         match_dict = match.groupdict()
 
         direction = match.groupdict()["direction"]
-        progress = match.groupdict()["progress"]
+        distance = match.groupdict()["distance"]
         road_id = match.groupdict()["road_id"]
 
-        car = Car(int(road_id), float(progress), int(direction))
+        car = Car(int(road_id), float(distance), int(direction))
         cars.add(car)
 
     # Parsing street lamps

@@ -22,7 +22,7 @@ operations
             cars := {
                 car
                 | car in set all_cars_on_road
-                & abs(car.get_progress() - position) < range
+                & abs(car.get_distance() - position) < range
             };
 
     pure public get_cars : () ==> set of Car

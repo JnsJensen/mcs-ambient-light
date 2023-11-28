@@ -53,14 +53,14 @@ def draw_car(
     end = rl.Vector2(end[0], end[1])
     
     road_length = rl.vector_2distance(start, end)
-    progress_normalized = car.progress / road_length
-    # interpolate between the two points based on the car's progress
+    distance_normalized = car.distance / road_length
+    # interpolate between the two points based on the car's distance
     # pos = rl.Vector2(0, 0)
     # if car.direction == 1:
-    #     pos = rl.vector2_lerp(start, end, progress_normalized)
+    #     pos = rl.vector2_lerp(start, end, distance_normalized)
     # else:
-    #     pos = rl.vector2_lerp(end, start, progress_normalized)
-    pos = rl.vector2_lerp(start, end, progress_normalized)
+    #     pos = rl.vector2_lerp(end, start, distance_normalized)
+    pos = rl.vector2_lerp(start, end, distance_normalized)
 
     # move car slightly to the side
     # depending on the direction of the car

@@ -120,7 +120,7 @@ operations
             let cars = {
                 new Car(
                     car.get_road_id(),
-                    car.get_progress(),
+                    car.get_distance(),
                     car.get_direction()
                 ) | car in set city.get_cars()
             } in 
