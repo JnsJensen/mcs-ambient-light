@@ -6,10 +6,10 @@ instance variables
     private position : real; -- position along the road in meters
 
 operations
-    public StreetLamp : Road * real ==> StreetLamp
-    StreetLamp(p_road, p_position) == (
+    public StreetLamp : RoadID * real ==> StreetLamp
+    StreetLamp(p_road_id, p_position) == (
         position := p_position;
-        road_id := p_road.get_id();
+        road_id := p_road_id;
     );
 
     public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp

@@ -28,7 +28,6 @@ operations
     get_connections() == return connections;
 
     -- chooses a random road between available connections
-    -- todo: should part of this be a function?
     public next_road : Road ==> [Road]
     next_road(p_from_road) == 
         let available_connections = connections \ {p_from_road} in

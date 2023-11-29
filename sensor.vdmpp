@@ -1,11 +1,11 @@
 class Sensor is subclass of GLOBAL
 
 values
-    private static range : real = 20.0; -- Range of the sensor in meters
+    private static range : real = 20.0; -- range of the sensor in meters
 
 instance variables
     private cars : set of Car := {};
-    private road : Road; -- Reference to the road it is part of
+    private road : Road; -- reference to the road it is part of
     private position : real; -- position along the road in meters
 
 operations

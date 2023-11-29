@@ -24,7 +24,7 @@ operations
             | distance in set {1,...,length / st_spacing}
         } in (
             street_lamps := {
-                new StreetLamp(self, st_position)
+                new StreetLamp(id, st_position)
                 | st_position in set st_positions
             };
             sensors := {
