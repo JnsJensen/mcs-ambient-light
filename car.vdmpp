@@ -3,7 +3,7 @@ class Car is subclass of GLOBAL
 values
     -- defines speed along a road
     -- negative speed means driving in the opposite direction
-    private velocity : real = 10; -- m/s
+    private speed : real = 10; -- m/s
 
 instance variables
     -- reference to the road the car is driving on
@@ -21,8 +21,8 @@ instance variables
 functions
     -- calculate distance
     private new_distance : real * real * real * int -> real
-    new_distance(p_distance, p_velocity, p_dt, p_direction) ==
-        p_distance + p_direction * p_velocity * p_dt;
+    new_distance(p_distance, p_speed, p_dt, p_direction) ==
+        p_distance + p_direction * p_speed * p_dt;
 
 operations
     public Car : RoadID * real * int ==> Car
@@ -54,7 +54,7 @@ operations
 
     public drive : real ==> real
     drive(dt) == (
-        distance := new_distance(distance, velocity, dt, direction);
+        distance := new_distance(distance, speed, dt, direction);
         return distance;
     );
 
