@@ -1,0 +1,135 @@
+
+default Car
+Default name changed to Car
+qc
+PO #53, UNCHECKED
+PO #54, UNCHECKED
+PO #55, UNCHECKED
+PO #56, UNCHECKED
+PO #57, UNCHECKED
+PO #58, UNCHECKED
+PO #59, UNCHECKED
+PO #60, UNCHECKED
+OK
+default CityTest
+Default name changed to CityTest
+qc
+No POs in current class
+default City
+Default name changed to City
+qc
+PO #61, MAYBE in 0.003s
+PO #62, PROVED by trivial strategy in 0.001s
+PO #63, MAYBE in 0.014s
+PO #64, PROVED by trivial strategy in 0.0s
+PO #65, PROVED by trivial strategy in 0.001s
+PO #66, MAYBE in 0.003s
+PO #67, MAYBE in 0.003s
+PO #68, MAYBE in 0.004s
+PO #69, PROVED in 0.0s
+PO #70, PROVED in 0.0s
+PO #71, UNCHECKED
+PO #72, UNCHECKED
+PO #73, UNCHECKED
+PO #74, UNCHECKED
+PO #75, UNCHECKED
+PO #76, UNCHECKED
+PO #77, UNCHECKED
+PO #78, UNCHECKED
+PO #79, UNCHECKED
+PO #80, UNCHECKED
+PO #81, UNCHECKED
+PO #82, UNCHECKED
+PO #83, UNCHECKED
+PO #84, UNCHECKED
+PO #85, UNCHECKED
+PO #86, UNCHECKED
+PO #87, UNCHECKED
+PO #88, UNCHECKED
+PO #89, UNCHECKED
+PO #90, UNCHECKED
+PO #91, UNCHECKED
+PO #92, UNCHECKED
+OK
+default Environment
+Default name changed to Environment
+qc
+PO #93, MAYBE in 0.0s
+PO #94, MAYBE in 0.0s
+PO #95, MAYBE in 0.0s
+PO #96, MAYBE in 0.0s
+PO #97, MAYBE in 0.0s
+PO #98, MAYBE in 0.0s
+PO #99, MAYBE in 0.0s
+PO #100, MAYBE in 0.001s
+PO #101, UNCHECKED
+PO #102, UNCHECKED
+PO #103, UNCHECKED
+PO #104, UNCHECKED
+PO #105, UNCHECKED
+PO #106, UNCHECKED
+PO #107, UNCHECKED
+OK
+default GLOBAL
+Default name changed to GLOBAL
+qc
+PO #35, MAYBE in 0.0s
+PO #36, PROVED in 0.0s
+PO #37, MAYBE in 0.0s
+PO #38, PROVED in 0.0s
+PO #39, MAYBE in 0.001s
+PO #40, MAYBE in 0.0s
+PO #41, MAYBE in 0.0s
+PO #42, MAYBE in 0.0s
+PO #43, MAYBE in 0.0s
+PO #44, MAYBE in 0.001s
+PO #45, MAYBE in 0.001s
+PO #46, MAYBE in 0.001s
+PO #47, MAYBE in 0.0s
+PO #48, MAYBE in 0.001s
+PO #49, MAYBE in 0.001s
+PO #50, MAYBE in 0.002s
+PO #51, MAYBE in 0.001s
+PO #52, MAYBE in 0.002s
+OK
+default Intersection
+Default name changed to Intersection
+qc
+PO #108, UNCHECKED
+PO #109, UNCHECKED
+PO #110, UNCHECKED
+PO #111, UNCHECKED
+OK
+default Position
+Default name changed to Position
+qc
+PO #112, UNCHECKED
+PO #113, UNCHECKED
+PO #114, UNCHECKED
+OK
+default Road
+Default name changed to Road
+qc
+PO #115, UNCHECKED
+PO #116, UNCHECKED
+PO #117, UNCHECKED
+PO #118, UNCHECKED
+OK
+default Sensor
+Default name changed to Sensor
+qc
+No POs in current class
+default StreetLamps
+Class StreetLamps not loaded
+default StreetLamp
+Default name changed to StreetLamp
+qc
+No POs in current class
+default Timer
+Default name changed to Timer
+qc
+No POs in current class
+default World
+Default name changed to World
+qc
+No POs in current class

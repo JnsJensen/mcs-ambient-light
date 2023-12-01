@@ -1,6 +1,12 @@
 class GLOBAL
 
 types
+    public real0 = real
+    inv r == r >= 0;
+
+    public real01 = real
+    inv r == r >= 0 and r <= 1;
+
     public Time = real;
     public String = seq of char;
     public StreetLampState = <ON> | <OFF>;
@@ -26,6 +32,12 @@ functions
     public add_reals : real * real +> real
     add_reals(a, b) == a + b;
 
+    -- function to add two real0s
+    -- can be used as the operator in sum_seq[real0]
+    public add_real0s : real0 * real0 +> real0
+    add_real0s(a, b) == a + b
+    post RESULT >= 0;
+
     -- function to add two ints
     -- can be used as the operator in sum_seq[int]
     public add_ints : int * int +> int
@@ -34,6 +46,11 @@ functions
     -- sum a sequence of reals
     public sum_seq_reals : seq of real +> real
     sum_seq_reals(p_seq) == sum_seq[real](p_seq, add_reals);
+
+    -- sum a sequence of real0s
+    public sum_seq_real0s : seq of real0 +> real0
+    sum_seq_real0s(p_seq) == sum_seq[real0](p_seq, add_real0s)
+    post RESULT >= 0;
 
     -- sum a sequence of ints
     public sum_seq_ints : seq of int +> int

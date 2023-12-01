@@ -8,9 +8,10 @@ instance variables
     -- public end_position : Position;
     private id : RoadID;
     private cars : set of Car := {};
-    private length : real;
     private street_lamps : set of StreetLamp;
     private sensors : set of Sensor;
+
+    private length : real0;
 
 operations
     public Road : RoadID * Position * Position ==> Road
@@ -32,7 +33,8 @@ operations
                 | st_position in set st_positions
             }
         );
-    );
+    )
+    post length > 0;
 
     pure public get_id : () ==> RoadID
     get_id() == return id;
