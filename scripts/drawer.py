@@ -19,6 +19,7 @@ except ImportError or ModuleNotFoundError:
 parser = argparse.ArgumentParser(description='Draw the city')
 parser.add_argument('-cf', '--city-file', type=str, required=True, help='Path to the VDM city file')
 parser.add_argument('-of', '--outlines-file', type=str, required=True, help='Path to the VDM outlines file')
+parser.add_argument('-fd', '--font-dir', type=str, required=True, help='Path to the font directory')
 
 args = parser.parse_args()
 
@@ -40,6 +41,15 @@ if not outlines_file.exists():
     print(f"File {outlines_file} does not exist.")
     sys.exit(1)
 
+if not args.font_dir:
+    parser.print_help()
+    sys.exit(1)
+
+font_dir = Path(args.font_dir).resolve()
+if not font_dir.exists():
+    print(f"Directory {font_dir} does not exist.")
+    sys.exit(1)
+
 def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outline], window_size=(800, 600), intersection_size=5):
     rl.init_window(window_size[0], window_size[1], "City Visualization")
     rl.set_target_fps(60)
@@ -52,16 +62,40 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
     camera.zoom = 2.5 # Initial zoom level
     camera.target = rl.Vector2(-30.0, -100.0)
 
-    # Catppuccin color palette
-    colors = {
-        "background": rl.Color(36, 39, 58, 255),        # Mocha base
-        "intersection": rl.Color(73, 77, 100, 255),     # surface1
-        "road": rl.Color(54, 58, 79, 255),              # surface0
-        "street_lamp_on": rl.Color(223, 142, 29, 255),  # Yellow
-        "street_lamp_off": rl.Color(82, 75, 65, 255),   # Muted yellow
-        "car": rl.Color(238, 153, 160, 255),            # maroon
-        "car_reverse": rl.Color(198, 160, 246, 255),    # mauve
+    # Load your custom font
+    fonts = {
+        "jetbrains-mono": {
+            "regular": rl.load_font((font_dir / "JetBrainsMono-Regular.ttf").__str__()),
+            "bold": rl.load_font((font_dir / "JetBrainsMono-Bold.ttf").__str__()),
+            "italic": rl.load_font((font_dir / "JetBrainsMono-Italic.ttf").__str__()),
+            "bold_italic": rl.load_font((font_dir / "JetBrainsMono-BoldItalic.ttf").__str__()),
+        }
     }
+
+    # Catppuccin color palette
+    themes = {
+        "macchiato": {
+            "background": rl.Color(36, 39, 58, 255),        # base
+            "intersection": rl.Color(73, 77, 100, 255),     # surface1
+            "road": rl.Color(54, 58, 79, 255),              # surface0
+            "street_lamp_on": rl.Color(223, 142, 29, 255),  # Yellow
+            "street_lamp_off": rl.Color(82, 75, 65, 255),   # Muted yellow
+            "car": rl.Color(238, 153, 160, 255),            # maroon
+            "car_reverse": rl.Color(198, 160, 246, 255),    # mauve
+            "text": rl.Color(202, 211, 245, 255)            # text
+        },
+        "latte": {
+            "background": rl.Color(239, 241, 245, 255),     # base
+            "intersection": rl.Color(188, 192, 204, 255),   # surface1
+            "road": rl.Color(204, 208, 218, 255),           # surface0
+            "street_lamp_on": rl.Color(223, 142, 29, 255),  # Yellow -- left
+            "street_lamp_off": rl.Color(82, 75, 65, 255),   # Muted yellow -- left
+            "car": rl.Color(230, 69, 83, 255),              # maroon
+            "car_reverse": rl.Color(136, 57, 239, 255),     # mauve
+            "text": rl.Color(76, 79, 105, 255)              # text
+        }
+    }
+    theme = "latte"
 
     # previous mouse position
     prev_mouse_pos = rl.get_mouse_position()
@@ -69,10 +103,10 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
     last_time = time.time()
     last = False
     while not rl.window_should_close():
+        colors = themes[theme]
         new_time = time.time()
 
         # total_delta_time = new_time - start_time
-        # print(f"Total time: {total_delta_time}")
 
         delta_time = new_time - last_time
         if delta_time > 0.1:
@@ -86,6 +120,74 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
 
         rl.begin_drawing()
         rl.clear_background(colors["background"])
+
+        # get current window size
+        window_size = rl.get_screen_width(), rl.get_screen_height()
+
+        font_size = 25
+        kerning = 1
+        spacing_x = 150
+        start_x = 20
+        spacing_y = font_size
+        start_y = 10
+        # draw total time in top left corner
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"Time:",
+            rl.Vector2(start_x, start_y),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"{outlines[0].time:.2f}",
+            rl.Vector2(start_x + spacing_x, start_y),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+        # draw current power usage in top left corner
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"Power:",
+            rl.Vector2(start_x, start_y + spacing_y),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"{outlines[0].power_usage * 100:.2f}%",
+            rl.Vector2(start_x + spacing_x, start_y + spacing_y),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+        # draw current traffic density in top left corner
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"Density:",
+            rl.Vector2(start_x, start_y + spacing_y * 2),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+        rl.draw_text_ex(
+            fonts["jetbrains-mono"]["bold"],
+            f"{outlines[0].traffic_density * 1000:.2f} cars/km",
+            rl.Vector2(start_x + spacing_x, start_y + spacing_y * 2),
+            font_size,
+            kerning,
+            colors["text"]
+        )
+
+        # button top left to change theme
+        if rl.is_key_pressed(rl.KEY_T):
+            if theme == "latte":
+                theme = "macchiato"
+            else:
+                theme = "latte"
 
         # move camera with arrow keys
         # or the wasd keys if you're a cool kid

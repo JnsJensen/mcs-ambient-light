@@ -84,8 +84,7 @@ operations
     );
 
     -- add a car to the city
-    -- takes a position of an intersection
-    -- use intersection to find the a road to start on
+    -- with the car is a road id which is used to place the car
     public add_car : Car ==> ()
     add_car(p_car) == (
         -- 1. find the intersection
@@ -107,21 +106,18 @@ operations
 
         -- 1. step all cars
         step_cars();
-
         -- 2. step all sensors
         step_sensors();
-        
         -- 3. step all street lamps
         step_street_lamps();
     );
 
     -- 1. step all cars
-    public step_cars : () ==> ()
+    --    1.1. if car reaches intersection, move it to the next road
+    --    1.2. if car reaches an intersection with no new road to move to, remove it
+    private step_cars : () ==> ()
     step_cars() ==
-        let cars = dunion {
-            road.get_cars()
-            | road in set roads
-        } in
+        let cars = get_cars() in
             for all car in set cars do (
                 -- Then the steps would be
                 -- 1. drive the car
@@ -161,7 +157,7 @@ operations
             );
 
     -- 2. step all sensors
-    public step_sensors : () ==> ()
+    private step_sensors : () ==> ()
     step_sensors() ==
         let sensors = dunion {
             road.get_sensors()
@@ -171,12 +167,9 @@ operations
                 sensor.sense();
 
     -- 3. step all street lamps
-    public step_street_lamps : () ==> ()
+    private step_street_lamps : () ==> ()
     step_street_lamps() ==
-        let street_lamps = dunion {
-            road.get_street_lamps()
-            | road in set roads
-        } in
+        let street_lamps = get_street_lamps() in
             for all street_lamp in set street_lamps do
                 let road in set roads be st road.get_id() = street_lamp.get_road_id() in
                     let sensor in set road.get_sensors() be st sensor.get_position() = street_lamp.get_position() in
@@ -200,5 +193,26 @@ operations
             road.get_street_lamps()
             | road in set roads
         };
+
+    -- calculate power usage as a percentage
+    -- this is turned-on-street-lamps / total-street-lamps
+    pure public power_usage : () ==> real
+    power_usage() ==
+        let street_lamps = get_street_lamps() in
+            let on_street_lamps = { street_lamp | street_lamp in set street_lamps & street_lamp.get_state() = <ON> } in
+                return card on_street_lamps / card street_lamps
+    post RESULT >= 0 and RESULT <= 1;
+
+    -- calculate traffic density as cars / total road length
+    pure public traffic_density : () ==> real
+    traffic_density() ==
+        let road_lengths = VDMUtil`set2seq[real]({
+            road.get_length()
+            | road in set roads
+        }) in
+            let total_road_length = sum_seq_reals(road_lengths) in
+                let cars = get_cars() in
+                    return card cars / total_road_length
+    post RESULT >= 0;
 
 end City

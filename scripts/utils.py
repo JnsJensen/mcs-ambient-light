@@ -31,13 +31,15 @@ class StreetLamp:
         return f"StreetLamp(lamp_state={self.lamp_state}, road_id={self.road_id}, position={self.position})"
 
 class Outline:
-    def __init__(self, time: float, cars, street_lamps):
+    def __init__(self, time: float, cars, street_lamps, power_usage: float, traffic_density: float):
         self.time = time
         self.cars = set(cars)
         self.street_lamps = set(street_lamps)
+        self.power_usage = power_usage
+        self.traffic_density = traffic_density
 
     def __repr__(self):
-        return f"Outline(time={self.time}, cars={self.cars}, street_lamps={self.street_lamps})"
+        return f"Outline(time={self.time}, cars={self.cars}, street_lamps={self.street_lamps}, power_usage={self.power_usage}, traffic_density={self.traffic_density})"
 
 def parse_vdm_city(content):
     """
@@ -125,4 +127,18 @@ def parse_vdm_outline(output: str):
     match_dict = time_match.groupdict()
     time = match_dict["time"]
 
-    return Outline(time, cars, street_lamps)
+    power_usage_pattern = re.compile(r", (?P<power_usage>\d+(\.\d+)?),")
+    power_usage_match = power_usage_pattern.search(output)
+    if power_usage_match is None:
+        raise ValueError("Could not find the power usage in the file.")
+    match_dict = power_usage_match.groupdict()
+    power_usage = match_dict["power_usage"]
+
+    traffic_density_pattern = re.compile(r"(?P<traffic_density>\d+(\.\d+)?)\)")
+    traffic_density_match = traffic_density_pattern.search(output)
+    if traffic_density_match is None:
+        raise ValueError("Could not find the power usage in the file.")
+    match_dict = traffic_density_match.groupdict()
+    traffic_density = match_dict["traffic_density"]
+
+    return Outline(float(time), cars, street_lamps, float(power_usage), float(traffic_density))

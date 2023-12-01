@@ -11,4 +11,23 @@ types
     public RoadGraph = map RoadID to Edge;
     public IntersectionGraph = map IntersectionID to set of RoadID;
 
+functions
+    -- polymorphic function to sum a sequence
+    public sum_seq[@T] : seq of @T * (@T * @T -> @T) +> @T
+    sum_seq(p_seq, p_operator) ==
+        if len p_seq = 0 then
+            0
+        else
+            p_operator(hd p_seq, sum_seq[@T](tl p_seq, p_operator))
+    measure len p_seq;
+
+    -- function to add two reals
+    -- can be used as the operator in sum_seq[real]
+    public add_reals : real * real +> real
+    add_reals(a, b) == a + b;
+
+    -- sum a sequence of reals
+    public sum_seq_reals : seq of real +> real
+    sum_seq_reals(p_seq) == sum_seq[real](p_seq, add_reals);
+
 end GLOBAL

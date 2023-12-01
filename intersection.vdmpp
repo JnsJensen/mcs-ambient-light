@@ -35,6 +35,6 @@ operations
                 let rand_idx = MATH`rand(len connections_seq) + 1 in
                     return connections_seq(rand_idx)
     pre p_from_road in set connections
-    post RESULT in set connections;
+    post RESULT in set connections \ {p_from_road};
 
 end Intersection

@@ -1,8 +1,9 @@
 class Environment is subclass of GLOBAL
 
 types
-    private inline = Time * Car;
-    private outline = Time * set of Car * set of StreetLamp;
+    private Inline = Time * Car;
+    -- outline : seconds * cars * street_lamps * power_usage * traffic_density(cars / road_length)
+    private Outline = Time * set of Car * set of StreetLamp * real * real;
 
 values
     private time_max : Time = 60.0;
@@ -10,16 +11,40 @@ values
 instance variables
     private io : IO := new IO();
 
-    private inlines : seq of inline := [];
-    private outlines : seq of outline := [];
+    private inlines : seq of Inline := [];
+    private outlines : seq of Outline := [];
     private city : City;
     
     private busy : bool := true;
 
+functions
+    -- calculate total power savings
+    -- average power usage of all time steps
+    private average_power_usage : seq of Outline +> real
+    average_power_usage(p_outlines) ==
+        let power_usage_seq = [
+            power_usage
+            | mk_(-, -, -, power_usage, -) in seq p_outlines
+        ] in
+            let total_power_usage = sum_seq_reals(power_usage_seq) in
+                total_power_usage / len power_usage_seq
+    pre len p_outlines > 0
+    post RESULT >= 0 and RESULT <= 1;
+
+    -- calculate total traffic density
+    -- average traffic density of all time steps
+    private average_traffic_density : seq of Outline +> real
+    average_traffic_density(p_outlines) ==
+        let traffic_density_seq = [
+            traffic_density
+            | mk_(-, -, -, -, traffic_density) in seq p_outlines
+        ] in
+            let total_traffic_density = sum_seq_reals(traffic_density_seq) in
+                total_traffic_density / len traffic_density_seq
+    pre len p_outlines > 0
+    post RESULT >= 0;
+
 operations
-    -- debug: [io]
-    --        Seems that `success` is always false,
-    --        I don't know where to start debugging
     public Environment : () ==> Environment
     Environment() == (
         -- note: cant read files does not work with custom typs/classes
@@ -67,19 +92,24 @@ operations
     );
 
     -- output the outlines
-    public show_result : () ==> ()
+    private show_result : () ==> ()
     show_result() ==
-        def - = io.writeval[seq of outline](outlines) in skip;
+        def - = io.writeval[seq of Outline](outlines) in skip;
     
-    public show_city : () ==> ()
+    private show_city : () ==> ()
     show_city() ==
         def - = io.writeval[City](city) in skip;
 
     -- write outlines to file
-    public write_result : String ==> ()
+    private write_result : String ==> ()
     write_result(p_fname) ==
-        def - = io.fwriteval[seq of outline](p_fname, outlines, <start>) in skip;
+        def - = io.fwriteval[seq of Outline](p_fname, outlines, <start>) in skip;
     
+    private append_to_result : String * String * real ==> ()
+    append_to_result(p_fname, p_prefix, p_value) ==
+        def - = io.fwriteval[String](p_fname, p_prefix, <append>) in
+            def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
+
     -- Function to run through the inlines and generate the outlines
     public run : () ==> ()
     run() == (
@@ -90,6 +120,16 @@ operations
             make_outline();
         );
         write_result("out.txt");
+        append_to_result(
+            "out.txt",
+            "Average power usage: ",
+            average_power_usage(outlines)
+        );
+        append_to_result(
+            "out.txt",
+            "Average traffic density: ",
+            average_traffic_density(outlines)
+        );
         -- show_result();
         -- show_city();
     );
@@ -113,30 +153,42 @@ operations
         else busy := false;
     );
 
-    -- Function to make an outline for the current time
+    -- make an outline for the current time
     private make_outline : () ==> ()
     make_outline() ==
         let time = World`timer_ref.get_time() in
-            let cars = {
-                new Car(
-                    car.get_road_id(),
-                    car.get_distance(),
-                    car.get_direction()
-                ) | car in set city.get_cars()
-            } in 
-                let lamps = {
-                    new StreetLamp(
-                        lamp.get_road_id(),
-                        lamp.get_position(),
-                        lamp.get_state()
-                    ) | lamp in set city.get_street_lamps()
-                } in
-                    outlines := outlines ^ [mk_(time, cars, lamps)];
+            let power_usage = city.power_usage() in
+                let traffic_density = city.traffic_density() in
+                    let cars = {
+                        new Car(
+                            car.get_road_id(),
+                            car.get_distance(),
+                            car.get_direction()
+                        ) | car in set city.get_cars()
+                    } in 
+                        let lamps = {
+                            new StreetLamp(
+                                lamp.get_road_id(),
+                                lamp.get_position(),
+                                lamp.get_state()
+                            ) | lamp in set city.get_street_lamps()
+                        } in
+                            outlines := outlines ^ [mk_(
+                                time,
+                                cars, lamps,
+                                power_usage,
+                                traffic_density
+                            )];
 
-    -- I think maybe we should keep simulating until all cars have exited the city
-    public is_finished : () ==> bool 
+    -- keep simulating until
+    -- 1. there are no more inlines to handle
+    -- AND
+    -- 2. there are no more cars in the city
+    -- OR
+    -- 3. the time is up
+    private is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
             return card cars = 0 and not busy or World`timer_ref.get_time() >= time_max;
-
+    
 end Environment

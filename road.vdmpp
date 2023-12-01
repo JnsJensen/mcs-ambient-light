@@ -58,5 +58,4 @@ operations
     public remove_car : Car ==> ()
     remove_car(p_car) == cars := cars \ {p_car};
 
-
 end Road
