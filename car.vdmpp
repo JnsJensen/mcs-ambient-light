@@ -11,10 +11,10 @@ instance variables
 
     -- the distance of the car along the road
     -- a real number between 0 and the length of the road
+    -- note: if the road could be looked up an invariant could be added
     private distance : real := 0; -- m
 
     -- direction denoted by either 1 or -1
-    -- invariant should exist to make sure this holds
     private direction : int := 1;
     inv direction in set {-1, 1};
 
@@ -30,7 +30,8 @@ operations
         road_id := p_road_id;
         distance := p_distance;
         direction := p_direction;
-    );
+    )
+    pre p_direction in set {-1, 1};
 
     pure public get_distance : () ==> real
     get_distance() == return distance;

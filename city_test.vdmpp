@@ -1,0 +1,124 @@
+class CityTest is subclass of City
+-- combinatorial testing for building the city
+-- using its constructor
+
+-- -- CONSTRUCTOR
+-- -- takes a sequence of positions, that define the placement of intersections
+-- -- along with the index for the each position as the intersection id
+-- -- takes a set of edges which describes which
+-- -- intersection ids (indices in the sequence) are connected
+-- public City : seq of Position * seq of Edge ==> City
+-- City(p_intersection_positions, p_edges) == (
+--     -- make the graph representation of the city with maps
+--     road_to_intersections := make_road_graph(p_edges);
+--     intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
+    
+--     -- instantiate the roads and intersections
+--     roads := make_roads(road_to_intersections, p_intersection_positions);
+--     intersections := make_intersections(p_intersection_positions, intersection_to_roads);
+-- );
+
+-- EXAMPLE CITY INITIALISATION
+-- city := new City(
+--     [
+--         new Position(   0.0,    0.0), -- intersection 1
+--         new Position(   0.0,   50.0), -- intersection 2
+--         new Position( 100.0,   50.0), -- intersection 3
+--         new Position( 100.0,    0.0), -- intersection 4
+--         new Position(-170.0, -170.0), -- intersection 5
+--         new Position(  50.0, -100.0), -- intersection 6
+--         new Position( 120.0, -120.0), -- intersection 7
+--         new Position( -100.0,-250.0)  -- intersection 8
+--     ],
+--     [
+--         mk_Edge(1, 2), -- road from intersection 1 to intersection 2
+--         mk_Edge(2, 3),
+--         mk_Edge(3, 4),
+--         mk_Edge(4, 1),
+--         mk_Edge(1, 5),
+--         mk_Edge(4, 6),
+--         mk_Edge(4, 7),
+--         mk_Edge(6, 7),
+--         mk_Edge(1, 6),
+--         mk_Edge(6, 8),
+--         mk_Edge(8, 5)
+--     ]
+-- );
+
+operations
+    private build_city : seq of Position * seq of Edge ==> City
+    build_city(p_intersection_positions, p_edges) ==
+        let city = new City(p_intersection_positions, p_edges) in return city;
+
+instance variables
+    private square : seq of Position := [
+        new Position(0.0, 0.0),
+        new Position(0.0, 50.0),
+        new Position(50.0, 50.0),
+        new Position(50.0, 0.0)
+    ];
+
+traces
+    -- try all possible graphs with 4 intersections
+    -- maximum number of edges with n vertices is n(n-1)/2
+    -- 4 vertices -> 6 edges
+    -- the number of possible simple graphs is 2^(n(n-1)/2)
+    -- 4 vertices -> 2^6 = 64 possible graphs
+    SquareSmall:
+        (
+            let intersection_ids = inds square in
+                let all_intersection_combinations = power intersection_ids in
+                    let intersections in set all_intersection_combinations
+                    be st card intersections >= 2 in
+                        let edges = {
+                            mk_Edge(i1, i2)
+                            | i1, i2 in set intersections
+                            & i1 <> i2
+                        } in build_city(square, VDMUtil`set2seq[Edge](edges))
+        );
+
+    -- try with all possible cities with {2,...,10} intersections
+    -- each intersection position can be placed on the unit circle
+    TestAllEdges:
+        (
+            let intersections_ids = {1,...,6} in
+                let intersection_positions = [
+                    new Position(
+                        MATH`cos(2 * MATH`pi * id / card intersections_ids),
+                        MATH`sin(2 * MATH`pi * id / card intersections_ids)
+                    )
+                    | id in set intersections_ids
+                ] in
+                    let all_intersection_combinations = power intersections_ids in
+                        let intersections in set all_intersection_combinations
+                        be st card intersections >= 2 in
+                            let edges = {
+                                mk_Edge(i1, i2)
+                                | i1, i2 in set intersections
+                                & i1 <> i2
+                            } in build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
+        );
+
+    -- no need to attempt to create all edge combinations
+    -- simply want to try with a large number nodes (intersections)
+    -- just draw the edges such that it is a connected graph
+    TestManyIntersections:
+        (
+            let intersection_amount in set {0,...,30} in
+                let intersections_ids = {1,...,intersection_amount} in
+                    let intersection_positions = [
+                        new Position(
+                            MATH`cos(2 * MATH`pi * id / card intersections_ids),
+                            MATH`sin(2 * MATH`pi * id / card intersections_ids)
+                        )
+                        | id in set intersections_ids
+                    ] in
+                        let edges = {
+                            mk_Edge(i1, i2)
+                            | i1, i2 in set intersections_ids
+                            & i1 <> i2
+                        } in build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
+        );
+
+
+end CityTest

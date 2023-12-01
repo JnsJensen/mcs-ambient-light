@@ -81,7 +81,11 @@ operations
         -- instantiate the roads and intersections
         roads := make_roads(road_to_intersections, p_intersection_positions);
         intersections := make_intersections(p_intersection_positions, intersection_to_roads);
-    );
+    )
+    pre len p_intersection_positions >= 2
+        and forall e1 in seq p_edges & e1.from_intersection <> e1.to_intersection
+        and e1.from_intersection in set inds p_intersection_positions
+        and e1.to_intersection in set inds p_intersection_positions;
 
     -- add a car to the city
     -- with the car is a road id which is used to place the car

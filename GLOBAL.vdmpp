@@ -26,8 +26,17 @@ functions
     public add_reals : real * real +> real
     add_reals(a, b) == a + b;
 
+    -- function to add two ints
+    -- can be used as the operator in sum_seq[int]
+    public add_ints : int * int +> int
+    add_ints(a, b) == a + b;
+
     -- sum a sequence of reals
     public sum_seq_reals : seq of real +> real
     sum_seq_reals(p_seq) == sum_seq[real](p_seq, add_reals);
+
+    -- sum a sequence of ints
+    public sum_seq_ints : seq of int +> int
+    sum_seq_ints(p_seq) == sum_seq[int](p_seq, add_ints);
 
 end GLOBAL

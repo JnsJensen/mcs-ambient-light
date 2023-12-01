@@ -8,12 +8,12 @@
             "defaultName": null
         },
         {
-            "name": "Lens config: Debug World`run",
+            "name": "Lens config: Launch Testing`power_set2",
             "type": "vdm",
             "request": "launch",
-            "noDebug": false,
-            "defaultName": "World",
-            "command": "p new World().run()"
+            "noDebug": true,
+            "defaultName": "Testing",
+            "command": "p new Testing().power_set2()"
         },
         {
             "name": "Launch VDM Debug from ()`",

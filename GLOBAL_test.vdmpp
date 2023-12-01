@@ -1,0 +1,39 @@
+class GLOBALTest is subclass of GLOBAL
+
+-- testing the utility functions
+-- 1. sum_seq[@T] : seq of @T * (@T * @T -> @T) +> @T
+-- 2. add_reals : real * real +> real
+-- 3. sum_seq_reals : seq of real +> real
+
+functions
+    private test_sum_reals : seq of real * real +> bool
+    test_sum_reals(p_sequence, p_expected) ==
+        sum_seq_reals(p_sequence) = p_expected;
+
+    private test_sum_ints : seq of int * int +> bool
+    test_sum_ints(p_sequence, p_expected) ==
+        sum_seq_ints(p_sequence) = p_expected;
+
+traces
+    SumEmpty:
+        test_sum_reals([], 0) | test_sum_ints([], 0)
+    
+    SumOne:
+        test_sum_reals([1.0], 1.0) | test_sum_ints([1], 1)
+    
+    SumSeveral:
+        test_sum_reals(
+            [
+                i / 2 | i in set {1,...,5}
+            ], 7.5
+        )
+        |
+        test_sum_ints(
+            [
+                i | i in set {1,..., 5}
+            ], 15
+        )
+
+    
+
+end GLOBALTest
