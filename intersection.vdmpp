@@ -5,11 +5,6 @@ instance variables
     private position : Position;
     private connections : set of Road;
 
-functions
-    -- private road_set2seq : set of Road -> seq of Road
-    -- road_set2seq(s) == 
-    --     ;
-
 operations
     public Intersection : IntersectionID * Position * set of Road ==> Intersection
     Intersection(p_id, p_position, p_roads) == (
@@ -21,13 +16,8 @@ operations
     pure public get_id : () ==> IntersectionID
     get_id() == return id;
 
-    pure public get_position : () ==> Position
-    get_position() == return position;
-
-    pure public get_connections : () ==> set of Road
-    get_connections() == return connections;
-
-    -- chooses a random road between available connections
+    -- chooses a random road between its connections,
+    -- excluding the road from which the car came
     public next_road : Road ==> [Road]
     next_road(p_from_road) == 
         let available_connections = connections \ {p_from_road} in

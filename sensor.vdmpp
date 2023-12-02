@@ -1,7 +1,7 @@
 class Sensor is subclass of GLOBAL
 
 values
-    private static range : real = 20.0; -- range of the sensor in meters
+    private range : real = 20.0; -- range of the sensor in meters
 
 instance variables
     private cars : set of Car := {};
@@ -25,8 +25,8 @@ operations
                 & abs(car.get_distance() - position) < range
             };
 
-    pure public get_cars : () ==> set of Car
-    get_cars() == return cars;
+    pure public is_triggered : () ==> bool
+    is_triggered() == return not cars = {};
 
     pure public get_position : () ==> real
     get_position() == return position;

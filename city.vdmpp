@@ -45,7 +45,6 @@ functions
         let total_road_length = sum_seq_real0s(p_roads_lengths) in
             card p_cars / total_road_length
     pre len p_roads_lengths > 0;
-    -- post RESULT >= 0;
 
     -- calculate the power usage
     private calc_power_usage : set of StreetLampState -> real01
@@ -58,7 +57,6 @@ functions
             card on_street_lamps / card p_street_lamp_states
     pre card p_street_lamp_states > 0
         and {street_lamp_state | street_lamp_state in set p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
-    -- post RESULT >= 0 and RESULT <= 1;
 
 operations
     -- make roads from RoadGraph
@@ -95,18 +93,20 @@ operations
     -- intersection ids (indices in the sequence) are connected
     public City : seq of Position * seq of Edge ==> City
     City(p_intersection_positions, p_edges) == (
-        -- make the graph representation of the city with maps
+        -- make the graphs
         road_to_intersections := make_road_graph(p_edges);
         intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
         
-        -- instantiate the roads and intersections
+        -- instantiation
         roads := make_roads(road_to_intersections, p_intersection_positions);
         intersections := make_intersections(p_intersection_positions, intersection_to_roads);
     )
     pre len p_intersection_positions >= 2
-        and forall e1 in seq p_edges & e1.from_intersection <> e1.to_intersection
-        and e1.from_intersection in set inds p_intersection_positions
-        and e1.to_intersection in set inds p_intersection_positions
+        -- and forall i1 in set VDMUtil`seq2set(p_intersection_positions) & forall i2 in set VDMUtil`seq2set(p_intersection_positions) \ i1 & i1 <> i2
+        -- and forall e1, e2 in seq p_edges & e1 <> e2
+        and forall e3 in seq p_edges & e3.from_intersection <> e3.to_intersection
+        and e3.from_intersection in set inds p_intersection_positions
+        and e3.to_intersection in set inds p_intersection_positions
     post card roads = len p_edges
         and card intersections = len p_intersection_positions;
 
@@ -170,14 +170,14 @@ operations
                                         let next_road = intersection.next_road(road) in
                                             if next_road <> nil then (
                                                 next_road.add_car(car);
-                                                if intersection_id = road_to_intersections(next_road.get_id()).from_intersection then
-                                                    car.set_direction(1)
-                                                else
+                                                if intersection_id = road_to_intersections(next_road.get_id()).from_intersection then (
+                                                    car.set_direction(1);
+                                                    car.set_distance(distance_remainder);
+                                                )
+                                                else (
                                                     car.set_direction(-1);
-                                                if road_to_intersections(next_road.get_id()).from_intersection = intersection_id then
-                                                    car.set_distance(distance_remainder)
-                                                else
                                                     car.set_distance(next_road.get_length() - distance_remainder);
+                                                );
                                             );
                                     );
                     );
@@ -200,7 +200,7 @@ operations
             for all street_lamp in set street_lamps do
                 let road in set roads be st road.get_id() = street_lamp.get_road_id() in
                     let sensor in set road.get_sensors() be st sensor.get_position() = street_lamp.get_position() in
-                        if sensor.get_cars() <> {} then
+                        if sensor.is_triggered() then
                             street_lamp.on()
                         else
                             street_lamp.off();
