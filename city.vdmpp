@@ -47,16 +47,16 @@ functions
     pre len p_roads_lengths > 0;
 
     -- calculate the power usage
-    private calc_power_usage : set of StreetLampState -> real01
+    private calc_power_usage : seq of StreetLampState -> real01
     calc_power_usage(p_street_lamp_states) ==
         let on_street_lamps = {
             street_lamp_state
-            | street_lamp_state in set p_street_lamp_states
+            | street_lamp_state in seq p_street_lamp_states
             & street_lamp_state = <ON>
         } in
-            card on_street_lamps / card p_street_lamp_states
-    pre card p_street_lamp_states > 0
-        and {street_lamp_state | street_lamp_state in set p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
+            card on_street_lamps / len p_street_lamp_states
+    pre len p_street_lamp_states > 0
+        -- and {street_lamp_state | street_lamp_state in seq p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
 
 operations
     -- make roads from RoadGraph
@@ -225,11 +225,19 @@ operations
     -- this is turned-on-street-lamps / total-street-lamps
     pure public power_usage : () ==> real01
     power_usage() ==
-        let street_lamp_states = {
-            street_lamp.get_state()
-            | street_lamp in set get_street_lamps()
-        } in
-            return calc_power_usage(street_lamp_states);
+        let street_lamps = get_street_lamps() in
+                let on_street_lamps = {
+                    street_lamp
+                    | street_lamp in set street_lamps
+                    & street_lamp.get_state() = <ON>
+                } in
+                    return card on_street_lamps / card street_lamps
+    post RESULT >= 0 and RESULT <= 1;
+        -- let street_lamp_states = [
+        --     street_lamp.get_state()
+        --     | street_lamp in set get_street_lamps()
+        --  ] in
+        --     return calc_power_usage(street_lamp_states);
     -- pre card get_street_lamps() > 0
     --     and {street_lamp | street_lamp in set get_street_lamps() & street_lamp.get_state() = <ON>} subset get_street_lamps()
     -- post RESULT > 0 and RESULT < 1;
