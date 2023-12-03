@@ -1,0 +1,94 @@
+id	kind	name	status
+35	subtype	Timer.step_length	Proved
+36	subtype	Timer.current_time	Proved
+37	subtype	Timer.step_time()	Unchecked
+38	total function	GLOBAL.real0	Maybe
+39	invariant satisfiability	GLOBAL.real0	Proved
+40	total function	GLOBAL.real01	Maybe
+41	invariant satisfiability	GLOBAL.real01	Proved
+42	total function	GLOBAL.sum_seq(seq of (@T), (@T * @T -> @T))	Maybe
+43	total function	GLOBAL.sum_seq(seq of (@T), (@T * @T -> @T)).measure_sum_seq(seq of (@T), (@T * @T -> @T))	Maybe
+44	function apply	GLOBAL.sum_seq(seq of (@T), (@T * @T -> @T))	Maybe
+45	non-empty sequence	GLOBAL.sum_seq(seq of (@T), (@T * @T -> @T))	Maybe
+46	non-empty sequence	GLOBAL.sum_seq(seq of (@T), (@T * @T -> @T))	Maybe
+47	total function	GLOBAL.add_reals(real, real)	Maybe
+48	total function	GLOBAL.add_real0s(real0, real0)	Maybe
+49	post condition	GLOBAL.add_real0s(real0, real0)	Maybe
+50	subtype	GLOBAL.add_real0s(real0, real0)	Maybe
+51	total function	GLOBAL.add_ints(int, int)	Maybe
+52	total function	GLOBAL.sum_seq_reals(seq of (real))	Maybe
+53	total function	GLOBAL.sum_seq_real0s(seq of (real0))	Maybe
+54	post condition	GLOBAL.sum_seq_real0s(seq of (real0))	Maybe
+55	total function	GLOBAL.sum_seq_ints(seq of (int))	Maybe
+56	total function	Car.Car(RoadID, real, int)	Unchecked
+57	state invariant	Car.set_distance(real)	Unchecked
+58	state invariant	Car.set_road_id(RoadID)	Unchecked
+59	total function	Car.get_direction()	Unchecked
+60	operation post condition	Car.get_direction()	Unchecked
+61	total function	Car.set_direction(int)	Unchecked
+62	state invariant	Car.set_direction(int)	Unchecked
+63	state invariant	Car.drive(real)	Unchecked
+64	subtype	Environment.time_max	Proved
+65	post condition	Environment.average_power_usage(seq of (Outline))	Maybe
+66	function apply	Environment.average_power_usage(seq of (Outline)).total_power_usage	Maybe
+67	subtype	Environment.average_power_usage(seq of (Outline)).total_power_usage	Maybe
+68	non-zero	Environment.average_power_usage(seq of (Outline))	Maybe
+69	subtype	Environment.average_power_usage(seq of (Outline))	Maybe
+70	post condition	Environment.average_traffic_density(seq of (Outline))	Maybe
+71	function apply	Environment.average_traffic_density(seq of (Outline)).total_traffic_density	Maybe
+72	subtype	Environment.average_traffic_density(seq of (Outline)).total_traffic_density	Maybe
+73	non-zero	Environment.average_traffic_density(seq of (Outline))	Maybe
+74	subtype	Environment.average_traffic_density(seq of (Outline))	Maybe
+75	subtype	Environment.Environment()	Unchecked
+76	while loop termination	Environment.run()	Unchecked
+77	function apply	Environment.run()	Unchecked
+78	function apply	Environment.run()	Unchecked
+79	while loop termination	Environment.handle_inlines()	Unchecked
+80	non-empty sequence	Environment.handle_inlines().car, time	Unchecked
+81	non-empty sequence	Environment.handle_inlines()	Unchecked
+82	subtype	Environment.make_outline()	Unchecked
+83	function apply	Position.norm((real * real), (real * real))	Maybe
+84	subtype	Position.norm((real * real), (real * real))	Maybe
+85	total function	Position.distance_to(Position)	Unchecked
+86	operation post condition	Position.distance_to(Position)	Unchecked
+87	total function	Road.Road(RoadID, Position, Position)	Unchecked
+88	operation post condition	Road.Road(RoadID, Position, Position)	Unchecked
+89	non-zero	Road.Road(RoadID, Position, Position).st_positions	Unchecked
+90	subtype	Road.get_length()	Unchecked
+91	total function	City.make_road_graph_rec(seq of (Edge), RoadID).measure_make_road_graph_rec(seq of (Edge), RoadID)	Maybe
+92	non-empty sequence	City.make_road_graph_rec(seq of (Edge), RoadID).edge	Proved
+93	recursive function	City.make_road_graph_rec(seq of (Edge), RoadID).rest	Maybe
+94	non-empty sequence	City.make_road_graph_rec(seq of (Edge), RoadID).rest	Proved
+95	map apply	City.make_intersection_graph(set of (IntersectionID), RoadGraph).edge	Proved
+96	function apply	City.calc_traffic_density(set of (Car), seq of (real0)).total_road_length	Maybe
+97	non-zero	City.calc_traffic_density(set of (Car), seq of (real0))	Maybe
+98	subtype	City.calc_traffic_density(set of (Car), seq of (real0))	Maybe
+99	sequence apply	City.make_roads(RoadGraph, seq of (Position))	Unchecked
+100	map apply	City.make_roads(RoadGraph, seq of (Position))	Unchecked
+101	sequence apply	City.make_roads(RoadGraph, seq of (Position))	Unchecked
+102	map apply	City.make_roads(RoadGraph, seq of (Position))	Unchecked
+103	sequence apply	City.make_intersections(seq of (Position), IntersectionGraph)	Unchecked
+104	map apply	City.make_intersections(seq of (Position), IntersectionGraph)	Unchecked
+105	total function	City.City(seq of (Position), seq of (Edge))	Unchecked
+106	total function	City.City(seq of (Position), seq of (Edge))	Unchecked
+107	operation post condition	City.City(seq of (Position), seq of (Edge))	Unchecked
+108	total function	City.add_car(Car)	Unchecked
+109	let be st existence	City.add_car(Car)	Unchecked
+110	subtype	City.step_cars().new_distance	Unchecked
+111	let be st existence	City.step_cars()	Unchecked
+112	map apply	City.step_cars().intersection_id, distance_remainder	Unchecked
+113	map apply	City.step_cars().intersection_id, distance_remainder	Unchecked
+114	let be st existence	City.step_cars()	Unchecked
+115	map apply	City.step_cars()	Unchecked
+116	let be st existence	City.step_street_lamps()	Unchecked
+117	let be st existence	City.step_street_lamps()	Unchecked
+118	total function	City.power_usage()	Unchecked
+119	operation post condition	City.power_usage()	Unchecked
+120	non-zero	City.power_usage()	Unchecked
+121	subtype	City.power_usage()	Unchecked
+122	function apply	City.traffic_density()	Unchecked
+123	total function	Intersection.next_road(Road)	Unchecked
+124	total function	Intersection.next_road(Road)	Unchecked
+125	operation post condition	Intersection.next_road(Road)	Unchecked
+126	sequence apply	Intersection.next_road(Road)	Unchecked
+127	subtype	Sensor.range	Proved
