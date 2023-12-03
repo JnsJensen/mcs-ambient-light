@@ -11,21 +11,17 @@ class StreetLamp is subclass of GLOBAL
 
 instance variables
     private lamp_state : StreetLampState := <OFF>;
-    -- private sensor : Sensor;
-    -- private road : RoadSegment;
     private road_id : RoadID;
-    private position : real; -- position along the road in meters
+    private position : real0; -- position along the road in meters
 
 operations
-    public StreetLamp : RoadSegment * real ==> StreetLamp
-    StreetLamp(p_road, p_position) == (
+    public StreetLamp : RoadID * real0 ==> StreetLamp
+    StreetLamp(p_road_id, p_position) == (
         position := p_position;
-        -- sensor := new Sensor(p_road, p_position);
-        -- road := p_road;
-        road_id := p_road.get_id();
+        road_id := p_road_id;
     );
 
-    public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp
+    public StreetLamp : RoadID * real0 * StreetLampState ==> StreetLamp
     StreetLamp(p_road_id, p_position, p_lamp_state) == (
         position := p_position;
         lamp_state := p_lamp_state;
@@ -38,13 +34,10 @@ operations
     public off : () ==> ()
     off() == lamp_state := <OFF>;
 
-    -- pure public get_sensor : () ==> Sensor
-    -- get_sensor() == return sensor;
-
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
-    pure public get_position : () ==> real
+    pure public get_position : () ==> real0
     get_position() == return position;
 
     pure public get_state : () ==> StreetLampState
@@ -58,24 +51,24 @@ end StreetLamp
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-StreetLamp & 100.0\% & 75726 \\
+StreetLamp & 100.0\% & 83539 \\
 \hline
-StreetLamp & 100.0\% & 126 \\
+StreetLamp & 100.0\% & 139 \\
 \hline
-StreetLamp:19 & 100.0\% & 75600 \\
+StreetLamp:15 & 100.0\% & 83400 \\
 \hline
-get\_position & 100.0\% & 654000 \\
+get\_position & 100.0\% & 683400 \\
 \hline
-get\_road\_id & 100.0\% & 521400 \\
+get\_road\_id & 100.0\% & 639600 \\
 \hline
-get\_state & 100.0\% & 75600 \\
+get\_state & 100.0\% & 166800 \\
 \hline
-off & 100.0\% & 54099 \\
+off & 100.0\% & 61152 \\
 \hline
-on & 100.0\% & 21501 \\
+on & 100.0\% & 22248 \\
 \hline
 \hline
-streetlamp.vdmpp & 100.0\% & 1478052 \\
+streetlamp.vdmpp & 100.0\% & 1740278 \\
 \hline
 \end{longtable}
 \end{document}

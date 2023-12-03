@@ -7,22 +7,22 @@
 \title{}
 \author{}
 \begin{vdm_al}
-class Timer 
-
-instance variables
-    private current_time : real := 0;
+class Timer is subclass of GLOBAL
 
 values 
-    private step_length : real = 0.1;
+    private step_length : Time = 0.1;
+
+instance variables
+    private current_time : Time := 0;
 
 operations
     public step_time: () ==> ()
     step_time() == current_time := current_time + step_length;
 
-    public get_time: () ==> real 
+    public get_time: () ==> Time
     get_time() == return current_time;
 
-    pure public get_step_length: () ==> real
+    pure public get_step_length: () ==> Time
     get_step_length() == return step_length;
 
 end Timer
@@ -35,14 +35,14 @@ Function or operation & Coverage & Calls \\
 \hline
 Timer & 100.0\% & 1 \\
 \hline
-get\_step\_length & 100.0\% & 7995 \\
+get\_step\_length & 100.0\% & 7268 \\
 \hline
-get\_time & 100.0\% & 1253 \\
+get\_time & 100.0\% & 1801 \\
 \hline
 step\_time & 100.0\% & 600 \\
 \hline
 \hline
-timer.vdmpp & 100.0\% & 9849 \\
+timer.vdmpp & 100.0\% & 9670 \\
 \hline
 \end{longtable}
 \end{document}

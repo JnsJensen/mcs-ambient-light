@@ -44,8 +44,18 @@ class CityTest is subclass of City
 --         mk_Edge(8, 5)
 --     ]
 -- );
+functions
+    private calc_position : nat1 * nat1 -> (real * real)
+    calc_position(p_id, p_amount) ==
+        let angle = 2 * MATH`pi * p_id / p_amount in
+            mk_(MATH`cos(angle), MATH`sin(angle));
 
 operations
+    private make_position : nat1 * nat1 ==> Position
+    make_position(p_id, p_amount) ==
+        let mk_(x, y) = calc_position(p_id, p_amount) in
+            return new Position(x, y);
+
     private build_city : seq of Position * seq of Edge ==> City
     build_city(p_intersection_positions, p_edges) ==
         let city = new City(p_intersection_positions, p_edges) in return city;
@@ -83,10 +93,7 @@ traces
         (
             let intersections_ids = {1,...,6} in
                 let intersection_positions = [
-                    new Position(
-                        MATH`cos(2 * MATH`pi * id / card intersections_ids),
-                        MATH`sin(2 * MATH`pi * id / card intersections_ids)
-                    )
+                    make_position(id, card intersections_ids)
                     | id in set intersections_ids
                 ] in
                     let all_intersection_combinations = power intersections_ids in
@@ -104,13 +111,10 @@ traces
     -- just draw the edges such that it is a connected graph
     TestManyIntersections:
         (
-            let intersection_amount in set {0,...,30} in
+            let intersection_amount in set {0,...,35} in
                 let intersections_ids = {1,...,intersection_amount} in
                     let intersection_positions = [
-                        new Position(
-                            MATH`cos(2 * MATH`pi * id / card intersections_ids),
-                            MATH`sin(2 * MATH`pi * id / card intersections_ids)
-                        )
+                        make_position(id, card intersections_ids)
                         | id in set intersections_ids
                     ] in
                         let edges = {

@@ -10,8 +10,9 @@
 class Environment is subclass of GLOBAL
 
 types
-    private inline = Time * Car;
-    private outline = Time * set of Car * set of StreetLamp;
+    private Inline = Time * Car;
+    -- outline : seconds * cars * street_lamps * power_usage * traffic_density(cars / road_length)
+    private Outline = Time * set of Car * set of StreetLamp * real01 * real0;
 
 values
     private time_max : Time = 60.0;
@@ -19,34 +20,69 @@ values
 instance variables
     private io : IO := new IO();
 
-    private inlines : seq of inline := [];
-    private outlines : seq of outline := [];
+    private inlines : seq of Inline := [];
+    private outlines : seq of Outline := [];
     private city : City;
     
     private busy : bool := true;
 
+functions
+    -- calculate total power savings
+    -- average power usage of all time steps
+    private average_power_usage : seq of Outline -> real01
+    average_power_usage(p_outlines) ==
+        let power_usage_seq = [
+            power_usage
+            | mk_(-, -, -, power_usage, -) in seq p_outlines
+        ] in
+            let total_power_usage = sum_seq_reals(power_usage_seq) in
+                total_power_usage / len power_usage_seq
+    pre len p_outlines > 0
+    post RESULT >= 0 and RESULT <= 1;
+
+    -- calculate total traffic density
+    -- average traffic density of all time steps
+    private average_traffic_density : seq of Outline -> real0
+    average_traffic_density(p_outlines) ==
+        let traffic_density_seq = [
+            traffic_density
+            | mk_(-, -, -, -, traffic_density) in seq p_outlines
+        ] in
+            let total_traffic_density = sum_seq_reals(traffic_density_seq) in
+                total_traffic_density / len traffic_density_seq
+    pre len p_outlines > 0
+    post RESULT >= 0;
+
 operations
-    -- debug: [io]
-    --        Seems that `success` is always false,
-    --        I don't know where to start debugging
     public Environment : () ==> Environment
     Environment() == (
         -- note: cant read files does not work with custom typs/classes
         inlines := [
-            mk_(0.0, new Car(1, 0.0,  1)),
-            mk_(1.0, new Car(2, 0.0,  1)),
-            mk_(1.0, new Car(3, 0.0,  1)),
-            mk_(2.0, new Car(4, 0.0,  1)),
-            mk_(2.0, new Car(5, 0.0, -1)),
-            mk_(2.0, new Car(6, 0.0, -1)),
-            mk_(3.0, new Car(7, 0.0,  1)),
-            mk_(3.0, new Car(2, 0.0, -1)),
-            mk_(3.0, new Car(3, 0.0, -1)),
-            mk_(4.0, new Car(4, 0.0,  1)),
-            mk_(4.0, new Car(3, 0.0, -1)),
-            mk_(5.0, new Car(6, 0.0,  1)),
-            mk_(5.0, new Car(5, 0.0, -1)),
-            mk_(5.0, new Car(8, 0.0, -1))
+            mk_( 0.0, new Car(1, 0.0,  1)),
+            mk_( 1.0, new Car(2, 0.0,  1)),
+            mk_( 1.0, new Car(3, 0.0,  1)),
+            mk_( 2.0, new Car(4, 0.0,  1)),
+            mk_( 2.0, new Car(5, 0.0, -1)),
+            mk_( 2.0, new Car(6, 0.0, -1)),
+            mk_( 3.0, new Car(7, 0.0,  1)),
+            mk_( 3.0, new Car(2, 0.0, -1)),
+            mk_( 3.0, new Car(3, 0.0, -1)),
+            mk_( 4.0, new Car(4, 0.0,  1)),
+            mk_( 4.0, new Car(3, 0.0, -1)),
+            mk_( 5.0, new Car(6, 0.0,  1)),
+            mk_( 5.0, new Car(5, 0.0, -1)),
+            mk_( 5.0, new Car(8, 0.0, -1)),
+            mk_(10.0, new Car(8, 0.0, -1)),
+            mk_(15.0, new Car(5, 0.0,  1)),
+            mk_(20.0, new Car(4, 0.0,  1)),
+            mk_(25.0, new Car(6, 0.0, -1)),
+            mk_(30.0, new Car(7, 0.0, -1)),
+            mk_(35.0, new Car(1, 0.0,  1)),
+            mk_(40.0, new Car(2, 0.0, -1)),
+            mk_(45.0, new Car(2, 0.0,  1)),
+            mk_(50.0, new Car(3, 0.0,  1)),
+            mk_(55.0, new Car(3, 0.0, -1)),
+            mk_(60.0, new Car(6, 0.0, -1))
         ];
         city := new City(
             [
@@ -57,7 +93,10 @@ operations
                 new Position(-170.0, -170.0), -- intersection 5
                 new Position(  50.0, -100.0), -- intersection 6
                 new Position( 120.0, -120.0), -- intersection 7
-                new Position( -100.0,-250.0)  -- intersection 8
+                new Position(-100.0, -250.0), -- intersection 8
+                new Position(-200.0, -170.0), -- intersection 9
+                new Position( -50.0,   50.0), -- intersection 10
+                new Position( 150.0,   50.0)  -- intersection 11
             ],
             [
                 mk_Edge(1, 2), -- road from intersection 1 to intersection 2
@@ -70,38 +109,54 @@ operations
                 mk_Edge(6, 7),
                 mk_Edge(1, 6),
                 mk_Edge(6, 8),
-                mk_Edge(8, 5)
+                mk_Edge(8, 5),
+                mk_Edge(5, 9),
+                mk_Edge(2, 10),
+                mk_Edge(3, 11)
             ]
         );
     );
 
     -- output the outlines
-    public show_result : () ==> ()
+    private show_result : () ==> ()
     show_result() ==
-        def - = io.writeval[seq of outline](outlines) in skip;
+        (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[seq of Outline]((*@\vdmnotcovered{outline}@*)s) in (*@\vdmnotcovered{ski}@*)p;
     
-    public show_city : () ==> ()
+    private show_city : () ==> ()
     show_city() ==
         (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[City]((*@\vdmnotcovered{cit}@*)y) in (*@\vdmnotcovered{ski}@*)p;
 
     -- write outlines to file
-    -- question: [io]
-    --           How to write to file?
-    public write_result : String ==> ()
+    private write_result : String ==> ()
     write_result(p_fname) ==
-        def - = io.fwriteval[seq of outline](p_fname, outlines, <start>) in skip;
+        def - = io.fwriteval[seq of Outline](p_fname, outlines, <start>) in skip;
     
+    private append_to_result : String * String * real ==> ()
+    append_to_result(p_fname, p_prefix, p_value) ==
+        def - = io.fwriteval[String](p_fname, p_prefix, <append>) in
+            def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
+
     -- Function to run through the inlines and generate the outlines
     public run : () ==> ()
     run() == (
         while not is_finished() do (
             handle_inlines();
             city.step();
-            World`timerRef.step_time();
+            World`timer_ref.step_time();
             make_outline();
         );
-        show_result();
         write_result("out.txt");
+        append_to_result(
+            "out.txt",
+            "Average power usage: ",
+            average_power_usage(outlines)
+        );
+        append_to_result(
+            "out.txt",
+            "Average traffic density: ",
+            average_traffic_density(outlines)
+        );
+        -- show_result();
         -- show_city();
     );
 
@@ -109,7 +164,7 @@ operations
     private handle_inlines : () ==> ()
     handle_inlines() == (
         if len inlines > 0 then (
-            dcl current_time : Time := World`timerRef.get_time(),
+            dcl current_time : Time := World`timer_ref.get_time(),
                 done : bool := false;
             while not done do (
                 def mk_(time, car) = hd inlines in
@@ -121,35 +176,47 @@ operations
                     else done := true;
             )
         )
-        else busy := false;
+        else (*@\vdmnotcovered{bus}@*)y := (*@\vdmnotcovered{fals}@*)e;
     );
 
-    -- Function to make an outline for the current time
+    -- make an outline for the current time
     private make_outline : () ==> ()
     make_outline() ==
-        let time = World`timerRef.get_time() in
-            let cars = {
-                new Car(
-                    car.get_road_id(),
-                    car.get_progress(),
-                    car.get_direction()
-                ) | car in set city.get_cars()
-            } in 
-                let lamps = {
-                    new StreetLamp(
-                        lamp.get_road_id(),
-                        lamp.get_position(),
-                        lamp.get_state()
-                    ) | lamp in set city.get_street_lamps()
-                } in
-                    outlines := outlines ^ [mk_(time, cars, lamps)];
+        let time = World`timer_ref.get_time() in
+            let power_usage = city.power_usage() in
+                let traffic_density = city.traffic_density() in
+                    let cars = {
+                        new Car(
+                            car.get_road_id(),
+                            car.get_distance(),
+                            car.get_direction()
+                        ) | car in set city.get_cars()
+                    } in 
+                        let lamps = {
+                            new StreetLamp(
+                                lamp.get_road_id(),
+                                lamp.get_position(),
+                                lamp.get_state()
+                            ) | lamp in set city.get_street_lamps()
+                        } in
+                            outlines := outlines ^ [mk_(
+                                time,
+                                cars, lamps,
+                                power_usage,
+                                traffic_density
+                            )];
 
-    -- I think maybe we should keep simulating until all cars have exited the city
-    public is_finished : () ==> bool 
+    -- keep simulating until
+    -- 1. there are no more inlines to handle
+    -- AND
+    -- 2. there are no more cars in the city
+    -- OR
+    -- 3. the time is up
+    private is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
-            return card cars = 0 and not busy or World`timerRef.get_time() >= time_max;
-
+            return card cars = 0 and not busy or World`timer_ref.get_time() >= time_max;
+    
 end Environment
 \end{vdm_al}
 \bigskip
@@ -158,11 +225,17 @@ end Environment
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Environment & 98.3\% & 1 \\
+Environment & 97.4\% & 1 \\
 \hline
 Environment & 100.0\% & 1 \\
 \hline
-handle\_inlines & 100.0\% & 600 \\
+append\_to\_result & 100.0\% & 2 \\
+\hline
+average\_power\_usage & 100.0\% & 1 \\
+\hline
+average\_traffic\_density & 100.0\% & 1 \\
+\hline
+handle\_inlines & 93.7\% & 600 \\
 \hline
 is\_finished & 100.0\% & 601 \\
 \hline
@@ -172,12 +245,12 @@ run & 100.0\% & 1 \\
 \hline
 show\_city & 0.0\% & 0 \\
 \hline
-show\_result & 100.0\% & 1 \\
+show\_result & 0.0\% & 0 \\
 \hline
 write\_result & 100.0\% & 1 \\
 \hline
 \hline
-environment.vdmpp & 98.3\% & 1806 \\
+environment.vdmpp & 97.4\% & 1809 \\
 \hline
 \end{longtable}
 \end{document}

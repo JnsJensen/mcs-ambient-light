@@ -7,13 +7,21 @@
 \title{}
 \author{}
 \begin{vdm_al}
-class Position
+class Position is subclass of GLOBAL
 -- Defines a 2D (x, y) position
 -- coordinates interpreted at a meter scale
 
 instance variables
     private x : real;
     private y : real;
+
+functions
+    private norm : (real * real) * (real * real) -> real0
+    norm(p1, p2) == (
+        let mk_(x1, y1) = p1 in
+            let mk_(x2, y2) = p2 in
+                MATH`sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    );
 
 operations
     public Position : real * real ==> Position
@@ -23,10 +31,10 @@ operations
     );
 
     -- Returns the distance from the current point to the given point
-    public distance_to : Position ==> real
-    distance_to(p_to_position) == (
-        MATH`sqrt((x - p_to_position.x)**2 + (y - p_to_position.y)**2)
-    );
+    public distance_to : Position ==> real0
+    distance_to(p_to_position) ==
+        norm(mk_(x, y), mk_(p_to_position.x, p_to_position.y))
+    post RESULT >= 0;
 
 end Position
 \end{vdm_al}
@@ -36,14 +44,16 @@ end Position
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Position & 100.0\% & 8 \\
+Position & 100.0\% & 11 \\
 \hline
-Position & 100.0\% & 8 \\
+Position & 100.0\% & 14 \\
 \hline
-distance\_to & 100.0\% & 11 \\
+distance\_to & 100.0\% & 14 \\
+\hline
+norm & 100.0\% & 14 \\
 \hline
 \hline
-position.vdmpp & 100.0\% & 27 \\
+position.vdmpp & 100.0\% & 53 \\
 \hline
 \end{longtable}
 \end{document}

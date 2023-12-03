@@ -15,11 +15,28 @@ except ImportError or ModuleNotFoundError:
     pass
 
 # Parsing the arguments
-# -f --file: The path to the file to be parsed
 parser = argparse.ArgumentParser(description='Draw the city')
-parser.add_argument('-cf', '--city-file', type=str, required=True, help='Path to the VDM city file')
-parser.add_argument('-of', '--outlines-file', type=str, required=True, help='Path to the VDM outlines file')
-parser.add_argument('-fd', '--font-dir', type=str, required=True, help='Path to the font directory')
+parser.add_argument(
+    '-cf',
+    '--city-file',
+    type=str,
+    required=True,
+    help='Path to the VDM city file'
+)
+parser.add_argument(
+    '-of',
+    '--outlines-file',
+    type=str,
+    required=True,
+    help='Path to the VDM outlines file'
+)
+parser.add_argument(
+    '-fd',
+    '--font-dir',
+    type=str,
+    required=True,
+    help='Path to the font directory'
+)
 
 args = parser.parse_args()
 
@@ -50,7 +67,13 @@ if not font_dir.exists():
     print(f"Directory {font_dir} does not exist.")
     sys.exit(1)
 
-def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outline], window_size=(800, 600), intersection_size=5):
+def draw_city(
+    intersections: [(int, int)],
+    roads: [(int, int)],
+    outlines: [Outline],
+    window_size=(800, 600),
+    intersection_size=5
+):
     rl.init_window(window_size[0], window_size[1], "City Visualization")
     rl.set_target_fps(60)
     intersection_size = 5
@@ -208,7 +231,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
             camera.target.y += 10.0 / camera.zoom
 
         mouse_pos = rl.get_mouse_position()
-        if (rl.is_mouse_button_down(rl.MOUSE_LEFT_BUTTON) or rl.is_mouse_button_down(rl.MOUSE_MIDDLE_BUTTON)):
+        if (rl.is_mouse_button_down(rl.MOUSE_LEFT_BUTTON)
+            or rl.is_mouse_button_down(rl.MOUSE_MIDDLE_BUTTON)):
             camera.target.x -= (mouse_pos.x - prev_mouse_pos.x) / camera.zoom
             camera.target.y -= (mouse_pos.y - prev_mouse_pos.y) / camera.zoom
 
@@ -231,10 +255,7 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
         for road in roads:
             start = intersections[road[0] - 1]
             end = intersections[road[1] - 1]
-            # rl.draw_line(start[0], start[1], end[0], end[1], colors["road"])
             rl.draw_line_ex(start, end, 8, colors["road"])
-            # draw the road as a rectangle
-            # rl.draw_rectangle_lines(start[0], start[1], end[0] - start[0], end[1] - start[1], colors["road"])
 
         # Draw intersections
         for pos in intersections:
@@ -266,17 +287,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
                 color = color
             )
 
-        # o = outlines[0]
-        # cars = o.cars
-        # for car in cars:
-            
-        # draw debug circle in center of world
-        # rl.draw_circle(0, 0, 5, rl.RED)
-
         rl.end_mode_2d()
         rl.end_drawing()
-    # keep window open until user closes it
-    # rl.close_window()
 
 # Parse the city data
 city_contents = city_file.read_text()

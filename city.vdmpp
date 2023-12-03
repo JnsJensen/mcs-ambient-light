@@ -227,21 +227,13 @@ operations
     pure public power_usage : () ==> real01
     power_usage() ==
         let street_lamps = get_street_lamps() in
-                let on_street_lamps = {
-                    street_lamp
-                    | street_lamp in set street_lamps
-                    & street_lamp.get_state() = <ON>
-                } in
-                    return card on_street_lamps / card street_lamps
+            let on_street_lamps = {
+                street_lamp
+                | street_lamp in set street_lamps
+                & street_lamp.get_state() = <ON>
+            } in
+                return card on_street_lamps / card street_lamps
     post RESULT >= 0 and RESULT <= 1;
-        -- let street_lamp_states = [
-        --     street_lamp.get_state()
-        --     | street_lamp in set get_street_lamps()
-        --  ] in
-        --     return calc_power_usage(street_lamp_states);
-    -- pre card get_street_lamps() > 0
-    --     and {street_lamp | street_lamp in set get_street_lamps() & street_lamp.get_state() = <ON>} subset get_street_lamps()
-    -- post RESULT > 0 and RESULT < 1;
 
     -- calculate traffic density as cars / total road length
     pure public traffic_density : () ==> real0
@@ -251,8 +243,5 @@ operations
             | road in set roads
         }) in
             return calc_traffic_density(get_cars(), road_lengths);
-    -- pre card roads > 0
-    --     and forall road_length in set {road.get_length() | road in set roads} & road_length > 0
-    -- post RESULT > 0;
 
 end City

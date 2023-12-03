@@ -1,4 +1,4 @@
-from utils import parse_vdm_city, parse_vdm_output, Outline, Car, StreetLamp
+from utils import parse_vdm_city, parse_vdm_output, Car, StreetLamp
 import pyray as rl
 import math
 # Check if rich is installed, and only import it if it is.
@@ -55,11 +55,6 @@ def draw_car(
     road_length = rl.vector_2distance(start, end)
     distance_normalized = car.distance / road_length
     # interpolate between the two points based on the car's distance
-    # pos = rl.Vector2(0, 0)
-    # if car.direction == 1:
-    #     pos = rl.vector2_lerp(start, end, distance_normalized)
-    # else:
-    #     pos = rl.vector2_lerp(end, start, distance_normalized)
     pos = rl.vector2_lerp(start, end, distance_normalized)
 
     # move car slightly to the side
@@ -70,7 +65,4 @@ def draw_car(
     normal = rl.vector2_normalize(normal)
     pos = rl.vector2_add(pos, rl.vector2_scale(normal, offset_magnitude * car.direction))
 
-    # print(f"Dawing car at ({pos.x}, {pos.y})")
-
-    # print(f"Drawing car at ({pos.x}, {pos.y})")
     rl.draw_circle(int(pos.x), int(pos.y), size, color)

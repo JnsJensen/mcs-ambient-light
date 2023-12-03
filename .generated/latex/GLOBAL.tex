@@ -10,29 +10,60 @@
 class GLOBAL
 
 types
-    public Time = real;
+    public real0 = real
+    inv r == r >= 0;
+
+    public real01 = real
+    inv r == r >= 0 and r <= 1;
+
+    public Time = real0;
     public String = seq of char;
     public StreetLampState = <ON> | <OFF>;
     public RoadID = nat1;
     public IntersectionID = nat1;
-    public Edge :: intersection1 : IntersectionID
-                   intersection2 : IntersectionID;
+    public Edge :: from_intersection : IntersectionID
+                   to_intersection : IntersectionID;
     public RoadGraph = map RoadID to Edge;
     public IntersectionGraph = map IntersectionID to set of RoadID;
 
 functions
-    -- -- Y combinator
-    -- public Y : ('a -> 'a) -> 'a
-    -- Y(f) == f(lambda x : 'a & Y(f)(x));
+    -- polymorphic function to sum a sequence
+    public sum_seq[@T] : seq of @T * (@T * @T -> @T) +> @T
+    sum_seq(p_seq, p_operator) ==
+        if len p_seq = 0 then
+            0
+        else
+            p_operator(hd p_seq, sum_seq[@T](tl p_seq, p_operator))
+    measure len p_seq;
 
-    -- -- Recursive Lambda Expression Example
-    -- RecursiveLambda : [Type] -> [Type]
-    -- RecursiveLambda () = lambda arg : [Type] & 
-    --                     if base_case_condition then 
-    --                         base_case_result 
-    --                     else 
-    --                         RecursiveLambda(modified_arg);
+    -- function to add two reals
+    -- can be used as the operator in sum_seq[real]
+    public add_reals : real * real +> real
+    add_reals(a, b) == a + b;
 
+    -- function to add two real0s
+    -- can be used as the operator in sum_seq[real0]
+    public add_real0s : real0 * real0 +> real0
+    add_real0s(a, b) == a + b
+    post RESULT >= 0;
+
+    -- function to add two ints
+    -- can be used as the operator in sum_seq[int]
+    public add_ints : int * int +> int
+    add_ints(a, b) == (*@\vdmnotcovered{}@*)a (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{}@*)b;
+
+    -- sum a sequence of reals
+    public sum_seq_reals : seq of real +> real
+    sum_seq_reals(p_seq) == sum_seq[real](p_seq, add_reals);
+
+    -- sum a sequence of real0s
+    public sum_seq_real0s : seq of real0 +> real0
+    sum_seq_real0s(p_seq) == sum_seq[real0](p_seq, add_real0s)
+    post RESULT >= 0;
+
+    -- sum a sequence of ints
+    public sum_seq_ints : seq of int +> int
+    sum_seq_ints(p_seq) == (*@\vdmnotcovered{sum\_se}@*)q[int]((*@\vdmnotcovered{p\_se}@*)q, (*@\vdmnotcovered{add\_int}@*)s);
 
 end GLOBAL
 \end{vdm_al}
@@ -42,10 +73,24 @@ end GLOBAL
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-GLOBAL & 0.0\% & 0 \\
+GLOBAL & 87.7\% & 34523 \\
+\hline
+add\_ints & 0.0\% & 0 \\
+\hline
+add\_real0s & 100.0\% & 5400 \\
+\hline
+add\_reals & 100.0\% & 1200 \\
+\hline
+sum\_seq & 100.0\% & 7202 \\
+\hline
+sum\_seq\_ints & 0.0\% & 0 \\
+\hline
+sum\_seq\_real0s & 100.0\% & 1200 \\
+\hline
+sum\_seq\_reals & 100.0\% & 4 \\
 \hline
 \hline
-GLOBAL.vdmpp & 0.0\% & 0 \\
+GLOBAL.vdmpp & 87.7\% & 49529 \\
 \hline
 \end{longtable}
 \end{document}
