@@ -1,0 +1,48 @@
+new City(
+    [
+        new Position(   0.0,    0.0), -- intersection 1
+        new Position(  50.0,    5.0), -- intersection 2
+        new Position(  50.0,  -50.0), -- intersection 3
+        new Position(   0.0,  -40.0), -- intersection 4
+        new Position( 100.0,    5.0), -- intersection 5
+        new Position( 100.0, -100.0), -- intersection 6
+        new Position( -50.0,    0.0), -- intersection 7
+        new Position( -55.0,  -50.0), -- intersection 8
+        new Position(-100.0,  -50.0), -- intersection 9
+        new Position( -90.0,   -5.0), -- intersection 10
+        new Position(-110.0,  -95.0), -- intersection 11
+        new Position(-120.0,  -45.0), -- intersection 12
+        new Position(-150.0,  -10.0), -- intersection 13
+        new Position(  25.0,   50.0), -- intersection 14
+        new Position(  40.0,   80.0), -- intersection 15
+        new Position( -90.0,   45.0), -- intersection 16
+        new Position(-110.0,   67.5), -- intersection 17
+        new Position( -25.0,   45.0), -- intersection 18
+        new Position( -25.0,   10.0)  -- intersection 19
+    ],
+    [
+        mk_Edge(1, 2), -- road from intersection 1 to intersection 2
+        mk_Edge(2, 3),
+        mk_Edge(3, 4),
+        mk_Edge(4, 1),
+        mk_Edge(2, 5),
+        mk_Edge(3, 6),
+        mk_Edge(4, 8),
+        mk_Edge(8, 7),
+        mk_Edge(7, 1),
+        mk_Edge(8, 9),
+        mk_Edge(9, 10),
+        mk_Edge(10, 7),
+        mk_Edge(9, 11),
+        mk_Edge(9, 12),
+        mk_Edge(10, 13),
+        mk_Edge(1, 14),
+        mk_Edge(14, 15),
+        mk_Edge(14, 18),
+        mk_Edge(16, 18),
+        mk_Edge(19, 18),
+        mk_Edge(10, 16),
+        mk_Edge(7, 16),
+        mk_Edge(16, 17)
+    ]
+);

@@ -21,10 +21,13 @@ operations
     public next_road : Road ==> [Road]
     next_road(p_from_road) == 
         let available_connections = connections \ {p_from_road} in
-            let connections_seq = VDMUtil`set2seq[Road](available_connections) in
-                let rand_idx = MATH`rand(len connections_seq) + 1 in
-                    return connections_seq(rand_idx)
+            if available_connections = {} then
+                return nil
+            else
+                let connections_seq = VDMUtil`set2seq[Road](available_connections) in
+                    let rand_idx = MATH`rand(len connections_seq) + 1 in
+                        return connections_seq(rand_idx)
     pre p_from_road in set connections
-    post RESULT in set connections \ {p_from_road};
+    post RESULT in set connections \ {p_from_road} or RESULT = nil;
 
 end Intersection

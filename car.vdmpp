@@ -3,7 +3,7 @@ class Car is subclass of GLOBAL
 values
     -- defines speed along a road
     -- negative speed means driving in the opposite direction
-    private speed : real = 10; -- m/s
+    private speed : real = 10; -- m/s = 36 km/h
 
 instance variables
     -- reference to the road the car is driving on
