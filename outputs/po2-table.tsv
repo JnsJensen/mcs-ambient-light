@@ -27,7 +27,7 @@ id	kind	name	status
 60	operation post condition	Car.get_direction()	Unchecked
 61	total function	Car.set_direction(int)	Unchecked
 62	state invariant	Car.set_direction(int)	Unchecked
-63	state invariant	Car.drive(real)	Unchecked
+63	state invariant	Car.drive(Time)	Unchecked
 64	subtype	Environment.time_max	Proved
 65	post condition	Environment.average_power_usage(seq of (Outline))	Maybe
 66	function apply	Environment.average_power_usage(seq of (Outline)).total_power_usage	Maybe
@@ -51,10 +51,10 @@ id	kind	name	status
 84	subtype	Position.norm((real * real), (real * real))	Maybe
 85	total function	Position.distance_to(Position)	Unchecked
 86	operation post condition	Position.distance_to(Position)	Unchecked
-87	total function	Road.Road(RoadID, Position, Position)	Unchecked
-88	operation post condition	Road.Road(RoadID, Position, Position)	Unchecked
-89	non-zero	Road.Road(RoadID, Position, Position).st_positions	Unchecked
-90	subtype	Road.get_length()	Unchecked
+87	subtype	Road.st_spacing	Proved
+88	total function	Road.Road(RoadID, Position, Position)	Unchecked
+89	operation post condition	Road.Road(RoadID, Position, Position)	Unchecked
+90	non-zero	Road.Road(RoadID, Position, Position).st_positions	Unchecked
 91	total function	City.make_road_graph_rec(seq of (Edge), RoadID).measure_make_road_graph_rec(seq of (Edge), RoadID)	Maybe
 92	non-empty sequence	City.make_road_graph_rec(seq of (Edge), RoadID).edge	Proved
 93	recursive function	City.make_road_graph_rec(seq of (Edge), RoadID).rest	Maybe
@@ -74,21 +74,20 @@ id	kind	name	status
 107	operation post condition	City.City(seq of (Position), seq of (Edge))	Unchecked
 108	total function	City.add_car(Car)	Unchecked
 109	let be st existence	City.add_car(Car)	Unchecked
-110	subtype	City.step_cars().new_distance	Unchecked
-111	let be st existence	City.step_cars()	Unchecked
+110	let be st existence	City.step_cars()	Unchecked
+111	map apply	City.step_cars().intersection_id, distance_remainder	Unchecked
 112	map apply	City.step_cars().intersection_id, distance_remainder	Unchecked
-113	map apply	City.step_cars().intersection_id, distance_remainder	Unchecked
-114	let be st existence	City.step_cars()	Unchecked
-115	map apply	City.step_cars()	Unchecked
+113	let be st existence	City.step_cars()	Unchecked
+114	map apply	City.step_cars()	Unchecked
+115	let be st existence	City.step_street_lamps()	Unchecked
 116	let be st existence	City.step_street_lamps()	Unchecked
-117	let be st existence	City.step_street_lamps()	Unchecked
-118	total function	City.power_usage()	Unchecked
-119	operation post condition	City.power_usage()	Unchecked
-120	non-zero	City.power_usage()	Unchecked
-121	subtype	City.power_usage()	Unchecked
-122	function apply	City.traffic_density()	Unchecked
+117	total function	City.power_usage()	Unchecked
+118	operation post condition	City.power_usage()	Unchecked
+119	non-zero	City.power_usage()	Unchecked
+120	subtype	City.power_usage()	Unchecked
+121	function apply	City.traffic_density()	Unchecked
+122	total function	Intersection.next_road(Road)	Unchecked
 123	total function	Intersection.next_road(Road)	Unchecked
-124	total function	Intersection.next_road(Road)	Unchecked
-125	operation post condition	Intersection.next_road(Road)	Unchecked
-126	sequence apply	Intersection.next_road(Road)	Unchecked
-127	subtype	Sensor.range	Proved
+124	operation post condition	Intersection.next_road(Road)	Unchecked
+125	sequence apply	Intersection.next_road(Road)	Unchecked
+126	subtype	Sensor.range	Proved

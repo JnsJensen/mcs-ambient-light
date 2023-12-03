@@ -20,7 +20,7 @@ instance variables
 
 functions
     -- calculate distance
-    private new_distance : real * real * real * int -> real
+    private new_distance : real * real * Time * int -> real
     new_distance(p_distance, p_speed, p_dt, p_direction) ==
         p_distance + p_direction * p_speed * p_dt;
 
@@ -53,7 +53,7 @@ operations
     set_direction(p_direction) == direction := p_direction
     pre p_direction in set {-1, 1};
 
-    public drive : real ==> real
+    public drive : Time ==> real
     drive(dt) == (
         distance := new_distance(distance, speed, dt, direction);
         return distance;

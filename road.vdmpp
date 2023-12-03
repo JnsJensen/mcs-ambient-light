@@ -1,7 +1,7 @@
 class Road is subclass of GLOBAL
 
 values
-    private st_spacing : real = 10.0;
+    private st_spacing : real0 = 10.0;
 
 instance variables
     -- public start_position : Position;
@@ -39,7 +39,7 @@ operations
     pure public get_id : () ==> RoadID
     get_id() == return id;
 
-    pure public get_length : () ==> real
+    pure public get_length : () ==> real0
     get_length() == return length;
 
     pure public get_cars : () ==> set of Car
