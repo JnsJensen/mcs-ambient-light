@@ -1,15 +1,15 @@
 class Sensor is subclass of GLOBAL
 
 values
-    private range : real = 20.0; -- range of the sensor in meters
+    private range : real0 = 20.0; -- range of the sensor in meters
 
 instance variables
     private cars : set of Car := {};
     private road : Road; -- reference to the road it is part of
-    private position : real; -- position along the road in meters
+    private position : real0; -- position along the road in meters
 
 operations
-    public Sensor : Road * real ==> Sensor
+    public Sensor : Road * real0 ==> Sensor
     Sensor(p_road, p_position) == (
         position := p_position;
         road := p_road;
@@ -28,7 +28,7 @@ operations
     pure public is_triggered : () ==> bool
     is_triggered() == return not cars = {};
 
-    pure public get_position : () ==> real
+    pure public get_position : () ==> real0
     get_position() == return position;
 
 end Sensor

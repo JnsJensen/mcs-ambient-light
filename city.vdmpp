@@ -46,16 +46,16 @@ functions
             card p_cars / total_road_length
     pre len p_roads_lengths > 0;
 
-    -- calculate the power usage
-    private calc_power_usage : seq of StreetLampState -> real01
-    calc_power_usage(p_street_lamp_states) ==
-        let on_street_lamps = {
-            street_lamp_state
-            | street_lamp_state in seq p_street_lamp_states
-            & street_lamp_state = <ON>
-        } in
-            card on_street_lamps / len p_street_lamp_states
-    pre len p_street_lamp_states > 0
+    -- -- calculate the power usage
+    -- private calc_power_usage : seq of StreetLampState -> real01
+    -- calc_power_usage(p_street_lamp_states) ==
+    --     let on_street_lamps = {
+    --         street_lamp_state
+    --         | street_lamp_state in seq p_street_lamp_states
+    --         & street_lamp_state = <ON>
+    --     } in
+    --         card on_street_lamps / len p_street_lamp_states
+    -- pre len p_street_lamp_states > 0
         -- and {street_lamp_state | street_lamp_state in seq p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
 
 operations
@@ -245,7 +245,7 @@ operations
     -- calculate traffic density as cars / total road length
     pure public traffic_density : () ==> real0
     traffic_density() ==
-        let road_lengths = VDMUtil`set2seq[real]({
+        let road_lengths = VDMUtil`set2seq[real0]({
             road.get_length()
             | road in set roads
         }) in

@@ -7,7 +7,7 @@ types
     public real01 = real
     inv r == r >= 0 and r <= 1;
 
-    public Time = real;
+    public Time = real0;
     public String = seq of char;
     public StreetLampState = <ON> | <OFF>;
     public RoadID = nat1;

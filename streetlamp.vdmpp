@@ -3,16 +3,16 @@ class StreetLamp is subclass of GLOBAL
 instance variables
     private lamp_state : StreetLampState := <OFF>;
     private road_id : RoadID;
-    private position : real; -- position along the road in meters
+    private position : real0; -- position along the road in meters
 
 operations
-    public StreetLamp : RoadID * real ==> StreetLamp
+    public StreetLamp : RoadID * real0 ==> StreetLamp
     StreetLamp(p_road_id, p_position) == (
         position := p_position;
         road_id := p_road_id;
     );
 
-    public StreetLamp : RoadID * real * StreetLampState ==> StreetLamp
+    public StreetLamp : RoadID * real0 * StreetLampState ==> StreetLamp
     StreetLamp(p_road_id, p_position, p_lamp_state) == (
         position := p_position;
         lamp_state := p_lamp_state;
@@ -28,7 +28,7 @@ operations
     pure public get_road_id : () ==> RoadID
     get_road_id() == return road_id;
 
-    pure public get_position : () ==> real
+    pure public get_position : () ==> real0
     get_position() == return position;
 
     pure public get_state : () ==> StreetLampState

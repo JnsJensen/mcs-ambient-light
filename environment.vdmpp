@@ -20,7 +20,7 @@ instance variables
 functions
     -- calculate total power savings
     -- average power usage of all time steps
-    private average_power_usage : seq of Outline -> real
+    private average_power_usage : seq of Outline -> real01
     average_power_usage(p_outlines) ==
         let power_usage_seq = [
             power_usage
@@ -33,7 +33,7 @@ functions
 
     -- calculate total traffic density
     -- average traffic density of all time steps
-    private average_traffic_density : seq of Outline -> real
+    private average_traffic_density : seq of Outline -> real0
     average_traffic_density(p_outlines) ==
         let traffic_density_seq = [
             traffic_density
