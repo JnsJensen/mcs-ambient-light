@@ -62,6 +62,8 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
     camera.zoom = 2.5 # Initial zoom level
     camera.target = rl.Vector2(-30.0, -100.0)
 
+    paused = True
+
     # Load your custom font
     fonts = {
         "jetbrains-mono": {
@@ -112,8 +114,10 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
         if delta_time > 0.1:
             last_time = new_time
             # print(f"outline lenght: {len(outlines)}")
-            if len(outlines) > 1:
+            if len(outlines) > 1 and not paused:
                 outlines.pop(0)
+            elif paused:
+                print("Paused")
             elif not last:
                 last = True
                 print("Continuing to draw last outline")
@@ -188,6 +192,9 @@ def draw_city(intersections: [(int, int)], roads: [(int, int)], outlines: [Outli
                 theme = "macchiato"
             else:
                 theme = "latte"
+
+        if rl.is_key_pressed(rl.KEY_P):
+            paused = not paused
 
         # move camera with arrow keys
         # or the wasd keys if you're a cool kid
