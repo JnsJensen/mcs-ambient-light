@@ -1,4 +1,4 @@
-class CityTest is subclass of City
+class CityTest is subclass of GLOBAL
 -- combinatorial testing for building the city
 -- using its constructor
 
@@ -45,10 +45,19 @@ class CityTest is subclass of City
 --     ]
 -- );
 functions
+    -- return a position on the unit circle
     private calc_position : nat1 * nat1 -> (real * real)
     calc_position(p_id, p_amount) ==
         let angle = 2 * MATH`pi * p_id / p_amount in
             mk_(MATH`cos(angle), MATH`sin(angle));
+    
+    -- makes a circular set of edges, that is the minimum amount + 1 for a connected graph
+    private make_minimum_edges : set of IntersectionID -> set of Edge
+    make_minimum_edges(p_intersection_ids) == {
+        mk_Edge(i, i + 1)
+        | i in set p_intersection_ids
+        & i < card p_intersection_ids
+    };
 
 operations
     private make_position : nat1 * nat1 ==> Position
@@ -92,18 +101,18 @@ traces
     TestAllEdges:
         (
             let intersections_ids = {1,...,6} in
-                let intersection_positions = [
-                    make_position(id, card intersections_ids)
-                    | id in set intersections_ids
-                ] in
-                    let all_intersection_combinations = power intersections_ids in
-                        let intersections in set all_intersection_combinations
-                        be st card intersections >= 2 in
-                            let edges = {
-                                mk_Edge(i1, i2)
-                                | i1, i2 in set intersections
-                                & i1 <> i2
-                            } in build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
+            let intersection_positions = [
+                make_position(id, card intersections_ids)
+                | id in set intersections_ids
+            ] in
+            let all_intersection_combinations = power intersections_ids in
+            let intersections in set all_intersection_combinations
+            be st card intersections >= 2 in
+            let edges = {
+                mk_Edge(i1, i2)
+                | i1, i2 in set intersections
+                & i1 <> i2
+            } in build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
         );
 
     -- no need to attempt to create all edge combinations
@@ -111,17 +120,14 @@ traces
     -- just draw the edges such that it is a connected graph
     TestManyIntersections:
         (
-            let intersection_amount in set {0,...,35} in
-                let intersections_ids = {1,...,intersection_amount} in
-                    let intersection_positions = [
-                        make_position(id, card intersections_ids)
-                        | id in set intersections_ids
-                    ] in
-                        let edges = {
-                            mk_Edge(i1, i2)
-                            | i1, i2 in set intersections_ids
-                            & i1 <> i2
-                        } in build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
+            let intersection_amount in set {0,...,500} in
+            let intersections_ids = {1,...,intersection_amount} in
+            let intersection_positions = [
+                make_position(id, card intersections_ids)
+                | id in set intersections_ids
+            ] in
+            let edges = make_minimum_edges(intersections_ids) in
+            build_city(intersection_positions, VDMUtil`set2seq[Edge](edges))
         );
 
 

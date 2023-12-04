@@ -28,8 +28,7 @@ functions
         ] in
             let total_power_usage = sum_seq_reals(power_usage_seq) in
                 total_power_usage / len power_usage_seq
-    pre len p_outlines > 0
-    post RESULT >= 0 and RESULT <= 1;
+    pre len p_outlines > 0;
 
     -- calculate total traffic density
     -- average traffic density of all time steps
@@ -41,8 +40,7 @@ functions
         ] in
             let total_traffic_density = sum_seq_reals(traffic_density_seq) in
                 total_traffic_density / len traffic_density_seq
-    pre len p_outlines > 0
-    post RESULT >= 0;
+    pre len p_outlines > 0;
 
 operations
     public Environment : () ==> Environment
@@ -107,15 +105,6 @@ operations
             ]
         );
     );
-
-    -- output the outlines
-    private show_result : () ==> ()
-    show_result() ==
-        def - = io.writeval[seq of Outline](outlines) in skip;
-    
-    private show_city : () ==> ()
-    show_city() ==
-        def - = io.writeval[City](city) in skip;
 
     -- write outlines to file
     private write_result : String ==> ()

@@ -46,18 +46,6 @@ functions
             card p_cars / total_road_length
     pre len p_roads_lengths > 0;
 
-    -- -- calculate the power usage
-    -- private calc_power_usage : seq of StreetLampState -> real01
-    -- calc_power_usage(p_street_lamp_states) ==
-    --     let on_street_lamps = {
-    --         street_lamp_state
-    --         | street_lamp_state in seq p_street_lamp_states
-    --         & street_lamp_state = <ON>
-    --     } in
-    --         card on_street_lamps / len p_street_lamp_states
-    -- pre len p_street_lamp_states > 0
-        -- and {street_lamp_state | street_lamp_state in seq p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
-
 operations
     -- make roads from RoadGraph
     private make_roads : RoadGraph * seq of Position ==> set of Road
@@ -102,8 +90,6 @@ operations
         intersections := make_intersections(p_intersection_positions, intersection_to_roads);
     )
     pre len p_intersection_positions >= 2
-        -- and forall i1 in set VDMUtil`seq2set(p_intersection_positions) & forall i2 in set VDMUtil`seq2set(p_intersection_positions) \ i1 & i1 <> i2
-        -- and forall e1, e2 in seq p_edges & e1 <> e2
         and forall e3 in seq p_edges & e3.from_intersection <> e3.to_intersection
         and e3.from_intersection in set inds p_intersection_positions
         and e3.to_intersection in set inds p_intersection_positions
