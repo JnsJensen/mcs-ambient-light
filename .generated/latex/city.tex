@@ -41,9 +41,10 @@ functions
         {
             intersection_id |-> {
                 road_id
-                | road_id in set dom p_road_to_intersections &
-                    let edge = p_road_to_intersections(road_id) in
-                        edge.from_intersection = intersection_id or edge.to_intersection = intersection_id
+                | road_id in set dom p_road_to_intersections
+                & let edge = p_road_to_intersections(road_id) in
+                  edge.from_intersection = intersection_id
+                  or edge.to_intersection = intersection_id
             }
             | intersection_id in set p_intersection_ids
         };
@@ -54,18 +55,6 @@ functions
         let total_road_length = sum_seq_real0s(p_roads_lengths) in
             card p_cars / total_road_length
     pre len p_roads_lengths > 0;
-
-    -- -- calculate the power usage
-    -- private calc_power_usage : seq of StreetLampState -> real01
-    -- calc_power_usage(p_street_lamp_states) ==
-    --     let on_street_lamps = {
-    --         street_lamp_state
-    --         | street_lamp_state in seq p_street_lamp_states
-    --         & street_lamp_state = <ON>
-    --     } in
-    --         card on_street_lamps / len p_street_lamp_states
-    -- pre len p_street_lamp_states > 0
-        -- and {street_lamp_state | street_lamp_state in seq p_street_lamp_states & street_lamp_state = <ON>} subset p_street_lamp_states;
 
 operations
     -- make roads from RoadGraph
@@ -89,7 +78,8 @@ operations
                 p_intersection_positions(intersection_id),
                 {
                     road
-                    | road in set roads & road.get_id() in set p_intersection_to_roads(intersection_id)
+                    | road in set roads
+                    & road.get_id() in set p_intersection_to_roads(intersection_id)
                 }
             )
             | intersection_id in set dom p_intersection_to_roads
@@ -104,15 +94,14 @@ operations
     City(p_intersection_positions, p_edges) == (
         -- make the graphs
         road_to_intersections := make_road_graph(p_edges);
-        intersection_to_roads := make_intersection_graph(inds p_intersection_positions, road_to_intersections);
+        intersection_to_roads := make_intersection_graph(inds p_intersection_positions,
+                                                          road_to_intersections);
         
         -- instantiation
         roads := make_roads(road_to_intersections, p_intersection_positions);
         intersections := make_intersections(p_intersection_positions, intersection_to_roads);
     )
     pre len p_intersection_positions >= 2
-        -- and forall i1 in set VDMUtil`seq2set(p_intersection_positions) & forall i2 in set VDMUtil`seq2set(p_intersection_positions) \ i1 & i1 <> i2
-        -- and forall e1, e2 in seq p_edges & e1 <> e2
         and forall e3 in seq p_edges & e3.from_intersection <> e3.to_intersection
         and e3.from_intersection in set inds p_intersection_positions
         and e3.to_intersection in set inds p_intersection_positions
@@ -154,44 +143,48 @@ operations
     private step_cars : () ==> ()
     step_cars() ==
         let cars = get_cars() in
-            for all car in set cars do (
-                -- Then the steps would be
-                -- 1. drive the car
-                -- check if the car has overstepped a road
-                --     1. remove the car from the road
-                --     2. car.distance < road.length -> choose from_intersection
-                --     3. car.distance > road.length -> choose to_intersection
-                --     4. select a new road from the intersection
-                --     5. add the car to the new road
-                
-                let new_distance = car.drive(World`timer_ref.get_step_length()) in 
-                    let road in set roads be st road.get_id() = car.get_road_id() in (
-                        let mk_(intersection_id, distance_remainder) = (
-                            if new_distance > road.get_length() then
-                                mk_(road_to_intersections(road.get_id()).to_intersection, new_distance - road.get_length())
-                            elseif new_distance < 0 then
-                                mk_(road_to_intersections(road.get_id()).from_intersection, abs new_distance)
-                            else mk_(nil, nil)
-                            ) in
-                                if intersection_id <> nil then
-                                    let intersection in set intersections be st intersection.get_id() = intersection_id in (
-                                        road.remove_car(car);
-                                        let next_road = intersection.next_road(road) in
-                                            if next_road <> nil then (
-                                                next_road.add_car(car);
-                                                if intersection_id
-                                                   = road_to_intersections(next_road.get_id())
-                                                   .from_intersection then (
-                                                    car.set_direction(1);
-                                                    car.set_distance(distance_remainder);
-                                                ) else (
-                                                    car.set_direction(-1);
-                                                    car.set_distance(next_road.get_length() - distance_remainder);
-                                                );
-                                            );
-                                    );
+        for all car in set cars do (
+            -- Then the steps would be
+            -- 1. drive the car
+            -- check if the car has overstepped a road
+            --     1. remove the car from the road
+            --     2. car.distance < road.length -> choose from_intersection
+            --     3. car.distance > road.length -> choose to_intersection
+            --     4. select a new road from the intersection
+            --     5. add the car to the new road
+            
+            let new_distance = car.drive(World`timer_ref.get_step_length()) in 
+            let road in set roads be st road.get_id() = car.get_road_id() in (
+            let mk_(intersection_id, distance_remainder) = (
+                if new_distance > road.get_length() then
+                    mk_(road_to_intersections(
+                        road.get_id()).to_intersection,
+                        new_distance - road.get_length())
+                elseif new_distance < 0 then
+                    mk_(road_to_intersections(road.get_id()).from_intersection,
+                        abs new_distance)
+                else mk_(nil, nil)
+            ) in
+                if intersection_id <> nil then
+                    let intersection in set intersections
+                    be st intersection.get_id() = intersection_id in (
+                        road.remove_car(car);
+                        let next_road = intersection.next_road(road) in
+                        if next_road <> nil then (
+                            next_road.add_car(car);
+                            if intersection_id
+                                = road_to_intersections(next_road.get_id())
+                                .from_intersection then (
+                                car.set_direction(1);
+                                car.set_distance(distance_remainder);
+                            ) else (
+                                car.set_direction(-1);
+                                car.set_distance(next_road.get_length() - distance_remainder);
+                            );
+                        );
                     );
             );
+        );
 
     -- 2. step all sensors
     private step_sensors : () ==> ()
@@ -207,13 +200,14 @@ operations
     private step_street_lamps : () ==> ()
     step_street_lamps() ==
         let street_lamps = get_street_lamps() in
-            for all street_lamp in set street_lamps do
-                let road in set roads be st road.get_id() = street_lamp.get_road_id() in
-                    let sensor in set road.get_sensors() be st sensor.get_position() = street_lamp.get_position() in
-                        if sensor.is_triggered() then
-                            street_lamp.on()
-                        else
-                            street_lamp.off();
+        for all street_lamp in set street_lamps do
+            let road in set roads be st road.get_id() = street_lamp.get_road_id() in
+            let sensor in set road.get_sensors()
+            be st sensor.get_position() = street_lamp.get_position() in
+                if sensor.is_triggered() then
+                    street_lamp.on()
+                else
+                    street_lamp.off();
 
     -- public getter for all cars
     pure public get_cars : () ==> set of Car
@@ -236,21 +230,12 @@ operations
     pure public power_usage : () ==> real01
     power_usage() ==
         let street_lamps = get_street_lamps() in
-                let on_street_lamps = {
-                    street_lamp
-                    | street_lamp in set street_lamps
-                    & street_lamp.get_state() = <ON>
-                } in
-                    return card on_street_lamps / card street_lamps
-    post RESULT >= 0 and RESULT <= 1;
-        -- let street_lamp_states = [
-        --     street_lamp.get_state()
-        --     | street_lamp in set get_street_lamps()
-        --  ] in
-        --     return calc_power_usage(street_lamp_states);
-    -- pre card get_street_lamps() > 0
-    --     and {street_lamp | street_lamp in set get_street_lamps() & street_lamp.get_state() = <ON>} subset get_street_lamps()
-    -- post RESULT > 0 and RESULT < 1;
+        let on_street_lamps = {
+            street_lamp
+            | street_lamp in set street_lamps
+            & street_lamp.get_state() = <ON>
+        } in
+        return card on_street_lamps / card street_lamps;
 
     -- calculate traffic density as cars / total road length
     pure public traffic_density : () ==> real0
@@ -259,10 +244,7 @@ operations
             road.get_length()
             | road in set roads
         }) in
-            return calc_traffic_density(get_cars(), road_lengths);
-    -- pre card roads > 0
-    --     and forall road_length in set {road.get_length() | road in set roads} & road_length > 0
-    -- post RESULT > 0;
+        return calc_traffic_density(get_cars(), road_lengths);
 
 end City
 \end{vdm_al}

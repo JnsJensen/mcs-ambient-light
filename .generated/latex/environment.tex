@@ -37,8 +37,7 @@ functions
         ] in
             let total_power_usage = sum_seq_reals(power_usage_seq) in
                 total_power_usage / len power_usage_seq
-    pre len p_outlines > 0
-    post RESULT >= 0 and RESULT <= 1;
+    pre len p_outlines > 0;
 
     -- calculate total traffic density
     -- average traffic density of all time steps
@@ -50,8 +49,7 @@ functions
         ] in
             let total_traffic_density = sum_seq_reals(traffic_density_seq) in
                 total_traffic_density / len traffic_density_seq
-    pre len p_outlines > 0
-    post RESULT >= 0;
+    pre len p_outlines > 0;
 
 operations
     public Environment : () ==> Environment
@@ -81,8 +79,7 @@ operations
             mk_(40.0, new Car(2, 0.0, -1)),
             mk_(45.0, new Car(2, 0.0,  1)),
             mk_(50.0, new Car(3, 0.0,  1)),
-            mk_(55.0, new Car(3, 0.0, -1)),
-            mk_(60.0, new Car(6, 0.0, -1))
+            mk_(55.0, new Car(3, 0.0, -1))
         ];
         city := new City(
             [
@@ -117,15 +114,6 @@ operations
         );
     );
 
-    -- output the outlines
-    private show_result : () ==> ()
-    show_result() ==
-        (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[seq of Outline]((*@\vdmnotcovered{outline}@*)s) in (*@\vdmnotcovered{ski}@*)p;
-    
-    private show_city : () ==> ()
-    show_city() ==
-        (*@\vdmnotcovered{de}@*)f - = (*@\vdmnotcovered{i}@*)o.(*@\vdmnotcovered{writeva}@*)l[City]((*@\vdmnotcovered{cit}@*)y) in (*@\vdmnotcovered{ski}@*)p;
-
     -- write outlines to file
     private write_result : String ==> ()
     write_result(p_fname) ==
@@ -134,7 +122,7 @@ operations
     private append_to_result : String * String * real ==> ()
     append_to_result(p_fname, p_prefix, p_value) ==
         def - = io.fwriteval[String](p_fname, p_prefix, <append>) in
-            def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
+        def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
 
     -- Function to run through the inlines and generate the outlines
     public run : () ==> ()
@@ -168,43 +156,43 @@ operations
                 done : bool := false;
             while not done do (
                 def mk_(time, car) = hd inlines in
-                    if time <= current_time then (
-                        city.add_car(car);
-                        inlines := tl inlines;
-                        done := len inlines = 0;
-                    )
-                    else done := true;
+                if time <= current_time then (
+                    city.add_car(car);
+                    inlines := tl inlines;
+                    done := len inlines = 0;
+                )
+                else done := true;
             )
         )
-        else (*@\vdmnotcovered{bus}@*)y := (*@\vdmnotcovered{fals}@*)e;
+        else busy := false;
     );
 
     -- make an outline for the current time
     private make_outline : () ==> ()
     make_outline() ==
         let time = World`timer_ref.get_time() in
-            let power_usage = city.power_usage() in
-                let traffic_density = city.traffic_density() in
-                    let cars = {
-                        new Car(
-                            car.get_road_id(),
-                            car.get_distance(),
-                            car.get_direction()
-                        ) | car in set city.get_cars()
-                    } in 
-                        let lamps = {
-                            new StreetLamp(
-                                lamp.get_road_id(),
-                                lamp.get_position(),
-                                lamp.get_state()
-                            ) | lamp in set city.get_street_lamps()
-                        } in
-                            outlines := outlines ^ [mk_(
-                                time,
-                                cars, lamps,
-                                power_usage,
-                                traffic_density
-                            )];
+        let power_usage = city.power_usage() in
+        let traffic_density = city.traffic_density() in
+        let cars = {
+            new Car(
+                car.get_road_id(),
+                car.get_distance(),
+                car.get_direction()
+            ) | car in set city.get_cars()
+        } in 
+        let lamps = {
+            new StreetLamp(
+                lamp.get_road_id(),
+                lamp.get_position(),
+                lamp.get_state()
+            ) | lamp in set city.get_street_lamps()
+        } in
+        outlines := outlines ^ [mk_(
+            time,
+            cars, lamps,
+            power_usage,
+            traffic_density
+        )];
 
     -- keep simulating until
     -- 1. there are no more inlines to handle
@@ -215,7 +203,8 @@ operations
     private is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
-            return card cars = 0 and not busy or World`timer_ref.get_time() >= time_max;
+        return card cars = 0 and not busy
+            or World`timer_ref.get_time() >= time_max;
     
 end Environment
 \end{vdm_al}
@@ -225,7 +214,7 @@ end Environment
 Function or operation & Coverage & Calls \\
 \hline
 \hline
-Environment & 97.4\% & 1 \\
+Environment & 100.0\% & 1 \\
 \hline
 Environment & 100.0\% & 1 \\
 \hline
@@ -235,7 +224,7 @@ average\_power\_usage & 100.0\% & 1 \\
 \hline
 average\_traffic\_density & 100.0\% & 1 \\
 \hline
-handle\_inlines & 93.7\% & 600 \\
+handle\_inlines & 100.0\% & 600 \\
 \hline
 is\_finished & 100.0\% & 601 \\
 \hline
@@ -243,14 +232,10 @@ make\_outline & 100.0\% & 600 \\
 \hline
 run & 100.0\% & 1 \\
 \hline
-show\_city & 0.0\% & 0 \\
-\hline
-show\_result & 0.0\% & 0 \\
-\hline
 write\_result & 100.0\% & 1 \\
 \hline
 \hline
-environment.vdmpp & 97.4\% & 1809 \\
+environment.vdmpp & 100.0\% & 1809 \\
 \hline
 \end{longtable}
 \end{document}

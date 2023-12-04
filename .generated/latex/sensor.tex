@@ -28,11 +28,11 @@ operations
     public sense : () ==> ()
     sense() ==
         let all_cars_on_road = road.get_cars() in
-            cars := {
-                car
-                | car in set all_cars_on_road
-                & abs(car.get_distance() - position) < range
-            };
+        cars := {
+            car
+            | car in set all_cars_on_road
+            & abs(car.get_distance() - position) < range
+        };
 
     pure public is_triggered : () ==> bool
     is_triggered() == return not cars = {};

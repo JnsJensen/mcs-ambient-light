@@ -17,11 +17,10 @@ instance variables
 
 functions
     private norm : (real * real) * (real * real) -> real0
-    norm(p1, p2) == (
+    norm(p1, p2) ==
         let mk_(x1, y1) = p1 in
-            let mk_(x2, y2) = p2 in
-                MATH`sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
-    );
+        let mk_(x2, y2) = p2 in
+        MATH`sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
 
 operations
     public Position : real * real ==> Position

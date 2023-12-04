@@ -70,8 +70,7 @@ operations
             mk_(40.0, new Car(2, 0.0, -1)),
             mk_(45.0, new Car(2, 0.0,  1)),
             mk_(50.0, new Car(3, 0.0,  1)),
-            mk_(55.0, new Car(3, 0.0, -1)),
-            mk_(60.0, new Car(6, 0.0, -1))
+            mk_(55.0, new Car(3, 0.0, -1))
         ];
         city := new City(
             [
@@ -114,7 +113,7 @@ operations
     private append_to_result : String * String * real ==> ()
     append_to_result(p_fname, p_prefix, p_value) ==
         def - = io.fwriteval[String](p_fname, p_prefix, <append>) in
-            def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
+        def - = io.fwriteval[real](p_fname, p_value, <append>) in skip;
 
     -- Function to run through the inlines and generate the outlines
     public run : () ==> ()
@@ -148,12 +147,12 @@ operations
                 done : bool := false;
             while not done do (
                 def mk_(time, car) = hd inlines in
-                    if time <= current_time then (
-                        city.add_car(car);
-                        inlines := tl inlines;
-                        done := len inlines = 0;
-                    )
-                    else done := true;
+                if time <= current_time then (
+                    city.add_car(car);
+                    inlines := tl inlines;
+                    done := len inlines = 0;
+                )
+                else done := true;
             )
         )
         else busy := false;
@@ -163,28 +162,28 @@ operations
     private make_outline : () ==> ()
     make_outline() ==
         let time = World`timer_ref.get_time() in
-            let power_usage = city.power_usage() in
-                let traffic_density = city.traffic_density() in
-                    let cars = {
-                        new Car(
-                            car.get_road_id(),
-                            car.get_distance(),
-                            car.get_direction()
-                        ) | car in set city.get_cars()
-                    } in 
-                        let lamps = {
-                            new StreetLamp(
-                                lamp.get_road_id(),
-                                lamp.get_position(),
-                                lamp.get_state()
-                            ) | lamp in set city.get_street_lamps()
-                        } in
-                            outlines := outlines ^ [mk_(
-                                time,
-                                cars, lamps,
-                                power_usage,
-                                traffic_density
-                            )];
+        let power_usage = city.power_usage() in
+        let traffic_density = city.traffic_density() in
+        let cars = {
+            new Car(
+                car.get_road_id(),
+                car.get_distance(),
+                car.get_direction()
+            ) | car in set city.get_cars()
+        } in 
+        let lamps = {
+            new StreetLamp(
+                lamp.get_road_id(),
+                lamp.get_position(),
+                lamp.get_state()
+            ) | lamp in set city.get_street_lamps()
+        } in
+        outlines := outlines ^ [mk_(
+            time,
+            cars, lamps,
+            power_usage,
+            traffic_density
+        )];
 
     -- keep simulating until
     -- 1. there are no more inlines to handle
@@ -195,7 +194,7 @@ operations
     private is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
-            return card cars = 0 and not busy
-                or World`timer_ref.get_time() >= time_max;
+        return card cars = 0 and not busy
+            or World`timer_ref.get_time() >= time_max;
     
 end Environment

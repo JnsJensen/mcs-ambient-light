@@ -7,7 +7,7 @@
 \title{}
 \author{}
 \begin{vdm_al}
-class CityTest is subclass of City
+class CityTest is subclass of GLOBAL
 -- combinatorial testing for building the city
 -- using its constructor
 
@@ -53,19 +53,30 @@ class CityTest is subclass of City
 --         mk_Edge(8, 5)
 --     ]
 -- );
+functions
+    -- return a position on the unit circle
+    private calc_position : nat1 * nat1 -> (real * real)
+    calc_position(p_id, p_amount) ==
+        (*@\vdmnotcovered{le}@*)t angle = (*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{MATH`p}@*)i (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{p\_i}@*)d (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{p\_amoun}@*)t in
+            (*@\vdmnotcovered{mk}@*)_((*@\vdmnotcovered{MATH`co}@*)s((*@\vdmnotcovered{angl}@*)e), (*@\vdmnotcovered{MATH`si}@*)n((*@\vdmnotcovered{angl}@*)e));
+    
+    -- makes a circular set of edges, that is the minimum amount + 1 for a connected graph
+    private make_minimum_edges : set of IntersectionID -> set of Edge
+    make_minimum_edges(p_intersection_ids) == (*@\vdmnotcovered{}@*){
+        (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{}@*)i, (*@\vdmnotcovered{}@*)i (*@\vdmnotcovered{}@*)+ (*@\vdmnotcovered{}@*)1)
+        | i in set (*@\vdmnotcovered{p\_intersection\_id}@*)s
+        & (*@\vdmnotcovered{}@*)i (*@\vdmnotcovered{}@*)< (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{p\_intersection\_id}@*)s
+    };
 
 operations
+    private make_position : nat1 * nat1 ==> Position
+    make_position(p_id, p_amount) ==
+        (*@\vdmnotcovered{le}@*)t mk_(x, y) = (*@\vdmnotcovered{calc\_positio}@*)n((*@\vdmnotcovered{p\_i}@*)d, (*@\vdmnotcovered{p\_amoun}@*)t) in
+            (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{}@*)x, (*@\vdmnotcovered{}@*)y);
+
     private build_city : seq of Position * seq of Edge ==> City
     build_city(p_intersection_positions, p_edges) ==
         (*@\vdmnotcovered{le}@*)t city = (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Cit}@*)y((*@\vdmnotcovered{p\_intersection\_position}@*)s, (*@\vdmnotcovered{p\_edge}@*)s) in (*@\vdmnotcovered{retur}@*)n (*@\vdmnotcovered{cit}@*)y;
-
-instance variables
-    private square : seq of Position := (*@\vdmnotcovered{}@*)[
-        (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{0.}@*)0),
-        (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{0.}@*)0, (*@\vdmnotcovered{50.}@*)0),
-        (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{50.}@*)0, (*@\vdmnotcovered{50.}@*)0),
-        (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n((*@\vdmnotcovered{50.}@*)0, (*@\vdmnotcovered{0.}@*)0)
-    ];
 
 traces
     -- try all possible graphs with 4 intersections
@@ -73,39 +84,24 @@ traces
     -- 4 vertices -> 6 edges
     -- the number of possible simple graphs is 2^(n(n-1)/2)
     -- 4 vertices -> 2^6 = 64 possible graphs
-    SquareSmall:
-        (
-            let (*@\vdmnotcovered{intersection\_id}@*)s = (*@\vdmnotcovered{ind}@*)s (*@\vdmnotcovered{squar}@*)e in
-                let (*@\vdmnotcovered{all\_intersection\_combination}@*)s = (*@\vdmnotcovered{powe}@*)r (*@\vdmnotcovered{intersection\_id}@*)s in
-                    let (*@\vdmnotcovered{intersection}@*)s in set (*@\vdmnotcovered{all\_intersection\_combination}@*)s
-                    be st (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersection}@*)s (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)2 in
-                        let (*@\vdmnotcovered{edge}@*)s = (*@\vdmnotcovered{}@*){
-                            (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{i}@*)1, (*@\vdmnotcovered{i}@*)2)
-                            | i1, i2 in set (*@\vdmnotcovered{intersection}@*)s
-                            & (*@\vdmnotcovered{i}@*)1 (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{i}@*)2
-                        } in (*@\vdmnotcovered{build\_cit}@*)y((*@\vdmnotcovered{squar}@*)e, (*@\vdmnotcovered{VDMUtil`set2se}@*)q[Edge]((*@\vdmnotcovered{edge}@*)s))
-        );
 
     -- try with all possible cities with {2,...,10} intersections
     -- each intersection position can be placed on the unit circle
     TestAllEdges:
         (
-            let (*@\vdmnotcovered{intersections\_id}@*)s = (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)1,...,(*@\vdmnotcovered{}@*)6} in
-                let (*@\vdmnotcovered{intersection\_position}@*)s = (*@\vdmnotcovered{}@*)[
-                    (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n(
-                        (*@\vdmnotcovered{MATH`co}@*)s((*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{MATH`p}@*)i (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{i}@*)d (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s),
-                        (*@\vdmnotcovered{MATH`si}@*)n((*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{MATH`p}@*)i (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{i}@*)d (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s)
-                    )
-                    | id in set (*@\vdmnotcovered{intersections\_id}@*)s
-                ] in
-                    let (*@\vdmnotcovered{all\_intersection\_combination}@*)s = (*@\vdmnotcovered{powe}@*)r (*@\vdmnotcovered{intersections\_id}@*)s in
-                        let (*@\vdmnotcovered{intersection}@*)s in set (*@\vdmnotcovered{all\_intersection\_combination}@*)s
-                        be st (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersection}@*)s (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)2 in
-                            let (*@\vdmnotcovered{edge}@*)s = (*@\vdmnotcovered{}@*){
-                                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{i}@*)1, (*@\vdmnotcovered{i}@*)2)
-                                | i1, i2 in set (*@\vdmnotcovered{intersection}@*)s
-                                & (*@\vdmnotcovered{i}@*)1 (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{i}@*)2
-                            } in (*@\vdmnotcovered{build\_cit}@*)y((*@\vdmnotcovered{intersection\_position}@*)s, (*@\vdmnotcovered{VDMUtil`set2se}@*)q[Edge]((*@\vdmnotcovered{edge}@*)s))
+            let intersections_ids = (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)1,...,(*@\vdmnotcovered{}@*)6} in
+            let intersection_positions = (*@\vdmnotcovered{}@*)[
+                (*@\vdmnotcovered{make\_positio}@*)n((*@\vdmnotcovered{i}@*)d, (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s)
+                | id in set (*@\vdmnotcovered{intersections\_id}@*)s
+            ] in
+            let all_intersection_combinations = (*@\vdmnotcovered{powe}@*)r (*@\vdmnotcovered{intersections\_id}@*)s in
+            let intersections in set (*@\vdmnotcovered{all\_intersection\_combination}@*)s
+            be st (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersection}@*)s (*@\vdmnotcovered{>}@*)= (*@\vdmnotcovered{}@*)2 in
+            let edges = (*@\vdmnotcovered{}@*){
+                (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{i}@*)1, (*@\vdmnotcovered{i}@*)2)
+                | i1, i2 in set (*@\vdmnotcovered{intersection}@*)s
+                & (*@\vdmnotcovered{i}@*)1 (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{i}@*)2
+            } in (*@\vdmnotcovered{build\_cit}@*)y((*@\vdmnotcovered{intersection\_position}@*)s, (*@\vdmnotcovered{VDMUtil`set2se}@*)q[Edge]((*@\vdmnotcovered{edge}@*)s))
         );
 
     -- no need to attempt to create all edge combinations
@@ -113,20 +109,14 @@ traces
     -- just draw the edges such that it is a connected graph
     TestManyIntersections:
         (
-            let (*@\vdmnotcovered{intersection\_amoun}@*)t in set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)0,...,(*@\vdmnotcovered{3}@*)0} in
-                let (*@\vdmnotcovered{intersections\_id}@*)s = (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)1,...,(*@\vdmnotcovered{intersection\_amoun}@*)t} in
-                    let (*@\vdmnotcovered{intersection\_position}@*)s = (*@\vdmnotcovered{}@*)[
-                        (*@\vdmnotcovered{ne}@*)w (*@\vdmnotcovered{Positio}@*)n(
-                            (*@\vdmnotcovered{MATH`co}@*)s((*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{MATH`p}@*)i (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{i}@*)d (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s),
-                            (*@\vdmnotcovered{MATH`si}@*)n((*@\vdmnotcovered{}@*)2 (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{MATH`p}@*)i (*@\vdmnotcovered{}@*)* (*@\vdmnotcovered{i}@*)d (*@\vdmnotcovered{}@*)/ (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s)
-                        )
-                        | id in set (*@\vdmnotcovered{intersections\_id}@*)s
-                    ] in
-                        let (*@\vdmnotcovered{edge}@*)s = (*@\vdmnotcovered{}@*){
-                            (*@\vdmnotcovered{mk\_Edg}@*)e((*@\vdmnotcovered{i}@*)1, (*@\vdmnotcovered{i}@*)2)
-                            | i1, i2 in set (*@\vdmnotcovered{intersections\_id}@*)s
-                            & (*@\vdmnotcovered{i}@*)1 (*@\vdmnotcovered{<}@*)> (*@\vdmnotcovered{i}@*)2
-                        } in (*@\vdmnotcovered{build\_cit}@*)y((*@\vdmnotcovered{intersection\_position}@*)s, (*@\vdmnotcovered{VDMUtil`set2se}@*)q[Edge]((*@\vdmnotcovered{edge}@*)s))
+            let intersection_amount in set (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)0,...,(*@\vdmnotcovered{50}@*)0} in
+            let intersections_ids = (*@\vdmnotcovered{}@*){(*@\vdmnotcovered{}@*)1,...,(*@\vdmnotcovered{intersection\_amoun}@*)t} in
+            let intersection_positions = (*@\vdmnotcovered{}@*)[
+                (*@\vdmnotcovered{make\_positio}@*)n((*@\vdmnotcovered{i}@*)d, (*@\vdmnotcovered{car}@*)d (*@\vdmnotcovered{intersections\_id}@*)s)
+                | id in set (*@\vdmnotcovered{intersections\_id}@*)s
+            ] in
+            let edges = (*@\vdmnotcovered{make\_minimum\_edge}@*)s((*@\vdmnotcovered{intersections\_id}@*)s) in
+            (*@\vdmnotcovered{build\_cit}@*)y((*@\vdmnotcovered{intersection\_position}@*)s, (*@\vdmnotcovered{VDMUtil`set2se}@*)q[Edge]((*@\vdmnotcovered{edge}@*)s))
         );
 
 
@@ -141,6 +131,12 @@ Function or operation & Coverage & Calls \\
 CityTest & 0.0\% & 0 \\
 \hline
 build\_city & 0.0\% & 0 \\
+\hline
+calc\_position & 0.0\% & 0 \\
+\hline
+make\_minimum\_edges & 0.0\% & 0 \\
+\hline
+make\_position & 0.0\% & 0 \\
 \hline
 \hline
 city\_test.vdmpp & 0.0\% & 0 \\

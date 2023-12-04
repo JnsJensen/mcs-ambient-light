@@ -30,12 +30,12 @@ operations
     public next_road : Road ==> [Road]
     next_road(p_from_road) == 
         let available_connections = connections \ {p_from_road} in
-            if available_connections = {} then
-                return nil
-            else
-                let connections_seq = VDMUtil`set2seq[Road](available_connections) in
-                    let rand_idx = MATH`rand(len connections_seq) + 1 in
-                        return connections_seq(rand_idx)
+        if available_connections = {} then
+            return nil
+        else
+            let connections_seq = VDMUtil`set2seq[Road](available_connections) in
+            let rand_idx = MATH`rand(len connections_seq) + 1 in
+            return connections_seq(rand_idx)
     pre p_from_road in set connections
     post RESULT in set connections \ {p_from_road} or RESULT = nil;
 
@@ -51,12 +51,12 @@ Intersection & 100.0\% & 11 \\
 \hline
 Intersection & 100.0\% & 11 \\
 \hline
-get\_id & 100.0\% & 398 \\
+get\_id & 100.0\% & 370 \\
 \hline
-next\_road & 100.0\% & 79 \\
+next\_road & 100.0\% & 77 \\
 \hline
 \hline
-intersection.vdmpp & 100.0\% & 499 \\
+intersection.vdmpp & 100.0\% & 469 \\
 \hline
 \end{longtable}
 \end{document}
