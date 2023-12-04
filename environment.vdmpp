@@ -195,6 +195,7 @@ operations
     private is_finished : () ==> bool 
     is_finished() == 
         let cars = city.get_cars() in
-            return card cars = 0 and not busy or World`timer_ref.get_time() >= time_max;
+            return card cars = 0 and not busy
+                or World`timer_ref.get_time() >= time_max;
     
 end Environment

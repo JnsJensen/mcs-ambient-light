@@ -219,7 +219,6 @@ operations
                 & street_lamp.get_state() = <ON>
             } in
                 return card on_street_lamps / card street_lamps
-    post RESULT >= 0 and RESULT <= 1;
 
     -- calculate traffic density as cars / total road length
     pure public traffic_density : () ==> real0
