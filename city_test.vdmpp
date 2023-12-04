@@ -69,32 +69,12 @@ operations
     build_city(p_intersection_positions, p_edges) ==
         let city = new City(p_intersection_positions, p_edges) in return city;
 
-instance variables
-    private square : seq of Position := [
-        new Position(0.0, 0.0),
-        new Position(0.0, 50.0),
-        new Position(50.0, 50.0),
-        new Position(50.0, 0.0)
-    ];
-
 traces
     -- try all possible graphs with 4 intersections
     -- maximum number of edges with n vertices is n(n-1)/2
     -- 4 vertices -> 6 edges
     -- the number of possible simple graphs is 2^(n(n-1)/2)
     -- 4 vertices -> 2^6 = 64 possible graphs
-    SquareSmall:
-        (
-            let intersection_ids = inds square in
-                let all_intersection_combinations = power intersection_ids in
-                    let intersections in set all_intersection_combinations
-                    be st card intersections >= 2 in
-                        let edges = {
-                            mk_Edge(i1, i2)
-                            | i1, i2 in set intersections
-                            & i1 <> i2
-                        } in build_city(square, VDMUtil`set2seq[Edge](edges))
-        );
 
     -- try with all possible cities with {2,...,10} intersections
     -- each intersection position can be placed on the unit circle
